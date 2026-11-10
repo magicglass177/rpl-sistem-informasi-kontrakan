@@ -41,4 +41,4 @@ Sebuah fitur dianggap selesai apabila:
 
 | Nama | Peran | Tanggal | Setuju |
 |------|-------|---------|--------|
-| (Nama lengkap) | Product Owner, Scrum Master, Developer | (Tanggal) | Ya |
+| Bayu Nanda Pamungkas | Product Owner, Scrum Master, Developer | 10 November 2026 | Ya |
