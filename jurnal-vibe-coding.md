@@ -162,3 +162,55 @@ Aturan proyek telah disesuaikan dengan ketentuan Jobsheet Step 9. Perintah menja
 Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggunaan AI dan perubahan dokumen tetap harus ditinjau oleh pengembang.
 
 **Status:** Penyempurnaan aturan proyek selesai; menunggu pemeriksaan akhir dan commit.
+
+### Pengujian PRD Menggunakan AI Reverse Summary — Iterasi 1
+
+**Tanggal:** 11 November 2026
+
+**Metode:** AI Reverse Summary menggunakan PRD.md dan aturan-proyek.md pada percakapan AI baru.
+
+**Hasil pengujian:**
+1. AI berhasil memahami tujuan dan ruang lingkup umum Sistem Informasi Pengelolaan Kontrakan.
+2. AI mengidentifikasi 12 asumsi, 16 bagian ambigu, dan sejumlah pertanyaan klarifikasi sebelum coding.
+3. AI menemukan ketidakjelasan terkait hak akses pengguna, pengelolaan kamar dan penyewa, pembayaran, jatuh tempo, masa sewa, serta laporan pendapatan.
+4. Evaluasi menemukan bahwa ringkasan AI belum membedakan secara tegas fitur Must Have dan Should Have.
+
+**Evaluasi:** Hasil pengujian pertama secara umum sesuai dengan maksud proyek. Beberapa temuan AI sudah tercantum dalam Open Questions PRD sehingga tidak seluruhnya membutuhkan penambahan baru.
+
+**Tindakan:** Mempertahankan pertanyaan yang belum terjawab sebagai Open Questions dan memperjelas prioritas fitur serta aturan operasional yang masih ambigu pada revisi PRD berikutnya.
+
+**Status:** Iterasi 1 selesai. Dilanjutkan ke Jobsheet Step 11 untuk revisi PRD dan pengujian ulang.
+
+### Revisi PRD — Versi 1.1
+
+**Tanggal:** 11 November 2026
+
+**Dasar revisi:** Hasil evaluasi AI Reverse Summary Iterasi 1.
+
+**Perubahan yang dilakukan:**
+1. Menambahkan penjelasan mengenai prioritas Must Have dan Should Have.
+2. Memperluas pertanyaan terbuka terkait pengguna, autentikasi, kamar, penyewa, periode sewa, pembayaran, laporan pendapatan, serta kualitas dan pengujian.
+3. Memperjelas bahwa hubungan antarentitas akan dibahas pada tahap perancangan ERD.
+4. Mempertahankan pertanyaan yang belum terjawab sebagai hal terbuka, bukan menetapkannya berdasarkan asumsi AI.
+
+**Status:** PRD versi 1.1 selesai direvisi dan menunggu pengujian ulang melalui AI Reverse Summary pada Jobsheet Step 11.
+
+### Pengujian PRD Menggunakan AI Reverse Summary — Iterasi 2
+
+**Tanggal:** 11 November 2026
+
+**Metode:** AI Reverse Summary menggunakan PRD.md versi 1.1 dan aturan-proyek.md pada percakapan AI baru.
+
+**Hasil pengujian:**
+1. AI berhasil memahami tujuan, pengguna, ruang lingkup, dan teknologi Sistem Informasi Pengelolaan Kontrakan.
+2. AI berhasil membedakan fitur Must Have dan Should Have secara jelas.
+3. AI mengidentifikasi 7 asumsi yang belum tertulis dan 10 bagian yang masih ambigu.
+4. AI menghasilkan 35 pertanyaan klarifikasi terkait pengguna, autentikasi, kamar, penyewa, periode sewa, pembayaran, laporan pendapatan, kualitas, dan proses proyek.
+5. AI mengidentifikasi bahwa aturan pembayaran, penentuan status kamar, jatuh tempo, dan perhitungan pendapatan masih membutuhkan keputusan.
+6. AI memahami bahwa prioritas dan kebutuhan dalam PRD masih berupa rancangan yang belum divalidasi.
+
+**Evaluasi:** Hasil Iterasi 2 menunjukkan peningkatan pemahaman dibandingkan Iterasi 1. Revisi PRD versi 1.1 berhasil memperjelas pengelompokan prioritas fitur dan memperluas pertanyaan terbuka. Namun, beberapa asumsi dan ambiguitas tetap ditemukan karena kebutuhan tersebut memang belum dikonfirmasi.
+
+**Tindakan:** Mempertahankan hal-hal yang belum terjawab sebagai pertanyaan terbuka. Temuan AI akan digunakan sebagai bahan evaluasi sebelum implementasi, bukan sebagai keputusan kebutuhan final.
+
+**Status:** Pengujian AI Reverse Summary Iterasi 2 selesai. Hasil pengujian diterima dan didokumentasikan untuk melanjutkan tahapan proyek.
