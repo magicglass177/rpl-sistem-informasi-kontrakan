@@ -99,3 +99,27 @@ Kebutuhan yang belum memiliki dasar dari catatan simulasi tidak akan dianggap se
 AI membantu menemukan bagian user story yang masih ambigu dan memberikan saran perbaikan. Keputusan akhir tetap ditentukan melalui proses review dokumen.
 
 Seluruh user story masih berstatus draft berdasarkan simulasi wawancara fiktif dan belum divalidasi oleh klien nyata.
+
+### Pengujian PRD Menggunakan AI — Sesi 4
+
+**Prompt:**
+
+"Tinjau dokumen PRD Sistem Informasi Pengelolaan Kontrakan. Buat ringkasan produk berdasarkan dokumen, identifikasi asumsi yang belum dikonfirmasi, dan temukan bagian yang masih ambigu atau belum lengkap. Jangan menambahkan fitur yang tidak tercantum dalam PRD."
+
+**Hasil AI:**
+
+AI merangkum bahwa produk merupakan sistem untuk membantu pemilik kontrakan mengelola kamar, penyewa, pembayaran sewa, periode sewa, dan laporan pendapatan.
+
+AI menemukan beberapa asumsi, yaitu penggunaan akun login, aturan jatuh tempo pembayaran, informasi masa sewa berakhir, fitur unduh laporan, dan kemungkinan akses bagi penjaga kontrakan.
+
+AI juga menemukan beberapa bagian yang masih perlu diperjelas, seperti atribut wajib data penyewa, aturan pembayaran cicilan, penentuan jatuh tempo, batas waktu informasi masa sewa berakhir, format laporan, dan hak akses pengguna.
+
+**Evaluasi:**
+
+Hasil ringkasan AI sesuai dengan tujuan dan ruang lingkup produk dalam PRD. Namun, beberapa aturan operasional masih belum dijelaskan secara terperinci.
+
+**Keputusan:**
+
+PRD dipertahankan dengan beberapa catatan validasi. Asumsi yang belum dikonfirmasi tetap diberi label asumsi dan tidak dianggap sebagai kebutuhan final klien.
+
+**Status:** Pengujian PRD selesai berdasarkan rancangan dokumen simulasi. Validasi dengan klien nyata masih diperlukan.
