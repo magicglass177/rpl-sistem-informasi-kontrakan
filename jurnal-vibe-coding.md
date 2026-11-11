@@ -214,3 +214,24 @@ Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggu
 **Tindakan:** Mempertahankan hal-hal yang belum terjawab sebagai pertanyaan terbuka. Temuan AI akan digunakan sebagai bahan evaluasi sebelum implementasi, bukan sebagai keputusan kebutuhan final.
 
 **Status:** Pengujian AI Reverse Summary Iterasi 2 selesai. Hasil pengujian diterima dan didokumentasikan untuk melanjutkan tahapan proyek.
+
+### Pembaruan Product Backlog — Jobsheet Langkah 12
+
+**Aktivitas:** Memperbarui Product Backlog berdasarkan PRD versi 1.1 dan SRS.
+
+**Bantuan AI:**
+- Membantu memetakan kebutuhan KF dan KNF ke dalam Product Backlog.
+- Memberikan rekomendasi prioritas menggunakan metode MoSCoW.
+- Membantu membagi kebutuhan ke dalam empat sprint dengan durasi dua minggu.
+- Memberikan usulan pemecahan tugas Sprint 1 dengan estimasi maksimal satu hari kerja per tugas.
+
+**Keputusan Pengembang:**
+- Menerima pemetaan kebutuhan dan pembagian sprint sebagai rancangan awal.
+- Menghapus kebutuhan fasilitas kamar, pencarian, dan dashboard karena belum tercantum dalam PRD.
+- Mempertahankan KF-08 sebagai Should sesuai PRD versi 1.1.
+- Mempertahankan KF-16 sebagai Could dan tidak menjadwalkannya pada Sprint 1–3.
+- Meninjau kembali keputusan yang masih bergantung pada pertanyaan terbuka PRD.
+
+**Verifikasi:** Perubahan diperiksa menggunakan `git diff --check` dan `git diff`. Tidak ditemukan masalah whitespace. Isi backlog tetap perlu dikonfirmasi kepada klien sebelum implementasi.
+
+**Status:** Draf Product Backlog diperbarui, belum di-commit dan belum di-merge.
