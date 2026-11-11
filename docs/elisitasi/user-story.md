@@ -1,85 +1,161 @@
 # User Story — Sistem Informasi Pengelolaan Kontrakan
 
-**Status:** Draf awal berdasarkan hipotesis proyek, belum tervalidasi melalui wawancara.
+> **Status dokumen:** Draft berdasarkan simulasi wawancara (data fiktif).  
+> **Catatan:** User story berikut belum divalidasi oleh klien nyata. Kebutuhan yang belum dikonfirmasi diberi tanda **[Asumsi]**.
 
-## US-01 — Login Pemilik Kontrakan
+## US-01 — Login Pemilik Kontrakan [Asumsi]
 
-**User Story:**
+**Sebagai** pemilik kontrakan, **saya ingin** masuk ke sistem menggunakan akun, **agar** data kontrakan hanya dapat diakses oleh pengguna yang memiliki izin.
 
-Sebagai pemilik kontrakan, saya ingin masuk ke sistem menggunakan akun saya agar data pengelolaan kontrakan hanya dapat diakses oleh pihak yang memiliki hak akses.
+**Sumber:** Asumsi awal proyek; belum dibahas secara khusus dalam simulasi wawancara.
 
-**Kriteria Penerimaan:**
+**Acceptance Criteria:**
 
-1. **Given** pemilik memiliki akun yang terdaftar dan aktif, **When** pemilik memasukkan username dan password yang benar, **Then** sistem menampilkan halaman utama.
-2. **Given** pemilik memasukkan password yang salah, **When** menekan tombol masuk, **Then** sistem menolak akses dan menampilkan pesan kesalahan.
-
-**Sumber:** Hipotesis awal proyek — belum ada nomor catatan wawancara.
+1. **Given** pengguna memiliki akun terdaftar, **When** pengguna memasukkan username dan password yang benar, **Then** sistem menampilkan halaman utama.
+2. **Given** pengguna memasukkan password yang salah, **When** pengguna menekan tombol login, **Then** sistem menampilkan pesan kesalahan dan tidak memberikan akses.
 
 ## US-02 — Mengelola Data Kamar
 
-**User Story:**
+**Sebagai** pemilik kontrakan, **saya ingin** menambahkan, melihat, mengubah, dan menghapus data kamar, **agar** informasi seluruh kamar dapat dikelola dengan rapi.
 
-Sebagai pemilik kontrakan, saya ingin mencatat dan memperbarui data kamar agar saya dapat mengetahui informasi dan ketersediaan setiap kamar.
+**Sumber:** Catatan Wawancara bagian A — Pengelolaan Kamar.
 
-**Kriteria Penerimaan:**
+**Acceptance Criteria:**
 
-1. **Given** pemilik berada pada halaman data kamar, **When** pemilik mengisi nomor kamar dan informasi kamar yang wajib diisi lalu menyimpan, **Then** data kamar tersimpan dan tampil pada daftar kamar.
-2. **Given** terdapat data kamar yang sudah tersimpan, **When** pemilik mengubah status kamar menjadi terisi, **Then** status kamar pada daftar berubah menjadi terisi.
+1. **Given** pemilik berada pada halaman data kamar, **When** pemilik mengisi nomor kamar dan harga sewa lalu menyimpan data, **Then** kamar baru ditampilkan dalam daftar kamar.
+2. **Given** terdapat data kamar, **When** pemilik mengubah informasi kamar dan menyimpan perubahan, **Then** sistem menampilkan informasi kamar yang telah diperbarui.
 
-**Sumber:** Hipotesis awal proyek — belum ada nomor catatan wawancara.
+## US-03 — Melihat Status Ketersediaan Kamar
 
-## US-03 — Mengelola Data Penyewa
+**Sebagai** pemilik kontrakan, **saya ingin** melihat status setiap kamar, **agar** saya dapat mengetahui kamar yang tersedia dan sedang ditempati.
 
-**User Story:**
+**Sumber:** Catatan Wawancara bagian A — Pengelolaan Kamar.
 
-Sebagai pemilik kontrakan, saya ingin mencatat dan memperbarui data penyewa agar informasi penghuni setiap kamar tersimpan dengan teratur.
+**Acceptance Criteria:**
 
-**Kriteria Penerimaan:**
+1. **Given** terdapat beberapa data kamar, **When** pemilik membuka daftar kamar, **Then** sistem menampilkan status setiap kamar.
+2. **Given** sebuah kamar telah ditempati penyewa, **When** pemilik memperbarui status kamar menjadi terisi, **Then** sistem menampilkan status kamar sebagai terisi.
 
-1. **Given** pemilik berada pada halaman data penyewa, **When** pemilik mengisi nama dan informasi wajib penyewa lalu menyimpan, **Then** data penyewa tersimpan dan tampil pada daftar penyewa.
-2. **Given** data penyewa sudah tersimpan, **When** pemilik memperbarui informasi penyewa dan menyimpan perubahan, **Then** sistem menampilkan informasi terbaru.
+## US-04 — Mengelola Data Penyewa
 
-**Sumber:** Hipotesis awal proyek — belum ada nomor catatan wawancara.
+**Sebagai** pemilik kontrakan, **saya ingin** mencatat dan mengelola data penyewa, **agar** informasi penyewa dapat ditemukan kembali dengan mudah.
 
-## US-04 — Mencatat Pembayaran Sewa
+**Sumber:** Catatan Wawancara bagian B — Data Penyewa.
 
-**User Story:**
+**Acceptance Criteria:**
 
-Sebagai pemilik kontrakan, saya ingin mencatat pembayaran sewa penyewa agar saya dapat memantau pembayaran yang sudah dilakukan dan yang belum dilakukan.
+1. **Given** pemilik berada pada halaman data penyewa, **When** pemilik mengisi nama dan informasi penyewa lalu menyimpan, **Then** data penyewa tersimpan dan ditampilkan.
+2. **Given** data penyewa sudah tersimpan, **When** pemilik mengubah informasi penyewa, **Then** sistem menampilkan data terbaru.
 
-**Kriteria Penerimaan:**
+## US-05 — Menghubungkan Penyewa dengan Kamar
 
-1. **Given** penyewa memiliki tagihan sewa yang belum dibayar, **When** pemilik mencatat pembayaran dengan nominal yang sesuai, **Then** sistem menyimpan transaksi dan memperbarui status pembayaran menjadi dibayar.
-2. **Given** terdapat tagihan sewa yang belum dibayar, **When** pemilik melihat daftar pembayaran, **Then** sistem menampilkan status tagihan tersebut sebagai belum dibayar.
+**Sebagai** pemilik kontrakan, **saya ingin** mencatat kamar yang ditempati setiap penyewa, **agar** saya dapat mengetahui siapa yang menempati setiap kamar.
 
-**Sumber:** Hipotesis awal proyek — belum ada nomor catatan wawancara.
+**Sumber:** Catatan Wawancara bagian B — Data Penyewa dan bagian A — Pengelolaan Kamar.
 
-## US-05 — Mengelola Periode Sewa
+**Acceptance Criteria:**
 
-**User Story:**
+1. **Given** terdapat data penyewa dan kamar yang tersedia, **When** pemilik memilih penyewa dan kamar, **Then** sistem menyimpan hubungan antara penyewa dan kamar tersebut.
+2. **Given** sebuah kamar sudah ditempati, **When** pemilik mencoba menghubungkan penyewa lain ke kamar yang sama, **Then** sistem menolak penempatan tersebut atau meminta pemilik menyelesaikan penempatan sebelumnya.
 
-Sebagai pemilik kontrakan, saya ingin mencatat tanggal mulai dan berakhirnya masa sewa agar saya dapat mengetahui periode sewa setiap penyewa.
+## US-06 — Mencatat Pembayaran Sewa
 
-**Kriteria Penerimaan:**
+**Sebagai** pemilik kontrakan, **saya ingin** mencatat pembayaran sewa penyewa, **agar** riwayat pembayaran dapat tersimpan dan diperiksa kembali.
 
-1. **Given** pemilik sedang menambahkan data periode sewa, **When** pemilik mengisi tanggal mulai dan tanggal berakhir yang valid lalu menyimpan, **Then** sistem menyimpan kedua tanggal tersebut.
-2. **Given** periode sewa sudah tersimpan, **When** pemilik membuka data penyewa terkait, **Then** sistem menampilkan tanggal mulai dan tanggal berakhir masa sewa.
+**Sumber:** Catatan Wawancara bagian C — Pembayaran Sewa.
 
-**Sumber:** Hipotesis awal proyek — belum ada nomor catatan wawancara.
+**Acceptance Criteria:**
 
-## US-06 — Melihat Laporan Pendapatan
+1. **Given** terdapat data penyewa, **When** pemilik memasukkan tanggal dan jumlah pembayaran lalu menyimpan, **Then** sistem menyimpan transaksi pembayaran.
+2. **Given** pembayaran telah tersimpan, **When** pemilik membuka riwayat pembayaran penyewa, **Then** sistem menampilkan informasi pembayaran yang pernah dicatat.
 
-**User Story:**
+## US-07 — Melihat Status Pembayaran Penyewa
 
-Sebagai pemilik kontrakan, saya ingin melihat laporan pendapatan sewa berdasarkan periode tertentu agar saya dapat mengetahui jumlah pemasukan dari usaha kontrakan.
+**Sebagai** pemilik kontrakan, **saya ingin** melihat status pembayaran setiap penyewa, **agar** saya dapat mengetahui penyewa yang sudah dan belum membayar.
 
-**Kriteria Penerimaan:**
+**Sumber:** Catatan Wawancara bagian C — Pembayaran Sewa.
 
-1. **Given** terdapat transaksi pembayaran sewa yang sudah tercatat, **When** pemilik memilih periode laporan, **Then** sistem menampilkan total pembayaran yang berstatus dibayar dalam periode tersebut.
-2. **Given** pemilik memilih periode yang tidak memiliki transaksi pembayaran, **When** laporan ditampilkan, **Then** sistem menampilkan total pendapatan sebesar Rp0 untuk periode tersebut.
+**Acceptance Criteria:**
 
-**Sumber:** Hipotesis awal proyek — belum ada nomor catatan wawancara.
+1. **Given** terdapat data pembayaran penyewa, **When** pemilik membuka halaman pembayaran, **Then** sistem menampilkan status pembayaran berdasarkan data yang tercatat.
+2. **Given** pembayaran seorang penyewa telah dicatat, **When** pemilik menyimpan pembayaran tersebut, **Then** status pembayaran penyewa diperbarui sesuai transaksi yang dicatat.
+
+## US-08 — Mencatat Tanggal Jatuh Tempo Pembayaran [Asumsi]
+
+**Sebagai** pemilik kontrakan, **saya ingin** mengetahui tanggal jatuh tempo pembayaran sewa, **agar** saya dapat memantau pembayaran yang belum dilakukan tepat waktu.
+
+**Sumber:** Catatan Wawancara bagian C — Pembayaran Sewa. Aturan jatuh tempo belum dikonfirmasi secara khusus.
+
+**Acceptance Criteria:**
+
+1. **Given** data periode sewa memiliki tanggal jatuh tempo, **When** pemilik membuka informasi pembayaran, **Then** sistem menampilkan tanggal jatuh tempo tersebut.
+2. **Given** tanggal jatuh tempo telah terlewati dan pembayaran belum dicatat, **When** sistem menampilkan status pembayaran, **Then** pembayaran ditandai terlambat.
+
+## US-09 — Mengelola Periode Sewa
+
+**Sebagai** pemilik kontrakan, **saya ingin** mencatat tanggal mulai dan berakhirnya masa sewa, **agar** masa sewa setiap penyewa dapat dipantau.
+
+**Sumber:** Catatan Wawancara bagian D — Periode Sewa.
+
+**Acceptance Criteria:**
+
+1. **Given** pemilik sedang mencatat penyewaan kamar, **When** pemilik memasukkan tanggal mulai dan tanggal berakhir sewa, **Then** sistem menyimpan periode sewa.
+2. **Given** periode sewa telah tersimpan, **When** pemilik membuka detail penyewa, **Then** sistem menampilkan tanggal mulai dan berakhir sewa.
+
+## US-10 — Mendapatkan Informasi Masa Sewa yang Akan Berakhir [Asumsi]
+
+**Sebagai** pemilik kontrakan, **saya ingin** mengetahui masa sewa yang akan segera berakhir, **agar** saya dapat mempersiapkan proses perpanjangan atau pergantian penyewa.
+
+**Sumber:** Catatan Wawancara bagian D — Periode Sewa. Mekanisme pengingat otomatis belum dikonfirmasi.
+
+**Acceptance Criteria:**
+
+1. **Given** terdapat periode sewa yang mendekati tanggal berakhir, **When** pemilik membuka daftar periode sewa, **Then** sistem menampilkan informasi masa sewa yang akan segera berakhir.
+2. **Given** periode sewa telah melewati tanggal berakhir, **When** pemilik melihat data periode sewa, **Then** sistem menampilkan bahwa periode tersebut telah berakhir.
+
+## US-11 — Melihat Laporan Pendapatan
+
+**Sebagai** pemilik kontrakan, **saya ingin** melihat rekapitulasi pendapatan berdasarkan periode tertentu, **agar** saya dapat mengetahui pemasukan kontrakan.
+
+**Sumber:** Catatan Wawancara bagian E — Laporan Pendapatan.
+
+**Acceptance Criteria:**
+
+1. **Given** terdapat catatan pembayaran sewa, **When** pemilik memilih periode laporan, **Then** sistem menampilkan daftar pembayaran pada periode tersebut.
+2. **Given** laporan pembayaran telah ditampilkan, **When** pemilik melihat total pendapatan, **Then** sistem menampilkan jumlah berdasarkan transaksi pembayaran yang tercatat dalam periode tersebut.
+
+## US-12 — Mengunduh Laporan Pendapatan [Asumsi]
+
+**Sebagai** pemilik kontrakan, **saya ingin** mengunduh laporan pendapatan, **agar** saya dapat menyimpan dan menggunakan laporan sebagai arsip.
+
+**Sumber:** Catatan Wawancara bagian E — Laporan Pendapatan. Fitur unduh PDF belum dikonfirmasi dalam simulasi.
+
+**Acceptance Criteria:**
+
+1. **Given** laporan pendapatan telah ditampilkan, **When** pemilik memilih fitur unduh laporan, **Then** sistem menghasilkan file laporan yang dapat disimpan.
+2. **Given** pemilik memilih periode laporan tertentu, **When** pemilik mengunduh laporan, **Then** isi laporan sesuai dengan periode yang dipilih.
 
 ---
 
-**Catatan:** Semua user story di atas masih perlu divalidasi kepada pemilik kontrakan. Ganti bagian Sumber dengan nomor catatan wawancara setelah data wawancara tersedia.
+## Hasil Peninjauan Awal
+
+| No. | User Story | Status |
+|---|---|---|
+| 1 | Login Pemilik Kontrakan | [Asumsi] |
+| 2 | Mengelola Data Kamar | Draft simulasi |
+| 3 | Melihat Status Ketersediaan Kamar | Draft simulasi |
+| 4 | Mengelola Data Penyewa | Draft simulasi |
+| 5 | Menghubungkan Penyewa dengan Kamar | Draft simulasi |
+| 6 | Mencatat Pembayaran Sewa | Draft simulasi |
+| 7 | Melihat Status Pembayaran | Draft simulasi |
+| 8 | Mencatat Jatuh Tempo | [Asumsi] |
+| 9 | Mengelola Periode Sewa | Draft simulasi |
+| 10 | Informasi Masa Sewa Berakhir | [Asumsi] |
+| 11 | Melihat Laporan Pendapatan | Draft simulasi |
+| 12 | Mengunduh Laporan Pendapatan | [Asumsi] |
+
+## Catatan Validasi
+
+Seluruh user story dalam dokumen ini disusun berdasarkan skenario simulasi wawancara pemilik kontrakan fiktif. Status "Draft simulasi" berarti kebutuhan tersebut muncul dalam skenario latihan, bukan berarti telah dikonfirmasi oleh klien nyata.
+
+User story perlu ditinjau kembali setelah wawancara nyata atau setelah dosen menyetujui penggunaan responden alternatif/simulasi. Kebutuhan yang belum dikonfirmasi harus tetap ditandai sebagai asumsi.
