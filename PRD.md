@@ -1,8 +1,8 @@
 # Product Requirements Document (PRD)
 # Sistem Informasi Pengelolaan Kontrakan
 
-**Versi:** 1.0  
-**Status:** Draft  
+**Versi:** 1.1
+**Status:** Draft
 **Dasar:** SRS dan user story berdasarkan simulasi wawancara (data fiktif), belum divalidasi klien nyata.
 
 ## 1. Ringkasan Produk dan Tujuan
@@ -30,6 +30,12 @@ Tujuan produk:
 ## 3. Fitur Berdasarkan Prioritas dan Kriteria Penerimaan
 
 Kriteria penerimaan ditulis menggunakan format Given–When–Then.
+
+Prioritas fitur dibagi menjadi:
+- **Must Have:** Fitur dengan prioritas wajib dalam ruang lingkup produk.
+- **Should Have:** Fitur yang dianjurkan untuk dikembangkan, tetapi memiliki prioritas di bawah Must Have.
+
+Pengelompokan prioritas berikut masih berupa rancangan dan dapat ditinjau kembali setelah kebutuhan dikonfirmasi.
 
 ### 3.1 Must Have (Prioritas Wajib)
 
@@ -115,7 +121,7 @@ Entitas utama dan atribut penting yang direncanakan:
 4. **Pembayaran:** ID pembayaran, ID sewa, tanggal pembayaran, jumlah pembayaran, status pembayaran.
 5. **Akun pengguna:** ID akun, username, dan informasi autentikasi.
 
-Atribut tersebut masih berupa rancangan awal dan akan disesuaikan setelah kebutuhan dikonfirmasi. Struktur basis data lengkap akan dibahas pada tahap perancangan ERD.
+Atribut tersebut masih berupa rancangan awal dan akan disesuaikan setelah kebutuhan dikonfirmasi. Struktur basis data lengkap dan hubungan antarentitas akan dibahas pada tahap perancangan ERD.
 
 ## 5. Di Luar Lingkup
 
@@ -129,14 +135,63 @@ Fitur berikut belum termasuk dalam pengembangan saat ini:
 
 ## 6. Pertanyaan Terbuka
 
-Hal-hal berikut masih menunggu konfirmasi dari klien:
+Hal-hal berikut masih menunggu konfirmasi dari klien atau keputusan yang relevan sebelum implementasi. Pertanyaan yang belum terjawab tidak boleh dianggap sebagai kebutuhan final.
+
+### A. Pengguna dan autentikasi
 
 1. Apakah login hanya digunakan oleh pemilik atau juga pengelola/penjaga?
-2. Apakah data kamar perlu memiliki fitur hapus?
-3. Bagaimana aturan penentuan tanggal jatuh tempo pembayaran?
-4. Berapa lama sebelum masa sewa berakhir informasi perlu ditampilkan?
-5. Apakah status pembayaran cukup berupa sudah membayar dan belum membayar?
-6. Apakah laporan pendapatan perlu dapat diunduh, dan dalam format apa?
-7. Apakah kriteria kinerja tiga detik untuk 100 data kamar sudah sesuai kebutuhan?
+2. Bagaimana akun pemilik dibuat: melalui registrasi atau dibuat secara langsung?
+3. Apakah username harus unik?
+4. Apakah sistem membutuhkan fitur logout?
 
-**Catatan validasi:** Dokumen ini merupakan rancangan awal berdasarkan simulasi wawancara fiktif. Prioritas dan asumsi perlu ditinjau kembali bersama klien atau dosen sebelum ditetapkan sebagai kebutuhan final.
+### B. Pengelolaan kamar
+
+5. Apakah data kamar perlu memiliki fitur hapus?
+6. Apakah nomor kamar harus unik?
+7. Apakah status kamar tersedia atau terisi ditentukan secara otomatis berdasarkan periode sewa?
+8. Apakah kamar yang memiliki riwayat penyewaan boleh dihapus?
+9. Apakah fitur pencegahan penempatan kamar yang sudah terisi (F-11) perlu dinaikkan menjadi Must Have agar konsisten dengan kebutuhan pengelolaan ketersediaan kamar?
+
+### C. Pengelolaan penyewa
+
+10. Informasi apa saja yang wajib disimpan untuk setiap penyewa?
+11. Apakah nomor telepon dan alamat wajib diisi?
+12. Apakah data penyewa boleh dihapus apabila sudah memiliki riwayat sewa atau pembayaran?
+
+### D. Hubungan penyewa, kamar, dan periode sewa
+
+13. Apakah satu kamar hanya boleh ditempati satu penyewa dalam satu periode?
+14. Apakah penyewa diperbolehkan pindah kamar ketika masa sewanya masih berjalan?
+15. Bagaimana sistem menangani penyewa yang memperpanjang masa sewa?
+16. Apakah seorang penyewa dapat menyewa kamar yang berbeda pada periode berikutnya?
+17. Apakah kamar otomatis berubah menjadi tersedia ketika periode sewa berakhir?
+18. Apakah periode sewa yang sudah berakhir harus tetap tersimpan sebagai riwayat?
+
+### E. Pembayaran dan jatuh tempo
+
+19. Apakah pembayaran dilakukan per bulan, per periode sewa, atau berdasarkan kesepakatan pemilik?
+20. Apakah pembayaran boleh dilakukan secara bertahap atau dicicil?
+21. Apakah sistem perlu mendukung pembayaran sebagian sebelum dinyatakan lunas?
+22. Apakah status pembayaran cukup berupa sudah membayar dan belum membayar, atau perlu status terlambat?
+23. Bagaimana aturan penentuan tanggal jatuh tempo pembayaran?
+24. Apakah pemilik boleh mengubah atau menghapus catatan pembayaran yang sudah tersimpan?
+
+### F. Periode sewa
+
+25. Berapa lama sebelum masa sewa berakhir sistem harus menampilkan pemberitahuan?
+26. Apakah masa sewa yang telah berakhir harus tetap ditampilkan dalam daftar?
+27. Apakah sistem perlu menyimpan riwayat periode sewa sebelumnya?
+
+### G. Laporan pendapatan
+
+28. Apakah laporan pendapatan cukup menampilkan daftar pembayaran dan total pendapatan?
+29. Apakah pendapatan dihitung berdasarkan tanggal transaksi pembayaran atau periode sewa?
+30. Apakah laporan pendapatan perlu dapat diunduh, dan dalam format apa?
+
+### H. Kualitas dan pengujian
+
+31. Apakah kriteria kinerja tiga detik untuk 100 data kamar sudah sesuai kebutuhan?
+32. Kondisi perangkat dan lingkungan pengujian seperti apa yang digunakan untuk mengukur target kinerja tersebut?
+33. Bagaimana langkah pengujian maksimal lima langkah pada fitur penambahan kamar dihitung?
+
+**Catatan validasi:** Dokumen ini merupakan rancangan berdasarkan simulasi wawancara fiktif. Prioritas dan asumsi perlu ditinjau kembali bersama klien atau dosen sebelum ditetapkan sebagai kebutuhan final. Pertanyaan yang belum terjawab tetap menjadi hal terbuka dan tidak boleh diselesaikan berdasarkan asumsi AI tanpa persetujuan pengembang atau pihak terkait.
