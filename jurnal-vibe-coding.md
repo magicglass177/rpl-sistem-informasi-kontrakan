@@ -123,3 +123,42 @@ Hasil ringkasan AI sesuai dengan tujuan dan ruang lingkup produk dalam PRD. Namu
 PRD dipertahankan dengan beberapa catatan validasi. Asumsi yang belum dikonfirmasi tetap diberi label asumsi dan tidak dianggap sebagai kebutuhan final klien.
 
 **Status:** Pengujian PRD selesai berdasarkan rancangan dokumen simulasi. Validasi dengan klien nyata masih diperlukan.
+
+### Penyempurnaan Aturan Proyek — Jobsheet Step 9
+
+**Tanggal:** 11 November 2026
+
+**Tujuan:**
+
+Memperbarui `aturan-proyek.md` agar sesuai dengan ketentuan teknologi, struktur proyek, konvensi penulisan, keamanan, penggunaan AI, dan pengujian.
+
+**Bantuan AI yang digunakan:**
+
+AI membantu meninjau dan menyempurnakan aturan proyek berdasarkan ketentuan Jobsheet Step 9.
+
+**Perubahan yang dilakukan:**
+
+1. Menetapkan Python 3.14 sebagai versi utama dengan minimum Python 3.10.
+2. Menetapkan Flask sebagai framework dan SQLite sebagai database.
+3. Menambahkan struktur folder aplikasi, termasuk `app.py`, `templates/`, `static/`, `tests/`, dan `docs/`.
+4. Memperjelas aturan penamaan variabel, fungsi, class, konstanta, dan file.
+5. Menambahkan ketentuan komentar kode dan pesan antarmuka menggunakan Bahasa Indonesia.
+6. Memperkuat aturan penggunaan AI, termasuk larangan mengubah file di luar ruang lingkup tugas dan melemahkan pengujian.
+7. Memperjelas aturan keamanan agar kata sandi, token, dan API key tidak disimpan langsung dalam kode.
+8. Menambahkan petunjuk pembuatan virtual environment, instalasi Flask, menjalankan aplikasi, dan menjalankan pengujian otomatis.
+
+**Pemeriksaan:**
+
+- `Pemeriksaan akhir git diff --check berhasil tanpa kesalahan whitespace setelah perbaikan format.
+- `git status` menunjukkan hanya `aturan-proyek.md` yang berubah sebelum pembaruan jurnal.
+- Perubahan belum di-commit dan masih berada pada branch `docs-aturan-proyek-stack`.
+
+**Evaluasi:**
+
+Aturan proyek telah disesuaikan dengan ketentuan Jobsheet Step 9. Perintah menjalankan aplikasi dan pengujian telah dicantumkan sebagai pedoman untuk tahap implementasi.
+
+**Keputusan:**
+
+Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggunaan AI dan perubahan dokumen tetap harus ditinjau oleh pengembang.
+
+**Status:** Penyempurnaan aturan proyek selesai; menunggu pemeriksaan akhir dan commit.

@@ -2,27 +2,37 @@
 ## Sistem Informasi Pengelolaan Kontrakan
 
 ## 1. Tujuan
+
 Dokumen ini menjadi pedoman pengembangan Sistem Informasi Pengelolaan Kontrakan agar proses pengembangan berjalan terstruktur, konsisten, dan sesuai kebutuhan proyek.
 
 Aturan ini digunakan sebagai konteks bagi pengembang maupun AI ketika membantu pekerjaan proyek.
 
 ## 2. Informasi Teknologi
 
-- Jenis aplikasi: Aplikasi berbasis web.
-- Bahasa pemrograman: Belum ditentukan.
-- Framework: Belum ditentukan.
-- Database: Belum ditentukan.
-- Versi teknologi: Akan ditentukan setelah pemilihan stack proyek.
+Teknologi yang digunakan dalam proyek:
 
-**Catatan:** Pemilihan teknologi harus mempertimbangkan kebutuhan aplikasi, kemampuan pengembang, waktu pengerjaan, dan arahan dosen. AI tidak boleh menganggap teknologi tertentu sudah dipilih sebelum ada keputusan.
+- Bahasa pemrograman: Python 3.14 (minimal Python 3.10).
+- Framework: Flask.
+- Database: SQLite.
+- Paket tambahan: Hanya boleh ditambahkan setelah mendapat persetujuan sesuai kesepakatan tim.
+
+Ketentuan:
+
+- Pengembangan harus menggunakan teknologi yang telah ditetapkan.
+- Versi Python yang digunakan harus memenuhi persyaratan minimum.
+- Penggunaan paket tambahan harus memiliki alasan dan persetujuan terlebih dahulu.
+- AI tidak boleh memilih atau menambahkan teknologi dan dependensi sendiri.
 
 ## 3. Struktur Folder Proyek
 
-Struktur folder dan file yang digunakan saat ini:
+Struktur folder aplikasi yang direncanakan:
 
 ```text
 rpl-sistem-informasi-kontrakan/
-├── .github/
+├── app.py
+├── templates/
+├── static/
+├── tests/
 ├── docs/
 │   ├── elisitasi/
 │   │   ├── catatan-wawancara.md
@@ -31,6 +41,7 @@ rpl-sistem-informasi-kontrakan/
 │   ├── kesepakatan-tim.md
 │   ├── product-backlog.md
 │   └── srs.md
+├── .github/
 ├── .gitignore
 ├── aturan-proyek.md
 ├── jurnal-vibe-coding.md
@@ -39,11 +50,14 @@ rpl-sistem-informasi-kontrakan/
 ```
 
 Ketentuan:
-- Dokumentasi kebutuhan disimpan di folder `docs/`.
-- Dokumen elisitasi disimpan di `docs/elisitasi/`.
-- Dokumen PRD dan aturan proyek disimpan di direktori utama.
-- File baru harus ditempatkan sesuai fungsi dan jenis dokumennya.
-- Struktur folder aplikasi akan ditambahkan setelah tahap implementasi dimulai.
+
+- `app.py` berisi konfigurasi dan kode utama aplikasi Flask.
+- `templates/` menyimpan berkas template HTML.
+- `static/` menyimpan CSS, JavaScript, dan aset statis.
+- `tests/` menyimpan berkas pengujian otomatis.
+- `docs/` menyimpan dokumentasi proyek.
+- Struktur folder aplikasi dibuat sesuai kebutuhan implementasi.
+- File baru harus ditempatkan sesuai fungsi dan jenisnya.
 
 ## 4. Aturan Penamaan
 
@@ -57,6 +71,12 @@ Ketentuan:
   - `perbaikan-` untuk perbaikan kesalahan.
   - `docs-` untuk perubahan dokumentasi.
 - Pesan commit harus menjelaskan perubahan yang dilakukan.
+- Komentar kode dan pesan antarmuka pengguna menggunakan Bahasa Indonesia.
+- Nama variabel dan fungsi Python menggunakan `snake_case`.
+- Nama class menggunakan `PascalCase`.
+- Konstanta menggunakan `UPPER_SNAKE_CASE`.
+- Nama file menggunakan huruf kecil dan tanda hubung atau garis bawah jika diperlukan.
+- Setiap commit sebaiknya hanya memuat satu fitur atau satu kelompok perubahan yang saling berkaitan.
 
 ## 5. Aturan Penggunaan AI
 
@@ -70,6 +90,9 @@ AI digunakan sebagai alat bantu pengembangan dengan ketentuan:
 6. AI tidak boleh mengarang hasil wawancara atau menyatakan data simulasi sebagai hasil wawancara nyata.
 7. Data pribadi klien, kata sandi, token, dan kunci akses tidak boleh dimasukkan ke AI.
 8. AI tidak boleh mengubah struktur proyek, memilih teknologi, atau menambahkan dependensi tanpa persetujuan pengembang.
+9. AI tidak boleh mengubah atau menghapus berkas di luar ruang lingkup tugas yang diminta.
+10. AI tidak boleh menghapus, melemahkan, atau melewati pengujian yang sudah tersedia.
+11. AI tidak boleh menambahkan paket atau dependensi tanpa persetujuan pengembang.
 
 ## 6. Aturan Pengembangan
 
@@ -78,13 +101,18 @@ AI digunakan sebagai alat bantu pengembangan dengan ketentuan:
 - Implementasi tidak boleh menyimpang dari ruang lingkup proyek tanpa alasan dan keputusan yang terdokumentasi.
 - Perubahan kebutuhan dan keputusan teknis harus dicatat dalam dokumentasi atau Jurnal Vibe Coding.
 - Fitur yang belum diprioritaskan untuk proyek tidak boleh dikerjakan tanpa evaluasi ulang ruang lingkup.
+- Dilarang menyimpan kata sandi, token, API key, atau informasi rahasia lainnya secara langsung di dalam kode.
+- Informasi rahasia harus dikelola melalui konfigurasi lingkungan yang aman.
+- Perubahan hanya boleh dilakukan pada berkas yang relevan dengan tugas.
+- Penambahan dependensi harus mendapat persetujuan terlebih dahulu.
 
 ## 7. Aturan Pengujian
 
-- Setiap fitur harus diuji berdasarkan kriteria penerimaan yang telah ditentukan.
+- Setiap fitur harus diuji berdasarkan kriteria penerimaan.
+- Pengujian otomatis disimpan dalam folder `tests/`.
+- Pengujian tidak boleh dihapus atau dilemahkan hanya untuk membuat fitur terlihat berhasil.
+- Kesalahan pada fungsi utama harus diperbaiki sebelum fitur di-merge.
 - Hasil pengujian harus diperiksa sebelum perubahan dinyatakan selesai.
-- Kesalahan yang memengaruhi fungsi utama harus diperbaiki sebelum fitur di-merge.
-- Metode dan perintah pengujian akan disesuaikan setelah bahasa pemrograman dan framework ditentukan.
 
 ## 8. Aturan Git dan Pull Request
 
@@ -127,3 +155,50 @@ Fitur di luar ruang lingkup yang telah ditetapkan dalam SRS tidak boleh ditambah
 Dokumen ini merupakan pedoman awal pengembangan proyek dan dapat diperbarui apabila terdapat perubahan teknologi, kebutuhan, atau aturan berdasarkan arahan dosen dan hasil konfirmasi klien.
 
 **Catatan validasi:** Sebagian kebutuhan proyek masih berasal dari simulasi wawancara dengan data fiktif dan belum dikonfirmasi kepada klien nyata.
+
+## 12. Cara Menjalankan dan Menguji
+
+Persiapan lingkungan:
+
+1. Membuat virtual environment:
+
+   ```powershell
+   py -3.14 -m venv .venv
+   ```
+
+2. Mengaktifkan virtual environment di Windows:
+
+   ```powershell
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+3. Memasang Flask:
+
+   ```powershell
+   python -m pip install Flask
+   ```
+
+Menjalankan aplikasi:
+
+```powershell
+python app.py
+```
+
+Menjalankan pengujian otomatis:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+Ketentuan:
+
+- Perintah dijalankan dari direktori utama proyek.
+- Pengujian otomatis menggunakan `unittest` dari pustaka standar Python.
+- Pengujian aplikasi Flask dapat menggunakan test client bawaan Flask.
+- Perintah pengujian dapat disesuaikan jika metode pengujian proyek berubah.
+
+Catatan:
+
+- Python 3.14 menjadi versi yang diutamakan.
+- Jika Python 3.14 tidak tersedia, gunakan Python versi 3.10 atau lebih baru yang kompatibel dengan Flask.
+- Sesuaikan perintah pembuatan virtual environment dengan versi Python yang terpasang.
