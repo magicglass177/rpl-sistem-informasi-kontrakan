@@ -235,3 +235,37 @@ Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggu
 **Verifikasi:** Perubahan diperiksa menggunakan `git diff --check` dan `git diff`. Tidak ditemukan masalah whitespace. Isi backlog tetap perlu dikonfirmasi kepada klien sebelum implementasi.
 
 **Status:** Draf Product Backlog diperbarui, belum di-commit dan belum di-merge.
+
+### Pembuatan dan Verifikasi Activity Diagram dengan Bantuan AI — Sesi 2
+
+**Aktivitas:** Pembuatan, evaluasi, dan penyempurnaan Activity Diagram.
+
+**Bantuan AI:**
+
+- Membantu membuat draf Activity Diagram berdasarkan skenario Use Case UC-08, UC-09, dan UC-01.
+- Menghasilkan kode Mermaid untuk menggambarkan alur aktivitas, keputusan, dan kondisi pengecualian.
+- Membantu memeriksa kesesuaian diagram dengan skenario Use Case.
+
+**Temuan dan Evaluasi:**
+
+1. Draf UC-09 belum menggambarkan kondisi kegagalan penyimpanan pembayaran.
+2. Draf UC-09 menggunakan keputusan pembayaran bertahap berdasarkan alur alternatif pada skenario.
+3. Draf UC-01 menggambarkan pengulangan pengisian kredensial ketika data login belum lengkap.
+4. Draf UC-08 mencakup pemeriksaan keberadaan data penyewa dan kamar sesuai kondisi pengecualian pada skenario.
+
+**Perbaikan yang Dilakukan:**
+
+Menambahkan cabang keputusan pada UC-09 untuk menangani kondisi penyimpanan pembayaran berhasil atau gagal. Ketiga diagram kemudian diperiksa kembali dan diekspor ke format PNG.
+
+**Kesalahan AI yang Paling Berisiko:**
+
+AI dapat melewatkan alur pengecualian yang sudah tercantum dalam skenario Use Case, seperti kegagalan penyimpanan pembayaran, sehingga diagram perlu diperiksa secara manual sebelum ditetapkan sebagai hasil akhir.
+
+**Verifikasi:**
+
+- Ketiga diagram berhasil dirender menggunakan Mermaid Live Editor.
+- Alur aktivitas dan cabang keputusan diperiksa berdasarkan skenario Use Case.
+- Setiap diagram memiliki file Mermaid (`.mmd`) dan PNG.
+- Keenam file berhasil di-commit dan di-merge ke branch `main` melalui Pull Request #16.
+
+**Status:** Tiga Activity Diagram final selesai dibuat, diperiksa, dan diintegrasikan ke branch `main`.
