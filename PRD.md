@@ -81,9 +81,9 @@ Given terdapat catatan pembayaran, When pemilik memilih periode laporan, Then si
 
 Given terdapat data kamar, When pemilik mengubah informasi dan menyimpan perubahan, Then sistem menampilkan informasi kamar terbaru.
 
-**F-11 — Mencegah penempatan kamar yang sudah terisi (US-05, KF-08)**
+**F-11 — Mencegah penempatan kamar yang masih ditempati selama periode sewa berlangsung (US-05, KF-08)**
 
-Given kamar sudah ditempati, When pemilik mencoba menempatkan penyewa lain pada kamar yang sama, Then sistem menolak penempatan tersebut.
+Given kamar masih ditempati penyewa dalam periode sewa yang sedang berlangsung, When pemilik mencoba menempatkan penyewa lain pada kamar yang sama, Then sistem menolak penempatan tersebut.
 
 **F-12 — Melihat riwayat pembayaran (US-06, KF-10)**
 
@@ -150,48 +150,47 @@ Hal-hal berikut masih menunggu konfirmasi dari klien atau keputusan yang relevan
 6. Apakah nomor kamar harus unik?
 7. Apakah status kamar tersedia atau terisi ditentukan secara otomatis berdasarkan periode sewa?
 8. Apakah kamar yang memiliki riwayat penyewaan boleh dihapus?
-9. Apakah fitur pencegahan penempatan kamar yang sudah terisi (F-11) perlu dinaikkan menjadi Must Have agar konsisten dengan kebutuhan pengelolaan ketersediaan kamar?
 
 ### C. Pengelolaan penyewa
 
-10. Informasi apa saja yang wajib disimpan untuk setiap penyewa?
-11. Apakah nomor telepon dan alamat wajib diisi?
-12. Apakah data penyewa boleh dihapus apabila sudah memiliki riwayat sewa atau pembayaran?
+9. Informasi apa saja yang wajib disimpan untuk setiap penyewa?
+10. Apakah nomor telepon dan alamat wajib diisi?
+11. Apakah data penyewa boleh dihapus apabila sudah memiliki riwayat sewa atau pembayaran?
 
 ### D. Hubungan penyewa, kamar, dan periode sewa
 
-13. Apakah satu kamar hanya boleh ditempati satu penyewa dalam satu periode?
-14. Apakah penyewa diperbolehkan pindah kamar ketika masa sewanya masih berjalan?
-15. Bagaimana sistem menangani penyewa yang memperpanjang masa sewa?
-16. Apakah seorang penyewa dapat menyewa kamar yang berbeda pada periode berikutnya?
-17. Apakah kamar otomatis berubah menjadi tersedia ketika periode sewa berakhir?
-18. Apakah periode sewa yang sudah berakhir harus tetap tersimpan sebagai riwayat?
+12. Apakah satu kamar hanya boleh ditempati satu penyewa dalam satu periode?
+13. Apakah penyewa diperbolehkan pindah kamar ketika masa sewanya masih berjalan?
+14. Bagaimana sistem menangani penyewa yang memperpanjang masa sewa?
+15. Apakah seorang penyewa dapat menyewa kamar yang berbeda pada periode berikutnya?
+16. Apakah kamar otomatis berubah menjadi tersedia ketika periode sewa berakhir?
+17. Apakah periode sewa yang sudah berakhir harus tetap tersimpan sebagai riwayat?
 
 ### E. Pembayaran dan jatuh tempo
 
-19. Apakah pembayaran dilakukan per bulan, per periode sewa, atau berdasarkan kesepakatan pemilik?
-20. Apakah pembayaran boleh dilakukan secara bertahap atau dicicil?
-21. Apakah sistem perlu mendukung pembayaran sebagian sebelum dinyatakan lunas?
-22. Apakah status pembayaran cukup berupa sudah membayar dan belum membayar, atau perlu status terlambat?
-23. Bagaimana aturan penentuan tanggal jatuh tempo pembayaran?
-24. Apakah pemilik boleh mengubah atau menghapus catatan pembayaran yang sudah tersimpan?
+18. Apakah pembayaran dilakukan per bulan, per periode sewa, atau berdasarkan kesepakatan pemilik?
+19. Apakah pembayaran boleh dilakukan secara bertahap atau dicicil?
+20. Apakah sistem perlu mendukung pembayaran sebagian sebelum dinyatakan lunas?
+21. Apakah status pembayaran cukup berupa sudah membayar dan belum membayar, atau perlu status terlambat?
+22. Bagaimana aturan penentuan tanggal jatuh tempo pembayaran?
+23. Apakah pemilik boleh mengubah atau menghapus catatan pembayaran yang sudah tersimpan?
 
 ### F. Periode sewa
 
-25. Berapa lama sebelum masa sewa berakhir sistem harus menampilkan pemberitahuan?
-26. Apakah masa sewa yang telah berakhir harus tetap ditampilkan dalam daftar?
-27. Apakah sistem perlu menyimpan riwayat periode sewa sebelumnya?
+24. Berapa lama sebelum masa sewa berakhir sistem harus menampilkan pemberitahuan?
+25. Apakah masa sewa yang telah berakhir harus tetap ditampilkan dalam daftar?
+26. Apakah sistem perlu menyimpan riwayat periode sewa sebelumnya?
 
 ### G. Laporan pendapatan
 
-28. Apakah laporan pendapatan cukup menampilkan daftar pembayaran dan total pendapatan?
-29. Apakah pendapatan dihitung berdasarkan tanggal transaksi pembayaran atau periode sewa?
-30. Apakah laporan pendapatan perlu dapat diunduh, dan dalam format apa?
+27. Apakah laporan pendapatan cukup menampilkan daftar pembayaran dan total pendapatan?
+28. Apakah pendapatan dihitung berdasarkan tanggal transaksi pembayaran atau periode sewa?
+29. Apakah laporan pendapatan perlu dapat diunduh, dan dalam format apa?
 
 ### H. Kualitas dan pengujian
 
-31. Apakah kriteria kinerja tiga detik untuk 100 data kamar sudah sesuai kebutuhan?
-32. Kondisi perangkat dan lingkungan pengujian seperti apa yang digunakan untuk mengukur target kinerja tersebut?
-33. Bagaimana langkah pengujian maksimal lima langkah pada fitur penambahan kamar dihitung?
+30. Apakah kriteria kinerja tiga detik untuk 100 data kamar sudah sesuai kebutuhan?
+31. Kondisi perangkat dan lingkungan pengujian seperti apa yang digunakan untuk mengukur target kinerja tersebut?
+32. Bagaimana langkah pengujian maksimal lima langkah pada fitur penambahan kamar dihitung?
 
 **Catatan validasi:** Dokumen ini merupakan rancangan berdasarkan simulasi wawancara fiktif. Prioritas dan asumsi perlu ditinjau kembali bersama klien atau dosen sebelum ditetapkan sebagai kebutuhan final. Pertanyaan yang belum terjawab tetap menjadi hal terbuka dan tidak boleh diselesaikan berdasarkan asumsi AI tanpa persetujuan pengembang atau pihak terkait.

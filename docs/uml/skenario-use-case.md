@@ -116,7 +116,7 @@
 **Aktor dan KF**
 - Aktor utama: Pemilik Kontrakan
 - KF terkait: KF-07 — Menghubungkan penyewa dengan kamar; KF-08 — Mencegah penempatan pada kamar yang masih ditempati
-- Prioritas: Must*
+- Prioritas: Must
 
 **Prasyarat**
 1. Pemilik Kontrakan sudah login.
@@ -239,4 +239,4 @@
 3. Setiap skenario memiliki alur utama dan minimal satu pengecualian.
 4. Alur alternatif disertakan jika variasi proses dapat dijelaskan berdasarkan kebutuhan yang tersedia.
 5. Detail teknis yang belum ditetapkan dalam PRD atau SRS tidak diasumsikan sebagai ketentuan final.
-6. KF-08 memiliki perbedaan prioritas pada dokumen SRS: bagian kebutuhan fungsional menyebut Must, sedangkan tabel prioritas §5.2 menyebut Should. Prioritas tersebut perlu diselaraskan saat revisi SRS.
+6. KF-08 berprioritas Must sesuai dengan penetapan prioritas pada dokumen SRS.
