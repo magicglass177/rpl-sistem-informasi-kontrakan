@@ -10,7 +10,7 @@
 | UC-05 | Melihat Status Ketersediaan Kamar | Pemilik Kontrakan | KF-05 | Must |
 | UC-06 | Menambahkan Data Penyewa | Pemilik Kontrakan | KF-06 | Must |
 | UC-07 | Mengubah Data Penyewa | Pemilik Kontrakan | KF-06 | Must |
-| UC-08 | Menghubungkan Penyewa dengan Kamar | Pemilik Kontrakan | KF-07, KF-08 | Must* |
+| UC-08 | Menghubungkan Penyewa dengan Kamar | Pemilik Kontrakan | KF-07, KF-08 | Must |
 | UC-09 | Mencatat Pembayaran Sewa | Pemilik Kontrakan | KF-09 | Must |
 | UC-10 | Melihat Status Pembayaran | Pemilik Kontrakan | KF-11 | Must |
 | UC-11 | Melihat Riwayat Pembayaran | Pemilik Kontrakan | KF-10 | Should |
@@ -24,6 +24,6 @@
 
 1. Aktor utama seluruh use case adalah Pemilik Kontrakan.
 2. KF-08 merupakan aturan validasi dalam UC-08, bukan use case terpisah.
-3. KF-08 memiliki perbedaan prioritas dalam SRS: bagian kebutuhan fungsional menyebut Must, sedangkan tabel prioritas §5.2 menyebut Should. Prioritas perlu diselaraskan.
+3. KF-08 berprioritas Must sesuai dengan tabel kebutuhan fungsional dan tabel prioritas pada SRS.
 4. UC-16 merupakan fitur Could (opsional), tetapi tetap dicantumkan sebagai bagian dari daftar use case.
 5. UC-06 dan UC-07 merupakan pemisahan aktivitas tambah dan ubah data penyewa berdasarkan KF-06.

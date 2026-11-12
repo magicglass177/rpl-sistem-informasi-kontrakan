@@ -269,3 +269,34 @@ AI dapat melewatkan alur pengecualian yang sudah tercantum dalam skenario Use Ca
 - Keenam file berhasil di-commit dan di-merge ke branch `main` melalui Pull Request #16.
 
 **Status:** Tiga Activity Diagram final selesai dibuat, diperiksa, dan diintegrasikan ke branch `main`.
+
+
+### Revisi SRS, PRD, dan Penyelarasan Dokumen UML
+
+**Tanggal:** 12 November 2026
+
+**Aktivitas:** Perapian SRS dan penyelarasan kebutuhan fungsional dengan PRD serta dokumen UML.
+
+**Bantuan AI:**
+- Membantu meninjau struktur, kejelasan, dan konsistensi isi SRS.
+- Membantu memeriksa prioritas kebutuhan menggunakan metode MoSCoW.
+- Membantu memeriksa matriks ketertelusuran kebutuhan terhadap Use Case.
+- Membantu mengidentifikasi ketidaksesuaian KF-08 pada PRD dan dokumen UML.
+
+**Perubahan yang dilakukan:**
+1. Memperjelas KF-08 agar larangan penempatan penyewa baru berlaku ketika kamar masih ditempati dalam periode sewa yang sedang berlangsung.
+2. Menetapkan prioritas KF-08 menjadi Must dan memperbarui perhitungan prioritas kebutuhan menjadi 13 dari 20 kebutuhan (65%).
+3. Menambahkan alasan penetapan prioritas KF-08 pada SRS.
+4. Menambahkan pemetaan Use Case pada matriks ketertelusuran SRS.
+5. Menyelaraskan prioritas UC-08 dan catatan penjelas pada daftar serta skenario Use Case.
+6. Memperjelas F-11 pada PRD agar sesuai dengan aturan KF-08 pada SRS.
+
+**Evaluasi dan keputusan:**
+Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek dan konsistensi kebutuhan saat ini. Catatan historis pada jurnal yang sebelumnya menyebut KF-08 sebagai Should tetap dipertahankan sebagai riwayat keputusan terdahulu. Simulasi wawancara PT dan BM tetap dinyatakan sebagai data fiktif, bukan validasi klien nyata.
+
+**Verifikasi:**
+- Memeriksa perubahan pada PRD, SRS, dan dokumen UML.
+- Menjalankan `git diff --check`; tidak ditemukan kesalahan whitespace.
+- Git menampilkan peringatan line ending LF/CRLF pada beberapa dokumen.
+
+**Status:** Revisi dokumentasi selesai dan menunggu pemeriksaan akhir sebelum commit.
