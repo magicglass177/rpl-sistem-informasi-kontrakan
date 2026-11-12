@@ -1,0 +1,24 @@
+﻿flowchart TD
+    A([Mulai]) --> B["Pemilik membuka menu penghubungan penyewa dengan kamar"]
+    B --> C["Sistem menampilkan daftar penyewa dan kamar"]
+    C --> D{"Data penyewa dan kamar ditemukan?"}
+
+    D -->|Tidak| E["Sistem membatalkan proses dan menampilkan pemberitahuan kesalahan"]
+    E --> Z([Selesai])
+
+    D -->|Ya| F["Pemilik memilih penyewa"]
+    F --> G["Sistem menampilkan kamar yang dapat dipilih"]
+    G --> H["Pemilik memilih kamar"]
+    H --> I["Sistem memeriksa status penggunaan kamar berdasarkan penempatan dan periode sewa"]
+
+    I --> J{"Kamar masih ditempati dalam periode sewa yang berlangsung?"}
+
+    J -->|Ya| K["Sistem menolak penghubungan dan menampilkan informasi kamar masih ditempati"]
+    K --> L["Pemilik memilih kamar lain"]
+    L --> M["Sistem menampilkan informasi ketersediaan kamar yang dipilih"]
+    M --> H
+
+    J -->|Tidak| N["Sistem menyimpan hubungan penyewa dengan kamar"]
+    N --> O["Sistem memperbarui status kamar sesuai penempatan dan periode sewa"]
+    O --> P["Sistem menampilkan pemberitahuan bahwa penghubungan berhasil"]
+    P --> Z

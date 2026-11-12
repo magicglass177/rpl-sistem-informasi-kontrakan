@@ -1,0 +1,18 @@
+﻿flowchart TD
+    A([Mulai]) --> B["Pemilik Kontrakan membuka halaman login"]
+    B --> C["Sistem menampilkan formulir login"]
+    C --> D["Pemilik Kontrakan memasukkan kredensial akun"]
+    D --> E{"Data login lengkap?"}
+
+    E -->|Tidak| F["Sistem meminta Pemilik Kontrakan melengkapi formulir"]
+    F --> D
+
+    E -->|Ya| G["Sistem memeriksa kecocokan kredensial"]
+    G --> H{"Kredensial sesuai?"}
+
+    H -->|Tidak| I["Sistem menolak login dan menampilkan pesan kesalahan"]
+    I --> Z([Selesai])
+
+    H -->|Ya| J["Sistem memvalidasi kredensial dan membuat sesi login"]
+    J --> K["Sistem mengarahkan Pemilik Kontrakan ke halaman utama atau dashboard"]
+    K --> Z

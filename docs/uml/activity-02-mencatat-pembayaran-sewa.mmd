@@ -1,0 +1,31 @@
+﻿
+flowchart TD
+    A([Mulai]) --> B["Pemilik membuka menu pembayaran sewa"]
+    B --> C["Sistem menampilkan data penyewa dan informasi periode sewa"]
+    C --> D["Pemilik memilih penyewa"]
+    D --> E["Sistem menampilkan informasi pembayaran penyewa"]
+    E --> F["Pemilik memasukkan tanggal dan jumlah pembayaran"]
+    F --> G{"Data pembayaran lengkap?"}
+
+    G -->|Tidak| H["Sistem meminta Pemilik melengkapi data pembayaran"]
+    H --> F
+
+    G -->|Ya| I{"Jumlah pembayaran valid?"}
+
+    I -->|Tidak| J["Sistem menolak penyimpanan dan menampilkan pesan kesalahan"]
+    J --> Z([Selesai])
+
+    I -->|Ya| K{"Pembayaran dilakukan bertahap?"}
+
+    K -->|Ya| L["Sistem menyimpan pembayaran sebagai catatan pembayaran terpisah"]
+    K -->|Tidak| M["Sistem menyimpan catatan pembayaran"]
+
+    L --> N{"Penyimpanan berhasil?"}
+    M --> N
+
+    N -->|Tidak| O["Sistem menampilkan pemberitahuan kegagalan penyimpanan"]
+    O --> Z
+
+    N -->|Ya| P["Sistem memperbarui informasi pembayaran"]
+    P --> Q["Sistem menampilkan pemberitahuan bahwa pembayaran berhasil dicatat"]
+    Q --> Z
