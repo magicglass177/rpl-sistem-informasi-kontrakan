@@ -1,0 +1,284 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="sA5m5QmS2fe98Tabzms2">
+    <mxGraphModel dx="1839" dy="955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <UserObject label="" mermaidData="{&#xa;  &quot;data&quot;: &quot;usecase-beta\ndirection LR\n\nactor Pemilik(\&quot;Pemilik Kontrakan\&quot;)\n\nsystemBoundary \&quot;Sistem Informasi Pengelolaan Kontrakan\&quot;\n    Login(\&quot;Login\&quot;)\n\n    AddRoom(\&quot;Menambahkan Data Kamar\&quot;)\n    ViewRooms(\&quot;Melihat Daftar Kamar\&quot;)\n    EditRoom(\&quot;Mengubah Data Kamar\&quot;)\n    ViewRoomStatus(\&quot;Melihat Status Ketersediaan Kamar\&quot;)\n\n    AddTenant(\&quot;Menambahkan Data Penyewa\&quot;)\n    EditTenant(\&quot;Mengubah Data Penyewa\&quot;)\n\n    AssignRoom(\&quot;Menghubungkan Penyewa dengan Kamar\&quot;)\n\n    RecordPayment(\&quot;Mencatat Pembayaran Sewa\&quot;)\n    ViewPaymentStatus(\&quot;Melihat Status Pembayaran\&quot;)\n    ViewPaymentHistory(\&quot;Melihat Riwayat Pembayaran\&quot;)\n\n    ManageRentalPeriod(\&quot;Mengelola Periode Sewa\&quot;)\n    ViewDueDate(\&quot;Melihat Tanggal Jatuh Tempo\&quot;)\n    ViewRentalExpiry(\&quot;Melihat Periode Sewa yang Mendekati atau Telah Berakhir\&quot;)\n\n    ViewIncomeReport(\&quot;Melihat Laporan Pendapatan\&quot;)\n    DownloadReport(\&quot;Mengunduh Laporan Pendapatan\&quot;):::optional\nend\n\nPemilik --&gt; Login\n\nPemilik --&gt; AddRoom\nPemilik --&gt; ViewRooms\nPemilik --&gt; EditRoom\nPemilik --&gt; ViewRoomStatus\n\nPemilik --&gt; AddTenant\nPemilik --&gt; EditTenant\n\nPemilik --&gt; AssignRoom\n\nPemilik --&gt; RecordPayment\nPemilik --&gt; ViewPaymentStatus\nPemilik --&gt; ViewPaymentHistory\n\nPemilik --&gt; ManageRentalPeriod\nPemilik --&gt; ViewDueDate\nPemilik --&gt; ViewRentalExpiry\n\nPemilik --&gt; ViewIncomeReport\nPemilik --&gt; DownloadReport\n\nclassDef optional fill:#fff3cd,stroke:#d39e00,stroke-width:2px,color:#664d03&quot;,&#xa;  &quot;config&quot;: null,&#xa;  &quot;version&quot;: &quot;12&quot;&#xa;}" id="knB4R3iLcihwSXuzdTeU-1">
+          <mxCell connectable="0" parent="1" style="group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;" vertex="1">
+            <mxGeometry as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Sistem Informasi&lt;br&gt;Pengelolaan Kontrakan&lt;/div&gt;" mermaidId="n:Sistem_Informasi_Pengelolaan_Kontrakan" mermaidBaseStyle="shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;rounded=0;whiteSpace=nowrap;html=1;container=1;collapsible=0;recursiveResize=0;verticalAlign=top;align=center;spacing=0;fillColor=#FDF4FF;strokeColor=#E879F9;strokeWidth=1;fontFamily=Recursive;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;fontSize=14;fontColor=#000000;spacingTop=-5;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Sistem Informasi&lt;br&gt;Pengelolaan Kontrakan&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-2">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-1" style="shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;rounded=0;whiteSpace=nowrap;html=1;container=1;collapsible=0;recursiveResize=0;verticalAlign=top;align=center;spacing=0;fillColor=#FDF4FF;strokeColor=#E879F9;strokeWidth=1;fontFamily=Recursive;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;fontSize=14;fontColor=#000000;spacingTop=-5;" vertex="1">
+            <mxGeometry height="2059" width="220" x="353" y="30" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Login&lt;/div&gt;" mermaidId="n:Login" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Login&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-3">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="58" width="160" x="24" y="69" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Menambahkan Data&lt;br&gt;Kamar&lt;/div&gt;" mermaidId="n:AddRoom" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Menambahkan Data&lt;br&gt;Kamar&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-4">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="177" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Daftar Kamar&lt;/div&gt;" mermaidId="n:ViewRooms" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Daftar Kamar&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-5">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="58" width="160" x="24" y="303" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengubah Data&lt;br&gt;Kamar&lt;/div&gt;" mermaidId="n:EditRoom" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengubah Data&lt;br&gt;Kamar&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-6">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="411" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Status&lt;br&gt;Ketersediaan Kamar&lt;/div&gt;" mermaidId="n:ViewRoomStatus" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Status&lt;br&gt;Ketersediaan Kamar&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-7">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="537" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Menambahkan Data&lt;br&gt;Penyewa&lt;/div&gt;" mermaidId="n:AddTenant" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Menambahkan Data&lt;br&gt;Penyewa&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-8">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="663" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengubah Data&lt;br&gt;Penyewa&lt;/div&gt;" mermaidId="n:EditTenant" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengubah Data&lt;br&gt;Penyewa&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-9">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="789" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Menghubungkan&lt;br&gt;Penyewa dengan&lt;br&gt;Kamar&lt;/div&gt;" mermaidId="n:AssignRoom" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Menghubungkan&lt;br&gt;Penyewa dengan&lt;br&gt;Kamar&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-10">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="94" width="160" x="24" y="915" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mencatat&lt;br&gt;Pembayaran Sewa&lt;/div&gt;" mermaidId="n:RecordPayment" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mencatat&lt;br&gt;Pembayaran Sewa&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-11">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="1059" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Status&lt;br&gt;Pembayaran&lt;/div&gt;" mermaidId="n:ViewPaymentStatus" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Status&lt;br&gt;Pembayaran&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-12">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="1185" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Riwayat&lt;br&gt;Pembayaran&lt;/div&gt;" mermaidId="n:ViewPaymentHistory" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Riwayat&lt;br&gt;Pembayaran&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-13">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="1311" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengelola Periode&lt;br&gt;Sewa&lt;/div&gt;" mermaidId="n:ManageRentalPeriod" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengelola Periode&lt;br&gt;Sewa&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-14">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="1437" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Tanggal Jatuh&lt;br&gt;Tempo&lt;/div&gt;" mermaidId="n:ViewDueDate" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Tanggal Jatuh&lt;br&gt;Tempo&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-15">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="1563" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Periode Sewa&lt;br&gt;yang Mendekati atau&lt;br&gt;Telah Berakhir&lt;/div&gt;" mermaidId="n:ViewRentalExpiry" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Periode Sewa&lt;br&gt;yang Mendekati atau&lt;br&gt;Telah Berakhir&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-16">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="94" width="160" x="24" y="1689" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Laporan&lt;br&gt;Pendapatan&lt;/div&gt;" mermaidId="n:ViewIncomeReport" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Melihat Laporan&lt;br&gt;Pendapatan&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-17">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#F0FDFA;strokeColor=#2DD4BF;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="1833" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengunduh Laporan&lt;br&gt;Pendapatan&lt;/div&gt;" mermaidId="n:DownloadReport" mermaidBaseStyle="ellipse;whiteSpace=nowrap;html=1;fillColor=#fff3cd;strokeColor=#d39e00;strokeWidth=2;fontFamily=Open Sans,sans-serif;fontSize=12;fontColor=#664d03;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Mengunduh Laporan&lt;br&gt;Pendapatan&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-18">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-2" style="ellipse;whiteSpace=nowrap;html=1;fillColor=#fff3cd;strokeColor=#d39e00;strokeWidth=2;fontFamily=Recursive;fontSize=12;fontColor=#664d03;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="76" width="160" x="24" y="1959" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;Login#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.13175;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-19">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.13175;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-3">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="183" y="1032.94" />
+                <mxPoint x="183" y="128" />
+                <mxPoint x="343" y="128" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;AddRoom#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.18085;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-20">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.18085;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-4">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="203" y="1038.88" />
+                <mxPoint x="203" y="245" />
+                <mxPoint x="343" y="245" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ViewRooms#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.22995;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-21">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.22995;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-5">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="223" y="1044.82" />
+                <mxPoint x="223" y="362" />
+                <mxPoint x="343" y="362" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;EditRoom#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.27905;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-22">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.27905;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-6">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="243" y="1050.76" />
+                <mxPoint x="243" y="479" />
+                <mxPoint x="343" y="479" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ViewRoomStatus#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.32815;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-23">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.32815;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-7">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="263" y="1056.71" />
+                <mxPoint x="263" y="605" />
+                <mxPoint x="343" y="605" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;AddTenant#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.37725;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-24">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.37725;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-8">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="283" y="1062.65" />
+                <mxPoint x="283" y="731" />
+                <mxPoint x="343" y="731" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;EditTenant#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.42635;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-25">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.42635;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-9">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="303" y="1068.59" />
+                <mxPoint x="303" y="857" />
+                <mxPoint x="343" y="857" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;AssignRoom#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.47545;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-26">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.47545;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-10">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="323" y="1074.53" />
+                <mxPoint x="323" y="992" />
+                <mxPoint x="343" y="992" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;RecordPayment#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.52455;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-27">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.52455;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-11">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="323" y="1080.47" />
+                <mxPoint x="323" y="1127" />
+                <mxPoint x="343" y="1127" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ViewPaymentStatus#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.57365;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-28">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.57365;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-12">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="303" y="1086.41" />
+                <mxPoint x="303" y="1253" />
+                <mxPoint x="343" y="1253" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ViewPaymentHistory#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.62275;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-29">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.62275;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-13">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="283" y="1092.35" />
+                <mxPoint x="283" y="1379" />
+                <mxPoint x="343" y="1379" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ManageRentalPeriod#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.67185;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-30">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.67185;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-14">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="263" y="1098.29" />
+                <mxPoint x="263" y="1505" />
+                <mxPoint x="343" y="1505" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ViewDueDate#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.72095;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-31">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.72095;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-15">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="243" y="1104.24" />
+                <mxPoint x="243" y="1631" />
+                <mxPoint x="343" y="1631" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ViewRentalExpiry#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.77005;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-32">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.77005;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-16">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="223" y="1110.18" />
+                <mxPoint x="223" y="1766" />
+                <mxPoint x="343" y="1766" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;ViewIncomeReport#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.81915;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-33">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.81915;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-17">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="203" y="1116.12" />
+                <mxPoint x="203" y="1901" />
+                <mxPoint x="343" y="1901" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Pemilik-&gt;DownloadReport#0" mermaidBaseStyle="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.86825;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" mermaidBaseValue="" id="knB4R3iLcihwSXuzdTeU-34">
+          <mxCell edge="1" parent="knB4R3iLcihwSXuzdTeU-1" source="knB4R3iLcihwSXuzdTeU-35" style="html=1;strokeColor=#000000;strokeWidth=2;startArrow=none;endArrow=block;endSize=8.5;endFill=1;edgeStyle=none;rounded=1;arcSize=10;exitX=1;exitY=0.86825;exitPerimeter=0;entryX=-0.025;entryY=0.5;entryPerimeter=0;" target="knB4R3iLcihwSXuzdTeU-18">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="183" y="1122.06" />
+                <mxPoint x="183" y="2027" />
+                <mxPoint x="343" y="2027" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;line-height:1.5;&quot;&gt;Pemilik Kontrakan&lt;/div&gt;" mermaidId="n:Pemilik" mermaidBaseStyle="rounded=0;whiteSpace=nowrap;html=1;fillColor=none;strokeColor=none;verticalAlign=top;align=center;spacing=0;spacingTop=85;fontFamily=Open Sans,sans-serif;fontSize=14;fontColor=#28253D;" mermaidBaseValue="&lt;div style=&quot;line-height:1.5;&quot;&gt;Pemilik Kontrakan&lt;/div&gt;" id="knB4R3iLcihwSXuzdTeU-35">
+          <mxCell parent="knB4R3iLcihwSXuzdTeU-1" style="rounded=0;whiteSpace=nowrap;html=1;fillColor=none;strokeColor=none;verticalAlign=top;align=center;spacing=0;spacingTop=85;fontFamily=Recursive;fontSize=14;fontColor=#28253D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="121" width="133" x="30" y="1017" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="knB4R3iLcihwSXuzdTeU-36" parent="knB4R3iLcihwSXuzdTeU-35" style="shape=mermaidUsecaseActor;actorType=normal;html=1;connectable=0;fillColor=#F5F3FF;strokeColor=#A78BFA;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="72" width="56" x="38.5" y="10" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
