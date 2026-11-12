@@ -1,0 +1,54 @@
+usecase-beta
+direction LR
+
+actor Pemilik("Pemilik Kontrakan")
+
+systemBoundary "Sistem Informasi Pengelolaan Kontrakan"
+    Login("Login")
+
+    AddRoom("Menambahkan Data Kamar")
+    ViewRooms("Melihat Daftar Kamar")
+    EditRoom("Mengubah Data Kamar")
+    ViewRoomStatus("Melihat Status Ketersediaan Kamar")
+
+    AddTenant("Menambahkan Data Penyewa")
+    EditTenant("Mengubah Data Penyewa")
+
+    AssignRoom("Menghubungkan Penyewa dengan Kamar")
+
+    RecordPayment("Mencatat Pembayaran Sewa")
+    ViewPaymentStatus("Melihat Status Pembayaran")
+    ViewPaymentHistory("Melihat Riwayat Pembayaran")
+
+    ManageRentalPeriod("Mengelola Periode Sewa")
+    ViewDueDate("Melihat Tanggal Jatuh Tempo")
+    ViewRentalExpiry("Melihat Periode Sewa yang Mendekati atau Telah Berakhir")
+
+    ViewIncomeReport("Melihat Laporan Pendapatan")
+    DownloadReport("Mengunduh Laporan Pendapatan"):::optional
+end
+
+Pemilik --> Login
+
+Pemilik --> AddRoom
+Pemilik --> ViewRooms
+Pemilik --> EditRoom
+Pemilik --> ViewRoomStatus
+
+Pemilik --> AddTenant
+Pemilik --> EditTenant
+
+Pemilik --> AssignRoom
+
+Pemilik --> RecordPayment
+Pemilik --> ViewPaymentStatus
+Pemilik --> ViewPaymentHistory
+
+Pemilik --> ManageRentalPeriod
+Pemilik --> ViewDueDate
+Pemilik --> ViewRentalExpiry
+
+Pemilik --> ViewIncomeReport
+Pemilik --> DownloadReport
+
+classDef optional fill:#fff3cd,stroke:#d39e00,stroke-width:2px,color:#664d03
