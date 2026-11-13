@@ -300,3 +300,38 @@ Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek d
 - Git menampilkan peringatan line ending LF/CRLF pada beberapa dokumen.
 
 **Status:** Revisi dokumentasi selesai dan menunggu pemeriksaan akhir sebelum commit.
+
+### Jobsheet 6 — Perancangan ERD, Normalisasi, dan Kamus Data
+
+**Tanggal:** 13 November 2026
+
+**Aktivitas:** Merancang struktur basis data untuk Sistem Informasi Pengelolaan Kontrakan melalui identifikasi entitas, atribut, relasi, ERD, normalisasi, dan kamus data.
+
+**Bantuan AI:**
+- Membantu mengidentifikasi entitas berdasarkan kebutuhan fungsional dan Use Case.
+- Membantu menyusun atribut, primary key, foreign key, serta kardinalitas relasi.
+- Membantu menyusun dan meninjau ERD menggunakan Mermaid.
+- Membantu menjelaskan tahapan normalisasi UNF, 1NF, 2NF, dan 3NF.
+- Membantu menyusun kamus data beserta tipe data, aturan nilai, dan keterkaitan kebutuhan.
+
+**Perubahan yang dilakukan:**
+1. Membuat daftar lima entitas: `akun_pengguna`, `kamar`, `penyewa`, `sewa`, dan `pembayaran`.
+2. Mendefinisikan atribut dan kunci setiap entitas.
+3. Mendokumentasikan tiga relasi 1:N beserta foreign key.
+4. Membuat ERD dalam format Mermaid dan PNG.
+5. Mendokumentasikan proses normalisasi dari UNF hingga 3NF menggunakan data simulasi.
+6. Membuat kamus data untuk lima tabel hasil rancangan.
+7. Mendokumentasikan atribut turunan yang dihitung saat diperlukan dan tidak disimpan sebagai kolom tersendiri.
+
+**Evaluasi dan keputusan:**
+- Entitas `sewa` menghubungkan kamar dan penyewa serta menyimpan periode sewa dan harga sewa yang disepakati.
+- Satu periode sewa dapat memiliki beberapa catatan pembayaran untuk mendukung pembayaran bertahap.
+- Ketersediaan kamar, status pembayaran, dan total pendapatan diperlakukan sebagai nilai turunan.
+- Seluruh contoh data bersifat simulasi akademik dan bukan data dari klien nyata.
+
+**Verifikasi:**
+- Memeriksa konsistensi daftar entitas, atribut, relasi, ERD, hasil normalisasi, dan kamus data.
+- Memeriksa whitespace menggunakan `git diff --check` dan `git diff --cached --check`.
+- Pemeriksaan akhir dan integrasi ke branch `main` belum dilakukan.
+
+**Status:** Dokumen rancangan data telah dibuat dan sedang dalam pemeriksaan akhir sebelum commit.
