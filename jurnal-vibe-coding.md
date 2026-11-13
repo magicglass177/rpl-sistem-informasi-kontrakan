@@ -335,3 +335,41 @@ Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek d
 - Pemeriksaan akhir dan integrasi ke branch `main` belum dilakukan.
 
 **Status:** Dokumen rancangan data telah dibuat dan sedang dalam pemeriksaan akhir sebelum commit.
+
+### Jobsheet 6 — Sesi 2: Skema SQLite dan DDL Manual
+
+**Tanggal:** 13 November 2026
+
+**Aktivitas:** Menyusun DDL secara manual untuk tabel induk `kamar` dan tabel anak `sewa` menggunakan SQLite.
+
+**Bantuan AI:**
+- Membantu menyusun struktur `CREATE TABLE` berdasarkan ERD dan kamus data.
+- Membantu menentukan primary key, foreign key, tipe data, dan constraint.
+- Membantu menyusun skrip pengujian DDL menggunakan modul `sqlite3` bawaan Python.
+- Membantu memeriksa validitas constraint dan konsistensi skema.
+
+**Perubahan yang dilakukan:**
+1. Membuat file `docs/desain/schema.sql`.
+2. Menambahkan `PRAGMA foreign_keys = ON;`.
+3. Membuat tabel `kamar` dengan primary key, `NOT NULL`, `UNIQUE`, dan `CHECK`.
+4. Membuat tabel `sewa` dengan primary key, foreign key ke `kamar` dan `penyewa`, serta constraint validasi periode dan tanggal sewa.
+5. Menetapkan `tanggal_jatuh_tempo` sebagai kolom nullable sesuai prioritas kebutuhan KF-12.
+6. Menggunakan `ON UPDATE CASCADE` dan `ON DELETE RESTRICT` pada relasi foreign key.
+
+**Evaluasi dan keputusan:**
+- Tabel `kamar` dipilih sebagai tabel induk dan `sewa` sebagai tabel anak.
+- Foreign key `sewa.id_penyewa` tetap dicantumkan sesuai ERD, sedangkan tabel `penyewa` dibuat sementara saat pengujian karena Langkah 8 hanya meminta dua tabel.
+- `harga_sewa_disepakati` tetap disimpan sebagai snapshot harga pada saat transaksi sewa dibuat.
+- Pengujian dilakukan menggunakan database sementara di memori sehingga tidak mengubah database proyek.
+
+**Verifikasi:**
+- DDL berhasil dijalankan dan kedua tabel berhasil dibuat.
+- Foreign key berhasil diaktifkan.
+- Data sewa valid berhasil dimasukkan.
+- Constraint `CHECK` harga dan periode sewa berhasil diuji.
+- Constraint `UNIQUE` nomor kamar berhasil diuji.
+- Foreign key `id_kamar` dan `id_penyewa` berhasil diuji.
+- Validasi format tanggal berhasil diuji.
+- Seluruh pengujian tambahan dinyatakan lulus.
+
+**Status:** DDL dua tabel berhasil dibuat dan diuji. Pemeriksaan akhir dokumentasi serta commit masih menunggu penyelesaian.
