@@ -1,0 +1,42 @@
+erDiagram
+    %% RELASI ANTAR ENTITAS
+    kamar ||--o{ sewa : "memiliki riwayat"
+    penyewa ||--o{ sewa : "melakukan"
+    sewa ||--o{ pembayaran : "memiliki"
+
+    %% ATRIBUT ENTITAS
+    akun_pengguna {
+        int id_akun PK
+        varchar username UK
+        varchar password_hash
+    }
+
+    kamar {
+        int id_kamar PK
+        varchar nomor_kamar UK
+        decimal harga_sewa
+    }
+
+    penyewa {
+        int id_penyewa PK
+        varchar nama
+        varchar no_telepon
+        text alamat
+    }
+
+    sewa {
+        int id_sewa PK
+        int id_kamar FK
+        int id_penyewa FK
+        date tanggal_mulai
+        date tanggal_selesai
+        date tanggal_jatuh_tempo
+        decimal harga_sewa_disepakati
+    }
+
+    pembayaran {
+        int id_pembayaran PK
+        int id_sewa FK
+        date tanggal_pembayaran
+        decimal jumlah_bayar
+    }
