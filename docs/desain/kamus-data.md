@@ -31,7 +31,7 @@
 |---|---|---|---|---|---|
 | id_penyewa | INTEGER | Ya | PK | ID otomatis, unik, tidak boleh NULL | KF-06 |
 | nama | VARCHAR(100) | Ya | — | Tidak boleh kosong | KF-06 |
-| no_telepon | VARCHAR(20) | Ya | — | Harus mengikuti format nomor telepon yang valid | KF-06 |
+| no_telepon | VARCHAR(20) | Ya | — | Harus diawali `08` (10–13 digit) atau `+628` (12–15 karakter); selain tanda `+` pada awalan internasional, seluruh karakter harus berupa angka | KF-06 |
 | alamat | TEXT | Ya | — | Tidak boleh kosong | KF-06 |
 
 **Keterangan:** Nomor telepon tidak ditetapkan unik karena kebutuhan proyek belum menetapkan bahwa satu nomor hanya boleh digunakan oleh satu penyewa.

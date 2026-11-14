@@ -24,7 +24,19 @@ CREATE TABLE IF NOT EXISTS penyewa (
     nama TEXT NOT NULL
         CHECK (length(trim(nama)) BETWEEN 1 AND 100),
     no_telepon TEXT NOT NULL
-        CHECK (length(trim(no_telepon)) BETWEEN 1 AND 20),
+        CHECK (
+            (
+                length(trim(no_telepon)) BETWEEN 10 AND 13
+                AND substr(trim(no_telepon), 1, 2) = '08'
+                AND trim(no_telepon) NOT GLOB '*[^0-9]*'
+            )
+            OR
+            (
+                length(trim(no_telepon)) BETWEEN 12 AND 15
+                AND substr(trim(no_telepon), 1, 4) = '+628'
+                AND substr(trim(no_telepon), 2) NOT GLOB '*[^0-9]*'
+            )
+        ),
     alamat TEXT NOT NULL
         CHECK (length(trim(alamat)) > 0)
 );

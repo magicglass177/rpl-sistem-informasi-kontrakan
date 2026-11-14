@@ -373,3 +373,8 @@ Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek d
 - Seluruh pengujian tambahan dinyatakan lulus.
 
 **Status:** DDL dua tabel berhasil dibuat dan diuji. Pemeriksaan akhir dokumentasi serta commit masih menunggu penyelesaian.
+
+
+### Catatan Jobsheet 11 — Validasi Nomor Telepon
+
+Kesalahan AI yang paling sering muncul adalah membuat aturan validasi terlalu umum sehingga tidak sepenuhnya sesuai dengan format data yang telah ditetapkan.
