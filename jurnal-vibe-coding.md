@@ -378,3 +378,40 @@ Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek d
 ### Catatan Jobsheet 11 — Validasi Nomor Telepon
 
 Kesalahan AI yang paling sering muncul adalah membuat aturan validasi terlalu umum sehingga tidak sepenuhnya sesuai dengan format data yang telah ditetapkan.
+
+### Jobsheet Langkah 12 — Perancangan Arsitektur Sistem
+
+**Tanggal:** 14 November 2026
+
+**Aktivitas:** Merancang arsitektur aplikasi dan mendokumentasikan struktur folder serta tanggung jawab setiap lapisan sistem.
+
+**Bantuan AI:**
+- Membantu menyusun diagram arsitektur menggunakan Mermaid.
+- Membantu menjelaskan tanggung jawab browser, routes/controller, services, models, database, templates, dan static files.
+- Membantu menyusun struktur folder proyek berdasarkan kebutuhan aplikasi.
+- Membantu menentukan urutan rencana pengembangan modul berdasarkan Product Backlog Sprint 1.
+
+**Perubahan yang dilakukan:**
+1. Membuat `docs/desain/arsitektur.md`.
+2. Membuat diagram arsitektur menggunakan Mermaid.
+3. Mendokumentasikan tanggung jawab setiap lapisan aplikasi.
+4. Mendokumentasikan struktur folder dan tanggung jawab file.
+5. Menetapkan rancangan aturan bahwa hanya `models.py` yang boleh mengakses SQLite secara langsung.
+6. Menyusun rencana urutan pengembangan Sprint 1 berdasarkan Product Backlog.
+7. Memperbarui `aturan-proyek.md` agar sesuai dengan rancangan arsitektur dan aturan akses database.
+8. Menambahkan petunjuk untuk menjalankan dan memverifikasi skema SQL.
+
+**Evaluasi dan keputusan:**
+- Arsitektur berlapis dipilih untuk memisahkan pengelolaan request, proses bisnis, akses data, dan tampilan.
+- `models.py` ditetapkan sebagai satu-satunya lapisan yang mengakses SQLite secara langsung.
+- Urutan pengembangan modul Sprint 1 merupakan rencana berdasarkan Product Backlog, bukan pernyataan bahwa seluruh modul sudah diimplementasikan.
+- Struktur folder yang didokumentasikan masih berupa rancangan karena implementasi aplikasi Flask belum tersedia.
+
+**Verifikasi:**
+- Memeriksa keberadaan dan isi `docs/desain/arsitektur.md`.
+- Memeriksa diagram Mermaid dan struktur folder.
+- Memeriksa konsistensi aturan akses database pada `aturan-proyek.md`.
+- Menjalankan pemeriksaan whitespace menggunakan `git diff --check`.
+- Menjalankan `schema.sql` pada database sementara SQLite di memori dan memastikan eksekusinya berhasil.
+
+**Status:** Dokumentasi rancangan arsitektur telah dibuat dan pemeriksaan skema SQL berhasil. Pemeriksaan akhir dan integrasi melalui Git masih menunggu penyelesaian.

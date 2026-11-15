@@ -30,14 +30,26 @@ Struktur folder aplikasi yang direncanakan:
 ```text
 rpl-sistem-informasi-kontrakan/
 ├── app.py
+├── routes.py
+├── services.py
+├── models.py
 ├── templates/
 ├── static/
+│   ├── css/
+│   ├── js/
+│   └── img/
 ├── tests/
 ├── docs/
 │   ├── elisitasi/
 │   │   ├── catatan-wawancara.md
 │   │   ├── pedoman-wawancara.md
 │   │   └── user-story.md
+│   ├── desain/
+│   │   ├── schema.sql
+│   │   ├── erd.mmd
+│   │   ├── erd.png
+│   │   ├── kamus-data.md
+│   │   └── arsitektur.md
 │   ├── kesepakatan-tim.md
 │   ├── product-backlog.md
 │   └── srs.md
@@ -52,6 +64,9 @@ rpl-sistem-informasi-kontrakan/
 Ketentuan:
 
 - `app.py` berisi konfigurasi dan kode utama aplikasi Flask.
+- `routes.py` menangani routing dan request pengguna.
+- `services.py` menjalankan logika bisnis aplikasi.
+- `models.py` menangani akses data dan menjadi satu-satunya lapisan yang mengakses SQLite secara langsung.
 - `templates/` menyimpan berkas template HTML.
 - `static/` menyimpan CSS, JavaScript, dan aset statis.
 - `tests/` menyimpan berkas pengujian otomatis.
@@ -105,6 +120,17 @@ AI digunakan sebagai alat bantu pengembangan dengan ketentuan:
 - Informasi rahasia harus dikelola melalui konfigurasi lingkungan yang aman.
 - Perubahan hanya boleh dilakukan pada berkas yang relevan dengan tugas.
 - Penambahan dependensi harus mendapat persetujuan terlebih dahulu.
+
+### Aturan Arsitektur dan Akses Database
+
+- Aplikasi menggunakan arsitektur berlapis yang memisahkan routes/controller, services, models, dan templates.
+- `routes.py` bertanggung jawab menangani request dan response.
+- `services.py` bertanggung jawab menjalankan logika bisnis.
+- `models.py` menjadi satu-satunya lapisan yang boleh mengakses SQLite secara langsung.
+- Lapisan lain harus mengakses data melalui fungsi atau metode yang disediakan oleh `models.py`.
+- `templates/` digunakan untuk menyajikan antarmuka HTML.
+- `static/` digunakan untuk menyimpan CSS, JavaScript, dan gambar.
+- Struktur tersebut merupakan rancangan arsitektur dan akan diterapkan secara bertahap selama implementasi.
 
 ## 7. Aturan Pengujian
 
@@ -202,3 +228,11 @@ Catatan:
 - Python 3.14 menjadi versi yang diutamakan.
 - Jika Python 3.14 tidak tersedia, gunakan Python versi 3.10 atau lebih baru yang kompatibel dengan Flask.
 - Sesuaikan perintah pembuatan virtual environment dengan versi Python yang terpasang.
+
+### Menjalankan dan Memverifikasi Skema Database
+
+Untuk menjalankan dan memverifikasi struktur database berdasarkan file SQL menggunakan database sementara di memori:
+
+```powershell
+python -c "import sqlite3; from pathlib import Path; db=sqlite3.connect(':memory:'); db.executescript(Path('docs/desain/schema.sql').read_text(encoding='utf-8-sig')); print('Skema database berhasil dijalankan.'); db.close()"
+```
