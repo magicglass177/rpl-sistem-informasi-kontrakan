@@ -314,3 +314,62 @@ Pendapatan dihitung berdasarkan tanggal pembayaran diterima. Informasi masa sewa
 - Aturan penghapusan kamar yang memiliki riwayat penyewaan.
 
 **Catatan:** Seluruh tanggapan dan perubahan pada bagian ini merupakan hasil simulasi untuk keperluan latihan Jobsheet. Tidak ada konfirmasi atau persetujuan dari klien nyata.
+
+### Simulasi Konfirmasi Aturan Data — PT dan BM
+
+**Tanggal:** 15 November 2026
+**Metode:** Simulasi konfirmasi aturan data
+**Narasumber:** PT dan BM (narasumber fiktif)
+**Status:** Simulasi akademik, bukan hasil konfirmasi klien nyata.
+
+#### A. Daftar Pertanyaan dan Hasil Simulasi
+
+| No. | Pertanyaan | Hasil Simulasi | Status |
+|---|---|---|---|
+| 1 | Apakah satu kamar boleh disewakan kepada dua penyewa pada waktu yang sama? | Tidak. Satu kamar hanya boleh memiliki satu penyewa dalam periode yang sama. | Terjawab dalam simulasi |
+| 2 | Apakah harga sewa boleh berbeda sesuai kesepakatan dengan penyewa? | Boleh. Harga sewa yang disepakati dicatat pada transaksi penyewaan. | Usulan simulasi |
+| 3 | Jika harga kamar berubah, apakah harga sewa penyewa lama tetap mengikuti kesepakatan awal? | Ya. Harga yang sudah disepakati tetap menjadi catatan pada transaksi sewa tersebut. | Sesuai rancangan |
+| 4 | Apakah penyewa boleh membayar uang sewa secara bertahap? | Boleh. Setiap pembayaran dicatat sebagai transaksi tersendiri. | Terjawab dalam simulasi sebelumnya |
+| 5 | Bagaimana jika penyewa membayar lebih besar daripada sisa tagihannya? | Aturan kelebihan pembayaran belum ditentukan. | Belum diputuskan |
+| 6 | Apakah catatan pembayaran yang sudah tersimpan boleh diubah atau dihapus? | Perlu aturan khusus agar riwayat transaksi tidak hilang. | Belum diputuskan |
+| 7 | Apakah data penyewa yang sudah memiliki riwayat sewa boleh dihapus? | Tidak. Data penyewa tetap dipertahankan jika masih memiliki riwayat transaksi. | Terjawab dalam simulasi sebelumnya |
+| 8 | Apakah kamar yang pernah disewakan boleh dihapus? | Perlu dipastikan lebih lanjut. Rancangan saat ini membatasi penghapusan kamar yang memiliki riwayat sewa. | Perlu konfirmasi |
+| 9 | Berapa lama data penyewa dan pembayaran harus disimpan? | Jangka waktu penyimpanan belum ditentukan. | Belum diputuskan |
+| 10 | Apakah satu nomor telepon boleh digunakan oleh beberapa penyewa? | Belum ada keputusan apakah nomor telepon harus unik. | Belum diputuskan |
+| 11 | Apakah tanggal jatuh tempo wajib diisi untuk setiap penyewaan? | Tanggal jatuh tempo tetap bersifat opsional sesuai rancangan KF-12. | Sesuai rancangan |
+| 12 | Kapan pembayaran dianggap terlambat? | Aturan rinci perhitungan keterlambatan masih perlu ditentukan. | Belum diputuskan |
+
+#### B. Ringkasan Aturan Data
+
+Berdasarkan simulasi, aturan data yang dipertahankan atau diperjelas adalah:
+
+1. Nomor kamar harus unik.
+2. Satu kamar tidak boleh memiliki periode sewa yang bertumpang tindih.
+3. Harga sewa yang disepakati disimpan pada setiap transaksi sewa.
+4. Pembayaran dapat dilakukan secara bertahap dan dicatat secara terpisah.
+5. Data penyewa yang memiliki riwayat sewa tidak boleh dihapus.
+6. Penghapusan data yang memiliki hubungan dengan riwayat transaksi harus dibatasi.
+7. Tanggal jatuh tempo tetap boleh kosong sesuai prioritas KF-12.
+
+#### C. Pertanyaan yang Masih Terbuka
+
+1. Bagaimana menangani pembayaran yang melebihi sisa tagihan?
+2. Siapa yang boleh mengubah atau menghapus catatan pembayaran?
+3. Berapa lama data penyewa, sewa, dan pembayaran harus disimpan?
+4. Apakah nomor telepon boleh digunakan oleh beberapa penyewa?
+5. Bagaimana aturan penghapusan kamar yang memiliki riwayat penyewaan?
+6. Bagaimana menentukan batas keterlambatan pembayaran?
+
+Pertanyaan tersebut belum boleh dianggap sebagai keputusan final dan perlu dikonfirmasi kembali apabila proyek melibatkan klien nyata.
+
+#### D. Catatan Perubahan Kamus Data
+
+- `kamar.nomor_kamar`: mempertahankan batasan UNIQUE.
+- `sewa.harga_sewa_disepakati`: memperjelas fungsi sebagai penyimpanan harga berdasarkan kesepakatan pada saat transaksi.
+- `sewa.id_kamar`, `tanggal_mulai`, dan `tanggal_selesai`: mempertahankan aturan pencegahan periode sewa bertumpang tindih.
+- `pembayaran.jumlah_bayar`: mempertahankan aturan nilai harus lebih besar dari nol dan mendukung pembayaran bertahap.
+- `penyewa.no_telepon`: tetap tidak menggunakan UNIQUE karena aturan penggunaan nomor bersama belum diputuskan.
+- Penghapusan data: mempertahankan perlindungan foreign key terhadap data yang memiliki riwayat transaksi.
+- Masa retensi data: belum ditetapkan dan belum membutuhkan kolom baru.
+
+**Catatan akhir:** Seluruh jawaban pada bagian ini merupakan simulasi untuk keperluan Jobsheet. Tidak ada wawancara atau persetujuan dari klien nyata.

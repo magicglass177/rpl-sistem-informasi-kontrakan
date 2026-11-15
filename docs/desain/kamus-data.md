@@ -1,4 +1,4 @@
-﻿# Kamus Data
+# Kamus Data
 
 ## Sistem Informasi Pengelolaan Kontrakan
 
@@ -105,3 +105,42 @@ Seluruh primary key, foreign key, dan unique key mengikuti rancangan ERD. Atribu
 ## 9. Catatan
 
 Dokumen ini merupakan rancangan akademik. Tipe data, panjang karakter, serta batasan nilai dapat disesuaikan saat implementasi SQLite, selama tidak mengubah kebutuhan fungsional dan integritas data.
+
+## 10. Hasil Konfirmasi Aturan Data
+
+**Status:** Hasil simulasi dengan narasumber fiktif PT dan BM.
+**Tanggal:** 15 November 2026.
+
+Bagian ini menjelaskan kolom dan batasan yang berkaitan dengan hasil simulasi konfirmasi aturan data.
+
+| Tabel | Kolom | Aturan / Penjelasan | Status |
+|---|---|---|---|
+| `kamar` | `nomor_kamar` | Nomor kamar harus unik dan tidak boleh kosong. | Dikonfirmasi dalam simulasi sebelumnya |
+| `kamar` | `harga_sewa` | Menyimpan harga acuan kamar dan tidak boleh negatif. | Aturan dipertahankan |
+| `sewa` | `harga_sewa_disepakati` | Menyimpan harga yang disepakati dengan penyewa ketika transaksi sewa dibuat. Perubahan harga kamar tidak mengubah catatan transaksi sebelumnya. | Usulan simulasi; belum menjadi keputusan final |
+| `sewa` | `id_kamar`, `tanggal_mulai`, `tanggal_selesai` | Periode sewa pada kamar yang sama tidak boleh bertumpang tindih. | Dikonfirmasi dalam simulasi sebelumnya |
+| `sewa` | `tanggal_jatuh_tempo` | Boleh bernilai NULL sesuai prioritas KF-12. | Aturan dipertahankan |
+| `pembayaran` | `jumlah_bayar` | Harus lebih besar dari nol. Pembayaran bertahap dicatat sebagai beberapa baris pembayaran. | Dikonfirmasi dalam simulasi sebelumnya |
+| `pembayaran` | `id_sewa` | Harus mengacu pada transaksi sewa yang tersedia. Riwayat pembayaran dilindungi dari penghapusan data induk. | Aturan dipertahankan |
+| `penyewa` | `no_telepon` | Harus mengikuti format nomor telepon yang valid. Belum ditetapkan sebagai UNIQUE. | Aturan dipertahankan; keunikan belum diputuskan |
+
+### 10.1 Aturan yang Belum Diputuskan
+
+Beberapa aturan belum memiliki keputusan final:
+
+1. Batas maksimal pembayaran dan penanganan kelebihan pembayaran.
+2. Hak akses untuk mengubah atau menghapus catatan pembayaran.
+3. Jangka waktu penyimpanan data penyewa, sewa, dan pembayaran.
+4. Keunikan nomor telepon penyewa.
+5. Penghapusan kamar yang memiliki riwayat sewa.
+6. Perhitungan status keterlambatan pembayaran.
+
+Aturan tersebut tidak ditambahkan sebagai constraint baru sebelum memperoleh keputusan yang jelas.
+
+### 10.2 Ringkasan Perubahan
+
+Berdasarkan hasil simulasi, tidak ada kolom baru yang wajib ditambahkan pada lima tabel yang sudah dirancang.
+
+Perubahan utama berupa penegasan aturan pada `harga_sewa_disepakati`, aturan periode sewa, pembayaran bertahap, dan perlindungan riwayat transaksi.
+
+**Catatan:** Hasil ini merupakan dokumentasi simulasi akademik, bukan persetujuan klien nyata.
