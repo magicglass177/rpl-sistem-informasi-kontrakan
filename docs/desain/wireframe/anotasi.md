@@ -1,4 +1,4 @@
-# Anotasi Wireframe
+﻿# Anotasi Wireframe
 ## Sistem Informasi Pengelolaan Kontrakan
 
 **Dokumen:** Anotasi dan Penerapan Prinsip Antarmuka
@@ -106,10 +106,13 @@ Nomor anotasi pada gambar dimulai kembali dari 01 untuk setiap halaman.
 | No. | Elemen | Data / Aksi | Aturan / Pesan | Prinsip |
 |---|---|---|---|---|
 | 01 | Periode Sewa | Memilih periode sewa yang dibayar | Wajib dipilih dari data yang tersedia. | Pencegahan galat |
-| 02 | Tanggal Pembayaran | Memasukkan tanggal penerimaan uang | Wajib diisi dengan tanggal valid. | Pencegahan galat |
-| 03 | Jumlah Bayar | Memasukkan nominal uang yang diterima | Wajib berupa angka lebih dari 0. Pembayaran bertahap diperbolehkan. | Pencegahan galat |
-| 04 | Pesan validasi | Menampilkan kesalahan input atau penyimpanan | Pesan: Lengkapi tanggal atau jumlah / Jumlah pembayaran tidak valid / Pencatatan pembayaran belum berhasil. | Umpan balik |
-| 05 | Simpan Pembayaran dan Batal | Menyimpan atau membatalkan transaksi | Setiap pembayaran disimpan sebagai catatan terpisah. | Konsistensi |
+| 02 | Harga Sewa Disepakati | Melihat total kewajiban pembayaran periode sewa | Ditampilkan sebagai informasi baca-saja berdasarkan data periode sewa. | Keterbacaan |
+| 03 | Total Pembayaran Diterima | Melihat akumulasi pembayaran yang sudah diterima untuk periode sewa terpilih | Dihitung dari seluruh catatan pembayaran terkait. | Keterbacaan |
+| 04 | Sisa Pembayaran | Melihat selisih kewajiban dan total pembayaran diterima | Dihitung dari harga sewa disepakati dikurangi total pembayaran diterima. Penanganan kelebihan pembayaran belum ditetapkan. | Keterbacaan |
+| 05 | Tanggal Pembayaran | Memasukkan tanggal penerimaan uang | Wajib diisi dengan tanggal valid. | Pencegahan galat |
+| 06 | Jumlah Bayar | Memasukkan nominal uang yang diterima | Wajib berupa angka lebih dari 0. Pembayaran bertahap diperbolehkan. | Pencegahan galat |
+| 07 | Pesan validasi | Menampilkan kesalahan input atau penyimpanan | Pesan: Lengkapi tanggal atau jumlah / Jumlah pembayaran tidak valid / Pencatatan pembayaran belum berhasil. | Umpan balik |
+| 08 | Simpan Pembayaran dan Batal | Menyimpan atau membatalkan transaksi | Setiap pembayaran disimpan sebagai catatan terpisah. | Konsistensi |
 
 ### WF-11 — Laporan Pendapatan
 

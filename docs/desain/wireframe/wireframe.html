@@ -80,7 +80,7 @@ const pages = {
                 <p class="muted">Masukkan informasi kamar kontrakan.</p>
                 <div class="form-group"><label><span class="annotation-number">01</span> Nomor Kamar</label><input placeholder="Contoh: A-01"></div>
                 <div class="form-group"><label><span class="annotation-number">02</span> Harga Sewa (Rp)</label><input type="number" placeholder="Masukkan harga sewa"></div>
-                <div class="alert error">Pesan: Nomor kamar sudah digunakan. Gunakan nomor kamar lain. Lengkapi semua data wajib. Data kamar tidak valid. Periksa kembali isian Anda.</div>
+                <div class="alert error"><span class="annotation-number">07</span> Pesan: Nomor kamar sudah digunakan. Gunakan nomor kamar lain. Lengkapi semua data wajib. Data kamar tidak valid. Periksa kembali isian Anda.</div>
                 <div class="actions"><button class="btn primary"><span class="annotation-number">03</span> Simpan</button><button class="btn">Batal</button></div>
             </section>`
     },
@@ -109,7 +109,7 @@ const pages = {
                 <div class="form-group"><label><span class="annotation-number">01</span> Nama Penyewa</label><input placeholder="Masukkan nama lengkap"></div>
                 <div class="form-group"><label><span class="annotation-number">02</span> Nomor Telepon</label><input placeholder="Contoh: 081234567890"></div>
                 <div class="form-group"><label><span class="annotation-number">03</span> Alamat</label><textarea placeholder="Masukkan alamat lengkap"></textarea></div>
-                <div class="alert error">Pesan: Lengkapi semua data wajib. Format data tidak valid. Periksa kembali nama atau nomor telepon. Data penyewa belum berhasil disimpan. Silakan coba kembali.</div>
+                <div class="alert error"><span class="annotation-number">07</span> Pesan: Lengkapi semua data wajib. Format data tidak valid. Periksa kembali nama atau nomor telepon. Data penyewa belum berhasil disimpan. Silakan coba kembali.</div>
                 <div class="actions"><button class="btn primary">Simpan</button><button class="btn">Batal</button></div>
             </section>`
     },
@@ -141,7 +141,7 @@ const pages = {
                 </div>
                 <div class="form-group"><label><span class="annotation-number">04</span> Tanggal Jatuh Tempo (Opsional)</label><input type="date"></div>
                 <div class="form-group"><label><span class="annotation-number">05</span> Harga Sewa Disepakati (Rp)</label><input type="number" placeholder="Masukkan harga sewa"></div>
-                <div class="alert error">Pesan: Lengkapi tanggal mulai dan tanggal berakhir. Tanggal periode sewa tidak valid. Periksa kembali tanggal yang dipilih. Kamar masih ditempati pada periode tersebut. Silakan pilih kamar lain. Gagal menyimpan periode sewa. Kamar sudah memiliki periode sewa lain yang bertumpang tindih dengan tanggal yang dipilih. Data penyewa atau kamar tidak ditemukan. Muat ulang data dan coba kembali. Periode sewa belum berhasil disimpan. Silakan coba kembali.</div>
+                <div class="alert error"><span class="annotation-number">07</span> Pesan: Lengkapi tanggal mulai dan tanggal berakhir. Tanggal periode sewa tidak valid. Periksa kembali tanggal yang dipilih. Kamar masih ditempati pada periode tersebut. Silakan pilih kamar lain. Gagal menyimpan periode sewa. Kamar sudah memiliki periode sewa lain yang bertumpang tindih dengan tanggal yang dipilih. Data penyewa atau kamar tidak ditemukan. Muat ulang data dan coba kembali. Periode sewa belum berhasil disimpan. Silakan coba kembali.</div>
                 <div class="actions"><button class="btn primary"><span class="annotation-number">06</span> Simpan</button><button class="btn">Batal</button></div>
             </section>`
     },
@@ -166,11 +166,54 @@ const pages = {
             <section class="panel form-panel">
                 <h3>Form Pencatatan Pembayaran</h3>
                 <p class="muted">Catat pembayaran berdasarkan periode sewa.</p>
-                <div class="form-group"><label><span class="annotation-number">01</span> Periode Sewa</label><select><option>-- Pilih Periode Sewa --</option><option>Andi Saputra - Kamar A-01</option><option>Siti Aminah - Kamar A-03</option></select></div>
-                <div class="form-group"><label><span class="annotation-number">02</span> Tanggal Pembayaran</label><input type="date"></div>
-                <div class="form-group"><label><span class="annotation-number">03</span> Jumlah Bayar (Rp)</label><input type="number" placeholder="Masukkan jumlah pembayaran"></div>
-                <div class="alert error">Pesan: Lengkapi tanggal dan jumlah pembayaran. Jumlah pembayaran tidak valid. Masukkan angka lebih dari 0. Pembayaran belum berhasil dicatat. Silakan coba kembali. Pembayaran bertahap diperbolehkan.</div>
-                <div class="actions"><button class="btn primary"><span class="annotation-number">04</span> Simpan Pembayaran</button><button class="btn">Batal</button></div>
+
+                <div class="form-group">
+                    <label><span class="annotation-number">01</span> Periode Sewa</label>
+                    <select>
+                        <option>-- Pilih Periode Sewa --</option>
+                        <option selected>Andi Saputra - Kamar A-01</option>
+                        <option>Siti Aminah - Kamar A-03</option>
+                    </select>
+                </div>
+
+                <div class="payment-summary">
+                    <h4>Ringkasan Pembayaran</h4>
+                    <div class="payment-summary-grid">
+                        <div class="payment-summary-item">
+                            <span class="annotation-number">02</span>
+                            <small>Harga Sewa Disepakati</small>
+                            <strong>Rp800.000</strong>
+                        </div>
+                        <div class="payment-summary-item">
+                            <span class="annotation-number">03</span>
+                            <small>Total Pembayaran Diterima</small>
+                            <strong>Rp300.000</strong>
+                        </div>
+                        <div class="payment-summary-item">
+                            <span class="annotation-number">04</span>
+                            <small>Sisa Pembayaran</small>
+                            <strong>Rp500.000</strong>
+                        </div>
+                    </div>
+                    <p class="muted summary-note">Informasi dihitung berdasarkan periode sewa dan seluruh catatan pembayaran terkait.</p>
+                </div>
+
+                <div class="form-group">
+                    <label><span class="annotation-number">05</span> Tanggal Pembayaran</label>
+                    <input type="date">
+                </div>
+
+                <div class="form-group">
+                    <label><span class="annotation-number">06</span> Jumlah Bayar (Rp)</label>
+                    <input type="number" placeholder="Masukkan jumlah pembayaran">
+                </div>
+
+                <div class="alert error"><span class="annotation-number">07</span> Pesan: Lengkapi tanggal dan jumlah pembayaran. Jumlah pembayaran tidak valid. Masukkan angka lebih dari 0. Pembayaran belum berhasil dicatat. Silakan coba kembali. Pembayaran bertahap diperbolehkan.</div>
+
+                <div class="actions">
+                    <button class="btn primary"><span class="annotation-number">08</span> Simpan Pembayaran</button>
+                    <button class="btn">Batal</button>
+                </div>
             </section>`
     },
     "11": {
@@ -235,6 +278,3 @@ if (id === "01") {
 </script>
 </body>
 </html>
-
-
-

@@ -419,3 +419,54 @@ footer {
     font-weight: bold;
     vertical-align: middle;
 }
+
+/* Ringkasan pembayaran WF-10 */
+.payment-summary {
+    border: 2px solid #333333;
+    padding: 16px;
+    margin: 20px 0;
+    background: #ffffff;
+}
+
+.payment-summary h4 {
+    margin: 0 0 14px;
+    font-size: 14px;
+}
+
+.payment-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.payment-summary-item {
+    border: 1px solid #555555;
+    padding: 12px;
+    min-width: 0;
+}
+
+.payment-summary-item small {
+    display: block;
+    margin: 8px 0;
+    line-height: 1.5;
+    color: #333333;
+}
+
+.payment-summary-item strong {
+    display: block;
+    font-size: 17px;
+    color: #111111;
+    overflow-wrap: anywhere;
+}
+
+.payment-summary .summary-note {
+    margin-top: 12px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .payment-summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
