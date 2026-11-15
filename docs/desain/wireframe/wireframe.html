@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe Sistem Informasi Pengelolaan Kontrakan</title>
+    <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const pages = {
+    "01": {
+        title: "Login",
+        content: `
+            <div class="login-card">
+                <div class="login-icon">[LOGO]</div>
+                <h1>SISTEM INFORMASI<br>PENGELOLAAN KONTRAKAN</h1>
+                <p class="muted">Silakan masuk untuk melanjutkan</p>
+                <div class="form-group">
+                    <label><span class="annotation-number">01</span> Username</label>
+                    <input placeholder="Masukkan username">
+                </div>
+                <div class="form-group">
+                    <label><span class="annotation-number">02</span> Password</label>
+                    <input type="password" placeholder="Masukkan password">
+                </div>
+                <button class="btn primary full"><span class="annotation-number">03</span> Login</button>
+                <div class="alert error">Username atau password tidak sesuai. Pesan jika isian kosong: Lengkapi username dan password.</div>
+            </div>`
+    },
+    "02": {
+        title: "Dashboard",
+        content: `
+            <div class="stats"><span class="annotation-number">01</span> Ringkasan informasi kontrakan
+                <div class="stat"><span>Total Kamar</span><strong>24</strong><small>Seluruh kamar</small></div>
+                <div class="stat"><span>Kamar Tersedia</span><strong>8</strong><small>Belum ditempati</small></div>
+                <div class="stat"><span>Kamar Terisi</span><strong>16</strong><small>Sedang disewa</small></div>
+                <div class="stat"><span>Total Pendapatan</span><strong>Rp12.500.000</strong><small>Periode berjalan</small></div>
+            </div>
+            <div class="grid-two">
+                <section class="panel">
+                    <h3><span class="annotation-number">02</span> Ringkasan Pembayaran</h3>
+                    <div class="summary-row"><span>Pembayaran Lunas</span><b>12</b></div>
+                    <div class="summary-row"><span>Belum Lunas</span><b>4</b></div>
+                    <div class="summary-row"><span>Terlambat</span><b>2</b></div>
+                </section>
+                <section class="panel">
+                    <h3><span class="annotation-number">03</span> Periode Sewa Mendekati Akhir</h3>
+                    <div class="summary-row"><span>Kamar A-01</span><span>20 Nov 2026</span></div>
+                    <div class="summary-row"><span>Kamar A-03</span><span>25 Nov 2026</span></div>
+                    <div class="summary-row"><span>Kamar B-02</span><span>28 Nov 2026</span></div>
+                </section>
+            </div>
+            <div class="alert info">Informasi: Terdapat periode sewa yang mendekati tanggal berakhir. Periksa daftar periode sewa.</div>`
+    },
+    "03": {
+        title: "Daftar Kamar",
+        content: `
+            <div class="toolbar"><p>Kelola data kamar kontrakan.</p><button class="btn primary"><span class="annotation-number">01</span> + Tambah Kamar</button></div>
+            <section class="panel">
+                <div class="table-tools"><span class="annotation-number">02</span><input placeholder="Cari nomor kamar..."><button class="btn">Cari</button></div>
+                <table><thead><tr><th><span class="annotation-number">03</span> No.</th><th>Nomor Kamar</th><th>Harga Sewa</th><th>Status Ketersediaan</th><th>Aksi</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td>A-01</td><td>Rp800.000</td><td><span class="status occupied">Terisi</span></td><td><button class="btn small">Edit</button></td></tr>
+                <tr><td>2</td><td>A-02</td><td>Rp800.000</td><td><span class="status available">Tersedia</span></td><td><button class="btn small">Edit</button></td></tr>
+                <tr><td>3</td><td>A-03</td><td>Rp900.000</td><td><span class="status occupied">Terisi</span></td><td><button class="btn small">Edit</button></td></tr>
+                <tr><td>4</td><td>B-01</td><td>Rp750.000</td><td><span class="status available">Tersedia</span></td><td><button class="btn small">Edit</button></td></tr>
+                </tbody></table>
+                <div class="pagination">Menampilkan 1–4 dari 24 data <span>‹ &nbsp; 1 &nbsp; 2 &nbsp; 3 &nbsp; ›</span></div>
+            </section>
+            <div class="alert info">Berhasil: Data kamar berhasil ditambahkan. Gagal: Nomor kamar sudah digunakan. Lengkapi semua data wajib. Data kamar tidak valid.</div>`
+    },
+    "04": {
+        title: "Form Kamar",
+        content: `
+            <section class="panel form-panel">
+                <h3>Form Data Kamar</h3>
+                <p class="muted">Masukkan informasi kamar kontrakan.</p>
+                <div class="form-group"><label><span class="annotation-number">01</span> Nomor Kamar</label><input placeholder="Contoh: A-01"></div>
+                <div class="form-group"><label><span class="annotation-number">02</span> Harga Sewa (Rp)</label><input type="number" placeholder="Masukkan harga sewa"></div>
+                <div class="alert error">Pesan: Nomor kamar sudah digunakan. Gunakan nomor kamar lain. Lengkapi semua data wajib. Data kamar tidak valid. Periksa kembali isian Anda.</div>
+                <div class="actions"><button class="btn primary"><span class="annotation-number">03</span> Simpan</button><button class="btn">Batal</button></div>
+            </section>`
+    },
+    "05": {
+        title: "Daftar Penyewa",
+        content: `
+            <div class="toolbar"><p>Kelola informasi penyewa kontrakan.</p><button class="btn primary"><span class="annotation-number">01</span> + Tambah Penyewa</button></div>
+            <section class="panel">
+                <div class="table-tools"><span class="annotation-number">02</span><input placeholder="Cari nama penyewa..."><button class="btn">Cari</button></div>
+                <table><thead><tr><th><span class="annotation-number">03</span> No.</th><th>Nama Penyewa</th><th>No. Telepon</th><th>Alamat</th><th>Aksi</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td>Andi Saputra</td><td>081234567890</td><td>Jl. Merdeka</td><td><button class="btn small">Edit</button></td></tr>
+                <tr><td>2</td><td>Siti Aminah</td><td>082345678901</td><td>Jl. Mawar</td><td><button class="btn small">Edit</button></td></tr>
+                <tr><td>3</td><td>Budi Santoso</td><td>085678901234</td><td>Jl. Melati</td><td><button class="btn small">Edit</button></td></tr>
+                </tbody></table>
+                <div class="pagination">Menampilkan 1–3 data <span>‹ &nbsp; 1 &nbsp; 2 &nbsp; ›</span></div>
+            </section>
+            <div class="alert info">Pesan: Data penyewa berhasil ditambahkan. Lengkapi semua data wajib. Format data tidak valid. Data penyewa belum berhasil disimpan. Silakan coba kembali.</div>`
+    },
+    "06": {
+        title: "Form Penyewa",
+        content: `
+            <section class="panel form-panel">
+                <h3>Form Data Penyewa</h3>
+                <p class="muted">Masukkan informasi identitas penyewa.</p>
+                <div class="form-group"><label><span class="annotation-number">01</span> Nama Penyewa</label><input placeholder="Masukkan nama lengkap"></div>
+                <div class="form-group"><label><span class="annotation-number">02</span> Nomor Telepon</label><input placeholder="Contoh: 081234567890"></div>
+                <div class="form-group"><label><span class="annotation-number">03</span> Alamat</label><textarea placeholder="Masukkan alamat lengkap"></textarea></div>
+                <div class="alert error">Pesan: Lengkapi semua data wajib. Format data tidak valid. Periksa kembali nama atau nomor telepon. Data penyewa belum berhasil disimpan. Silakan coba kembali.</div>
+                <div class="actions"><button class="btn primary">Simpan</button><button class="btn">Batal</button></div>
+            </section>`
+    },
+    "07": {
+        title: "Daftar Periode Sewa",
+        content: `
+            <div class="toolbar"><p>Informasi periode sewa kamar dan penyewa.</p><button class="btn primary"><span class="annotation-number">01</span> + Tambah Periode Sewa</button></div>
+            <section class="panel">
+                <div class="table-tools"><span class="annotation-number">02</span><input placeholder="Cari penyewa atau kamar..."><button class="btn">Cari</button></div>
+                <table><thead><tr><th><span class="annotation-number">03</span> No.</th><th>Penyewa</th><th>Kamar</th><th>Tanggal Mulai</th><th>Tanggal Selesai</th><th>Jatuh Tempo</th><th>Harga Sewa</th><th>Status</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td>Andi Saputra</td><td>A-01</td><td>01/01/26</td><td>31/12/26</td><td>05/12/26</td><td>Rp800.000</td><td><span class="status occupied">Aktif</span></td></tr>
+                <tr><td>2</td><td>Siti Aminah</td><td>A-03</td><td>01/03/26</td><td>28/02/27</td><td>05/12/26</td><td>Rp900.000</td><td><span class="status occupied">Aktif</span></td></tr>
+                <tr><td>3</td><td>Budi Santoso</td><td>B-02</td><td>01/01/25</td><td>31/12/25</td><td>-</td><td>Rp750.000</td><td><span class="status available">Berakhir</span></td></tr>
+                </tbody></table>
+            </section>
+            <div class="alert info">Informasi: Periksa periode sewa yang aktif atau berakhir. Data penyewa atau kamar tidak ditemukan. Muat ulang data dan coba kembali.</div>`
+    },
+    "08": {
+        title: "Form Periode Sewa",
+        content: `
+            <section class="panel form-panel">
+                <h3>Form Periode Sewa</h3>
+                <div class="form-group"><label><span class="annotation-number">01</span> Penyewa</label><select><option>-- Pilih Penyewa --</option><option>Andi Saputra</option><option>Siti Aminah</option></select></div>
+                <div class="form-group"><label><span class="annotation-number">02</span> Kamar</label><select><option>-- Pilih Kamar --</option><option>A-01</option><option>A-02</option><option>B-01</option></select></div>
+                <div class="grid-two">
+                    <div class="form-group"><label><span class="annotation-number">03</span> Tanggal Mulai</label><input type="date"></div>
+                    <div class="form-group"><label><span class="annotation-number">03</span> Tanggal Selesai</label><input type="date"></div>
+                </div>
+                <div class="form-group"><label><span class="annotation-number">04</span> Tanggal Jatuh Tempo (Opsional)</label><input type="date"></div>
+                <div class="form-group"><label><span class="annotation-number">05</span> Harga Sewa Disepakati (Rp)</label><input type="number" placeholder="Masukkan harga sewa"></div>
+                <div class="alert error">Pesan: Lengkapi tanggal mulai dan tanggal berakhir. Tanggal periode sewa tidak valid. Periksa kembali tanggal yang dipilih. Kamar masih ditempati pada periode tersebut. Silakan pilih kamar lain. Gagal menyimpan periode sewa. Kamar sudah memiliki periode sewa lain yang bertumpang tindih dengan tanggal yang dipilih. Data penyewa atau kamar tidak ditemukan. Muat ulang data dan coba kembali. Periode sewa belum berhasil disimpan. Silakan coba kembali.</div>
+                <div class="actions"><button class="btn primary"><span class="annotation-number">06</span> Simpan</button><button class="btn">Batal</button></div>
+            </section>`
+    },
+    "09": {
+        title: "Daftar Pembayaran",
+        content: `
+            <div class="toolbar"><p>Riwayat pembayaran sewa kontrakan.</p><button class="btn primary"><span class="annotation-number">01</span> + Catat Pembayaran</button></div>
+            <section class="panel">
+                <div class="table-tools"><span class="annotation-number">02</span><input placeholder="Cari nama penyewa atau kamar..."><button class="btn">Cari</button></div>
+                <table><thead><tr><th><span class="annotation-number">03</span> No.</th><th>Penyewa</th><th>Kamar</th><th>Tanggal Pembayaran</th><th>Jumlah Bayar</th><th>Status Pembayaran</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td>Andi Saputra</td><td>A-01</td><td>05/11/26</td><td>Rp800.000</td><td><span class="status paid">Lunas</span></td></tr>
+                <tr><td>2</td><td>Siti Aminah</td><td>A-03</td><td>05/11/26</td><td>Rp500.000</td><td><span class="status pending">Belum Lunas</span></td></tr>
+                <tr><td>3</td><td>Budi Santoso</td><td>B-02</td><td>06/11/26</td><td>Rp750.000</td><td><span class="status paid">Lunas</span></td></tr>
+                </tbody></table>
+            </section>
+            <div class="alert info">Informasi: Riwayat pembayaran ditampilkan berdasarkan catatan transaksi. Pembayaran bertahap dicatat sebagai transaksi terpisah.</div>`
+    },
+    "10": {
+        title: "Form Catat Pembayaran",
+        content: `
+            <section class="panel form-panel">
+                <h3>Form Pencatatan Pembayaran</h3>
+                <p class="muted">Catat pembayaran berdasarkan periode sewa.</p>
+                <div class="form-group"><label><span class="annotation-number">01</span> Periode Sewa</label><select><option>-- Pilih Periode Sewa --</option><option>Andi Saputra - Kamar A-01</option><option>Siti Aminah - Kamar A-03</option></select></div>
+                <div class="form-group"><label><span class="annotation-number">02</span> Tanggal Pembayaran</label><input type="date"></div>
+                <div class="form-group"><label><span class="annotation-number">03</span> Jumlah Bayar (Rp)</label><input type="number" placeholder="Masukkan jumlah pembayaran"></div>
+                <div class="alert error">Pesan: Lengkapi tanggal dan jumlah pembayaran. Jumlah pembayaran tidak valid. Masukkan angka lebih dari 0. Pembayaran belum berhasil dicatat. Silakan coba kembali. Pembayaran bertahap diperbolehkan.</div>
+                <div class="actions"><button class="btn primary"><span class="annotation-number">04</span> Simpan Pembayaran</button><button class="btn">Batal</button></div>
+            </section>`
+    },
+    "11": {
+        title: "Laporan Pendapatan",
+        content: `
+            <section class="panel">
+                <h3>Filter Periode Laporan</h3>
+                <div class="grid-two">
+                    <div class="form-group"><label><span class="annotation-number">01</span> Tanggal Mulai</label><input type="date"></div>
+                    <div class="form-group"><label><span class="annotation-number">01</span> Tanggal Selesai</label><input type="date"></div>
+                </div>
+                <button class="btn primary"><span class="annotation-number">02</span> Tampilkan Laporan</button>
+            </section>
+            <section class="panel">
+                <div class="toolbar"><h3><span class="annotation-number">03</span> Rincian Pendapatan</h3><button class="btn"><span class="annotation-number">05</span> Unduh Laporan</button></div>
+                <table><thead><tr><th>No.</th><th>Tanggal Pembayaran</th><th>Jumlah Pembayaran</th></tr></thead>
+                <tbody>
+                <tr><td>1</td><td>01/11/2026</td><td>Rp800.000</td></tr>
+                <tr><td>2</td><td>05/11/2026</td><td>Rp900.000</td></tr>
+                <tr><td>3</td><td>10/11/2026</td><td>Rp750.000</td></tr>
+                </tbody></table>
+                <div class="total-box"><span><span class="annotation-number">04</span> Total Pendapatan</span><strong>Rp2.450.000</strong></div>
+            </section>
+            <div class="alert info">Pesan: Tampilkan hasil berdasarkan rentang tanggal pembayaran. Lengkapi tanggal mulai dan tanggal selesai. Rentang tanggal tidak valid.</div>`
+    }
+};
+
+const nav = [
+    ["Dashboard", "02", "[1]"],
+    ["Kamar", "03", "[2]"],
+    ["Penyewa", "05", "[3]"],
+    ["Periode Sewa", "07", "[4]"],
+    ["Pembayaran", "09", "[5]"],
+    ["Laporan", "11", "[6]"]
+];
+
+const id = new URLSearchParams(location.search).get("page") || "02";
+const page = pages[id] || pages["02"];
+const app = document.getElementById("app");
+
+if (id === "01") {
+    app.innerHTML = `<main class="login-page">${page.content}</main>`;
+} else {
+    app.innerHTML = `
+        <header class="topbar">
+            <div class="brand"><span class="brand-icon">[LOGO]</span>SISTEM INFORMASI PENGELOLAAN KONTRAKAN</div>
+            <div class="user-area"><span class="avatar">[P]</span><span>Pemilik Kontrakan</span><button class="logout">Logout</button></div>
+        </header>
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="side-label">MENU UTAMA</div>
+                ${nav.map(([name, target, icon]) => `<a class="nav-link ${id === target || (id === "04" && target === "03") || (id === "06" && target === "05") || (id === "08" && target === "07") || (id === "10" && target === "09") ? "active" : ""}" href="?page=${target}"><span>${icon}</span>${name}</a>`).join("")}
+            </aside>
+            <main class="main-content">
+                <div class="breadcrumb">Beranda / ${page.title}</div>
+                <div class="page-heading"><div><h1>${page.title}</h1><p>Pengelolaan data kontrakan secara terstruktur.</p></div></div>
+                ${page.content}
+                <footer>© 2026 Sistem Informasi Pengelolaan Kontrakan</footer>
+            </main>
+        </div>`;
+}
+</script>
+</body>
+</html>
+
+
+
