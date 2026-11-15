@@ -1,4 +1,4 @@
-﻿PRAGMA foreign_keys = ON;
+PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS akun_pengguna (
     id_akun INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS sewa (
             AND date(tanggal_selesai, '+0 days') = tanggal_selesai
         ),
 
+    -- Opsional sesuai KF-12; NULL diperbolehkan.
     tanggal_jatuh_tempo TEXT
         CHECK (
             tanggal_jatuh_tempo IS NULL
