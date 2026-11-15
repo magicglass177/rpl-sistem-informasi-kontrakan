@@ -239,18 +239,18 @@ Matriks ini memastikan setiap kebutuhan memiliki sumber dan hubungan yang jelas 
 
 | User Story | Use Case | Kebutuhan Fungsional | Kebutuhan Nonfungsional | Test Case |
 |---|---|---|---|---|
-| US-01 | UC-01 | KF-01 | KNF-04 | Belum dibuat |
-| US-02 | UC-02, UC-03, UC-04 | KF-02, KF-03, KF-04 | KNF-01, KNF-03 | Belum dibuat |
-| US-03 | UC-05 | KF-05 | KNF-01, KNF-02 | Belum dibuat |
-| US-04 | UC-06, UC-07 | KF-06 | KNF-01, KNF-04 | Belum dibuat |
-| US-05 | UC-08 | KF-07, KF-08 | KNF-03 | Belum dibuat |
-| US-06 | UC-09, UC-11 | KF-09, KF-10 | KNF-03 | Belum dibuat |
-| US-07 | UC-10 | KF-11 | KNF-01 | Belum dibuat |
-| US-08 | UC-13 | KF-12 | KNF-01 | Belum dibuat |
-| US-09 | UC-12 | KF-13 | KNF-03 | Belum dibuat |
-| US-10 | UC-14 | KF-14 | KNF-01 | Belum dibuat |
-| US-11 | UC-15 | KF-15 | - | Belum dibuat |
-| US-12 | UC-16 | KF-16 | - | Belum dibuat |
+| US-01 | UC-01 | KF-01 | KNF-04 | TC-01, TC-02, TC-19 |
+| US-02 | UC-02, UC-03, UC-04 | KF-02, KF-03, KF-04 | KNF-01, KNF-03 | TC-03, TC-04, TC-05, TC-06, TC-18 |
+| US-03 | UC-05 | KF-05 | KNF-01, KNF-02 | TC-07 |
+| US-04 | UC-06, UC-07 | KF-06 | KNF-01, KNF-03, KNF-04 | TC-08, TC-09, TC-18 |
+| US-05 | UC-08 | KF-07, KF-08 | KNF-03 | TC-10, TC-11 |
+| US-06 | UC-09, UC-11 | KF-09, KF-10 | KNF-03 | TC-12, TC-13 |
+| US-07 | UC-10 | KF-11 | KNF-01 | TC-14 |
+| US-08 | UC-13 | KF-12 | KNF-01 | Belum dibuat (Should) |
+| US-09 | UC-12 | KF-13 | KNF-03 | TC-15, TC-16 |
+| US-10 | UC-14 | KF-14 | KNF-01 | Belum dibuat (Should) |
+| US-11 | UC-15 | KF-15 | - | TC-17 |
+| US-12 | UC-16 | KF-16 | - | Tidak diuji (Could; di luar cakupan) |
 
 ### 6.1 Pemeriksaan Ketertelusuran
 

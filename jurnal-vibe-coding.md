@@ -415,3 +415,20 @@ Kesalahan AI yang paling sering muncul adalah membuat aturan validasi terlalu um
 - Menjalankan `schema.sql` pada database sementara SQLite di memori dan memastikan eksekusinya berhasil.
 
 **Status:** Dokumentasi rancangan arsitektur telah dibuat dan pemeriksaan skema SQL berhasil. Pemeriksaan akhir dan integrasi melalui Git masih menunggu penyelesaian.
+
+## Step 12 - Revisi Rancangan Berdasarkan Tinjauan
+**Tanggal:** 15 November 2026
+
+### Aktivitas
+Melakukan simulasi design review individu dengan bantuan AI, mengelompokkan masukan penelaah, menentukan keputusan revisi, dan memperbarui rancangan yang terdampak.
+
+### Keputusan
+1. Menerima masukan agar WF-10 menampilkan harga sewa disepakati, total pembayaran diterima, dan sisa pembayaran. Ketiga informasi ditambahkan pada anotasi serta wireframe HTML/CSS dan PNG.
+2. Menerima masukan mengenai kejelasan validasi periode sewa bertumpang tindih. Setelah diperiksa, pesan tersebut sudah tersedia pada WF-08 dan TC-11 sehingga tidak memerlukan perubahan tambahan.
+3. Meminta klarifikasi klien mengenai aturan keterlambatan dan pembayaran melebihi kewajiban. Aturan tersebut belum diubah karena keputusan bisnis belum tersedia.
+
+### Pelajaran
+Masukan AI atau penelaah tidak boleh langsung diterapkan tanpa pemeriksaan silang terhadap SRS, kamus data, wireframe, dan test case. Saran yang sudah terpenuhi tidak perlu diduplikasi, sedangkan aturan bisnis yang belum jelas harus ditandai untuk dikonfirmasi sebelum mengubah rancangan atau implementasi.
+
+### Batasan
+Review ini merupakan simulasi individu dengan bantuan AI, bukan review silang kelompok atau persetujuan klien yang sebenarnya. Revisi dilakukan pada dokumentasi desain; implementasi aplikasi belum diubah.
