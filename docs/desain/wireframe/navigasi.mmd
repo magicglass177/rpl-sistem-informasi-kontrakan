@@ -1,0 +1,28 @@
+﻿flowchart LR
+    A["Login"] --> B["Dashboard (Pemilik)"]
+
+    B --> C["Daftar Kamar (Pemilik)"]
+    C --> D["Form Kamar (Pemilik)"]
+    D --> C
+
+    B --> E["Daftar Penyewa (Pemilik)"]
+    E --> F["Form Penyewa (Pemilik)"]
+    F --> E
+
+    B --> G["Daftar Periode Sewa (Pemilik)"]
+    G --> H["Form Periode Sewa (Pemilik)"]
+    H --> G
+
+    B --> I["Daftar Pembayaran (Pemilik)"]
+    I --> J["Form Catat Pembayaran (Pemilik)"]
+    J --> I
+
+    B --> K["Laporan Pendapatan (Pemilik)"]
+
+    C -->|Kembali ke Dashboard| B
+    E -->|Kembali ke Dashboard| B
+    G -->|Kembali ke Dashboard| B
+    I -->|Kembali ke Dashboard| B
+    K -->|Kembali ke Dashboard| B
+
+    B -->|Logout| A
