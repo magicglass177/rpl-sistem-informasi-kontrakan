@@ -45,8 +45,8 @@
 | id_penyewa | INTEGER | Ya | FK | Harus mengacu pada `penyewa.id_penyewa` | KF-07 |
 | tanggal_mulai | DATE | Ya | — | Harus berupa tanggal valid | KF-13 |
 | tanggal_selesai | DATE | Ya | — | Harus berupa tanggal valid dan tidak lebih awal dari tanggal mulai | KF-13, KF-14 |
-| tanggal_jatuh_tempo | DATE | Ya jika KF-12 diterapkan | — | Harus berupa tanggal valid sesuai aturan jatuh tempo | KF-12 |
-| harga_sewa_disepakati | DECIMAL(12,2) | Ya | — | Nilai tidak boleh negatif; menyimpan harga kesepakatan saat sewa dibuat | KF-02, KF-07 |
+| tanggal_jatuh_tempo | DATE | Tidak | - | Opsional; jika diisi harus berupa tanggal valid. Boleh NULL sesuai KF-12 dan hasil simulasi | KF-12 |
+| harga_sewa_disepakati | DECIMAL(12,2) | Ya | — | Nilai tidak boleh negatif; menyimpan harga kesepakatan saat sewa dibuat sebagai rancangan sementara | KF-02, KF-07 |
 
 **Keterangan:**
 - Satu record sewa mewakili satu periode sewa.

@@ -145,3 +145,25 @@ Urutan tersebut merupakan rencana pengembangan berdasarkan prioritas Product Bac
 Dokumen ini merupakan rancangan arsitektur. Pada saat dokumentasi dibuat, struktur database dan pengujian skema telah tersedia, sedangkan implementasi aplikasi Flask dan pembagian kode ke dalam routes, services, dan models masih menjadi pekerjaan pengembangan berikutnya.
 
 Perintah inisialisasi database akan ditetapkan setelah fungsi inisialisasi tersedia pada implementasi aplikasi.
+
+## 9. Dokumen Desain dan Pengujian
+
+Dokumen desain yang menjadi acuan pengembangan sistem meliputi:
+
+| Dokumen | Fungsi |
+|---|---|
+| `docs/srs.md` | Menjelaskan kebutuhan fungsional dan nonfungsional sistem |
+| `docs/desain/erd.mmd` | Menjelaskan hubungan antarentitas database |
+| `docs/desain/erd.png` | Visualisasi ERD |
+| `docs/desain/kamus-data.md` | Menjelaskan atribut, tipe data, dan aturan integritas |
+| `docs/desain/normalisasi.md` | Menjelaskan proses normalisasi database |
+| `docs/desain/schema.sql` | Menjadi acuan struktur database SQLite |
+| `docs/desain/arsitektur.md` | Menjelaskan pembagian lapisan aplikasi |
+
+Skrip pengujian rancangan database disimpan pada folder `tests/`:
+
+- `cek_skema.py`
+- `cek_skema_lanjutan.py`
+- `cek_validasi_telepon.py`
+
+Setiap perubahan pada struktur database harus diperiksa kesesuaiannya dengan SRS, ERD, kamus data, dan hasil pengujian.
