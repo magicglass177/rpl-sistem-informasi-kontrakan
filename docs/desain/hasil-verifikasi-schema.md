@@ -17,6 +17,7 @@ verifikasi berdasarkan dokumen proyek.
 - `docs/desain/schema.sql`
 - `tests/cek_skema.py`
 - `tests/cek_skema_lanjutan.py`
+- `tests/cek_validasi_telepon.py`
 
 ## 3. Checklist Verifikasi Skema
 
@@ -38,6 +39,7 @@ verifikasi berdasarkan dokumen proyek.
 | 14 | Perubahan periode yang menyebabkan tumpang tindih ditolak | Lulus |
 | 15 | Satu sewa dapat memiliki beberapa pembayaran | Lulus |
 | 16 | Penghapusan data yang memiliki riwayat transaksi dibatasi | Lulus |
+| 17 | Nomor telepon penyewa mengikuti format yang ditentukan | Lulus |
 
 ## 4. Hasil Pengujian
 
@@ -67,13 +69,31 @@ Pengujian mencakup periode sewa berurutan, periode pada kamar
 berbeda, perubahan periode sewa, pembayaran bertahap, dan
 pembatasan penghapusan data yang memiliki riwayat transaksi.
 
-### 4.3 Ringkasan
+### 4.3 Pengujian Validasi Nomor Telepon
 
-Total pengujian berhasil: 19.
+Berkas: `tests/cek_validasi_telepon.py`
 
-Total pengujian gagal: 0.
+| Keterangan | Jumlah |
+|---|---:|
+| Nomor telepon valid diterima | 6 |
+| Nomor telepon tidak valid ditolak | 10 |
+| Pengujian gagal | 0 |
 
-Status: seluruh pengujian yang dijalankan berhasil.
+Pengujian memastikan format nomor telepon Indonesia yang
+diperbolehkan diterima dan format yang tidak sesuai ditolak.
+
+### 4.4 Ringkasan
+
+| Keterangan | Jumlah |
+|---|---:|
+| Data valid diterima | 1 |
+| Pengujian penolakan skema berhasil | 11 |
+| Pengujian lanjutan berhasil | 8 |
+| Pengujian nomor telepon berhasil | 16 |
+| Total skenario berhasil | 36 |
+| Total skenario gagal | 0 |
+
+Status: seluruh skenario pengujian yang dijalankan berhasil.
 
 ## 5. Temuan dan Perbaikan
 
@@ -95,17 +115,17 @@ disewakan kepada dua penyewa dalam periode yang sama. Hal ini
 dapat menimbulkan konflik pengelolaan kamar, ketidaksesuaian
 riwayat sewa, dan masalah pencatatan transaksi.
 
-Perbaikan dilakukan dengan menambahkan dua trigger SQLite
-untuk memeriksa periode sewa ketika data baru ditambahkan
-maupun ketika periode yang sudah tersimpan diubah.
+Perbaikan dilakukan dengan menambahkan dua trigger SQLite,
+yaitu trigger INSERT dan UPDATE, untuk memeriksa periode sewa
+ketika data baru ditambahkan atau periode sewa diubah.
 
 ## 7. Kesimpulan
 
-Skema telah melewati 19 pengujian dengan nol kegagalan.
+Skema telah melewati 36 skenario pengujian dengan nol kegagalan.
 
 Pengujian mencakup constraint, foreign key, validasi tanggal,
 pencegahan periode sewa bertumpang tindih, pembayaran bertahap,
-dan perlindungan riwayat transaksi.
+perlindungan riwayat transaksi, dan validasi nomor telepon.
 
 Hasil ini merupakan verifikasi terhadap skenario yang diuji
 dan bukan jaminan bahwa seluruh kemungkinan kesalahan telah
