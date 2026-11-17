@@ -44,3 +44,42 @@ def init_db():
         connection.commit()
     finally:
         connection.close()
+
+
+def get_all_kamar(kata_kunci=""):
+    """
+    Mengambil seluruh data kamar dan menghitung status ketersediaan
+    berdasarkan periode sewa yang sedang berlangsung.
+    """
+    connection = get_db_connection()
+
+    try:
+        query = """
+            SELECT
+                k.id_kamar,
+                k.nomor_kamar,
+                k.harga_sewa,
+                CASE
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM sewa AS s
+                        WHERE s.id_kamar = k.id_kamar
+                          AND date('now', 'localtime')
+                              BETWEEN date(s.tanggal_mulai)
+                              AND date(s.tanggal_selesai)
+                    )
+                    THEN 'Terisi'
+                    ELSE 'Tersedia'
+                END AS status_ketersediaan
+            FROM kamar AS k
+            WHERE k.nomor_kamar LIKE ?
+            ORDER BY k.nomor_kamar ASC
+        """
+
+        return connection.execute(
+            query,
+            (f"%{kata_kunci.strip()}%",)
+        ).fetchall()
+
+    finally:
+        connection.close()

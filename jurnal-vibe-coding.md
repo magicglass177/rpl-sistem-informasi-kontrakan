@@ -609,3 +609,30 @@ Kerangka proyek Flask telah diperiksa berdasarkan checklist Appendix C.
 Kerangka proyek Flask dan inisialisasi database berhasil diperiksa. Perubahan siap disiapkan untuk commit.
 
 **Status:** Review berhasil.
+
+## Langkah 5 - Membuat Halaman Daftar Kamar
+
+### Implementasi
+1. Menambahkan fungsi `get_all_kamar()` pada `models.py` untuk mengambil data kamar berdasarkan urutan nomor kamar.
+2. Menambahkan pencarian berdasarkan nomor kamar menggunakan parameter SQL.
+3. Menambahkan perhitungan status ketersediaan berdasarkan periode sewa aktif.
+4. Membuat templat `kamar_list.html` yang menggunakan `base.html`.
+5. Menampilkan kolom nomor, nomor kamar, harga sewa, status ketersediaan, dan aksi.
+6. Menampilkan pesan "Belum ada data" ketika tabel kamar kosong.
+7. Menambahkan empat data kamar fiktif langsung ke SQLite: A-01, A-02, A-03, dan B-01.
+
+### Hasil Pengujian
+- Halaman daftar kamar menghasilkan HTTP 200.
+- Keempat data kamar berhasil ditampilkan.
+- Status ketersediaan tampil sebagai "Tersedia" ketika belum ada periode sewa.
+- Pencarian nomor kamar A-01 berhasil dan tidak menampilkan A-02.
+- Pengujian database kosong menggunakan database sementara berhasil menampilkan pesan "Belum ada data".
+- Data kamar utama tetap tersimpan setelah pengujian kondisi kosong.
+- Pemeriksaan sintaks Python berhasil.
+- Tidak ditemukan perintah SQL langsung di `app.py`.
+- `git diff --check` tidak menemukan kesalahan whitespace.
+
+### Catatan
+Tombol tambah dan edit belum diaktifkan karena proses CRUD dilaksanakan pada langkah berikutnya. Status ketersediaan dihitung dari periode sewa tanpa mengubah skema database.
+
+**Status:** Langkah 5 selesai dan pengujian berhasil.

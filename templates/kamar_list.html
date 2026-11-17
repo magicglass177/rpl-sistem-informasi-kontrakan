@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>Daftar Kamar</h1>
+    <p>Pengelolaan data kontrakan secara terstruktur.</p>
+</section>
+
+<div class="toolbar">
+    <span>Kelola data kamar kontrakan.</span>
+
+    <button class="button" type="button" disabled
+            title="Form tambah dibuat pada Langkah 6">
+        + Tambah Kamar
+    </button>
+</div>
+
+<section class="table-card">
+    <form class="search-form" method="GET"
+          action="{{ url_for('main.daftar_kamar') }}">
+        <input
+            type="search"
+            name="q"
+            placeholder="Cari nomor kamar..."
+            value="{{ kata_kunci }}"
+            aria-label="Cari nomor kamar"
+        >
+        <button class="button" type="submit">Cari</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">No.</th>
+                <th>Nomor Kamar</th>
+                <th>Harga Sewa</th>
+                <th>Status Ketersediaan</th>
+                <th style="width: 14%;">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for kamar in daftar_kamar %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ kamar["nomor_kamar"] }}</td>
+                <td>
+                    Rp{{ "{:,.0f}".format(kamar["harga_sewa"]).replace(",", ".") }}
+                </td>
+                <td>
+                    <span class="status">
+                        {{ kamar["status_ketersediaan"] }}
+                    </span>
+                </td>
+                <td>
+                    <button class="button" type="button" disabled
+                            title="Fitur edit dibuat pada langkah berikutnya">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty-state">
+                    Belum ada data
+                    {% if kata_kunci %}
+                        kamar dengan nomor "{{ kata_kunci }}"
+                    {% else %}
+                        kamar yang tersedia
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="table-footer">
+        <span>
+            Menampilkan {{ daftar_kamar|length }} data kamar
+        </span>
+        <span>
+            Total data: {{ daftar_kamar|length }}
+        </span>
+    </div>
+</section>
+{% endblock %}
