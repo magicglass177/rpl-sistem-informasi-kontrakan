@@ -13,13 +13,13 @@
 Pertanyaan awal diubah karena bersifat mengarahkan narasumber pada solusi tertentu, yaitu aplikasi berbasis web, dan dapat menghasilkan jawaban singkat berupa ya atau tidak. Pertanyaan tersebut kemudian diperbaiki menjadi pertanyaan terbuka dan netral agar narasumber dapat menyampaikan kebutuhan serta harapannya berdasarkan pengalaman sendiri tanpa diarahkan pada solusi teknologi tertentu.
 
 
-## Jurnal Vibe Coding — Entri Penyusunan Pedoman Wawancara
+## Jurnal Vibe Coding Ã¢â‚¬â€ Entri Penyusunan Pedoman Wawancara
 
 **Kegiatan:** Penyusunan Pedoman Wawancara dengan Bantuan AI
 
 **Proyek:** Sistem Informasi Pengelolaan Kontrakan
 
-**Tahapan:** Sesi 1 – Langkah 4
+**Tahapan:** Sesi 1 Ã¢â‚¬â€œ Langkah 4
 
 ### 1. Prompt
 Memberikan instruksi kepada AI untuk menghasilkan 15 pertanyaan wawancara berdasarkan konteks proyek Sistem Informasi Pengelolaan Kontrakan dengan narasumber pemilik kontrakan.
@@ -42,7 +42,7 @@ Pedoman wawancara berhasil disusun dengan 15 pertanyaan yang terbagi dalam enam 
 
 **Status:** Draft pedoman wawancara selesai dan belum digunakan untuk wawancara langsung.
 
-## Vibe Coding Journal — Kritik AI dan Review User Story
+## Vibe Coding Journal Ã¢â‚¬â€ Kritik AI dan Review User Story
 
 ### 1. Tujuan Penggunaan AI
 
@@ -52,7 +52,7 @@ Evaluasi dilakukan untuk memeriksa kejelasan kebutuhan, acceptance criteria, ket
 
 ### 2. Prompt yang Digunakan
 
-"Periksa 12 user story pada dokumen user-story.md untuk Sistem Informasi Pengelolaan Kontrakan. Evaluasi apakah setiap user story sudah berorientasi pada kebutuhan pengguna, memiliki acceptance criteria Given–When–Then yang jelas dan dapat diuji, serta memiliki sumber kebutuhan yang sesuai. Berikan kritik dan saran perbaikan untuk setiap user story. Jangan menambahkan kebutuhan baru seolah-olah sudah dikonfirmasi oleh klien."
+"Periksa 12 user story pada dokumen user-story.md untuk Sistem Informasi Pengelolaan Kontrakan. Evaluasi apakah setiap user story sudah berorientasi pada kebutuhan pengguna, memiliki acceptance criteria GivenÃ¢â‚¬â€œWhenÃ¢â‚¬â€œThen yang jelas dan dapat diuji, serta memiliki sumber kebutuhan yang sesuai. Berikan kritik dan saran perbaikan untuk setiap user story. Jangan menambahkan kebutuhan baru seolah-olah sudah dikonfirmasi oleh klien."
 
 ### 3. Ringkasan Hasil Kritik AI
 
@@ -100,7 +100,7 @@ AI membantu menemukan bagian user story yang masih ambigu dan memberikan saran p
 
 Seluruh user story masih berstatus draft berdasarkan simulasi wawancara fiktif dan belum divalidasi oleh klien nyata.
 
-### Pengujian PRD Menggunakan AI — Sesi 4
+### Pengujian PRD Menggunakan AI Ã¢â‚¬â€ Sesi 4
 
 **Prompt:**
 
@@ -124,7 +124,7 @@ PRD dipertahankan dengan beberapa catatan validasi. Asumsi yang belum dikonfirma
 
 **Status:** Pengujian PRD selesai berdasarkan rancangan dokumen simulasi. Validasi dengan klien nyata masih diperlukan.
 
-### Penyempurnaan Aturan Proyek — Jobsheet Step 9
+### Penyempurnaan Aturan Proyek Ã¢â‚¬â€ Jobsheet Step 9
 
 **Tanggal:** 11 November 2026
 
@@ -163,7 +163,7 @@ Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggu
 
 **Status:** Penyempurnaan aturan proyek selesai; menunggu pemeriksaan akhir dan commit.
 
-### Pengujian PRD Menggunakan AI Reverse Summary — Iterasi 1
+### Pengujian PRD Menggunakan AI Reverse Summary Ã¢â‚¬â€ Iterasi 1
 
 **Tanggal:** 11 November 2026
 
@@ -181,7 +181,7 @@ Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggu
 
 **Status:** Iterasi 1 selesai. Dilanjutkan ke Jobsheet Step 11 untuk revisi PRD dan pengujian ulang.
 
-### Revisi PRD — Versi 1.1
+### Revisi PRD Ã¢â‚¬â€ Versi 1.1
 
 **Tanggal:** 11 November 2026
 
@@ -195,7 +195,7 @@ Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggu
 
 **Status:** PRD versi 1.1 selesai direvisi dan menunggu pengujian ulang melalui AI Reverse Summary pada Jobsheet Step 11.
 
-### Pengujian PRD Menggunakan AI Reverse Summary — Iterasi 2
+### Pengujian PRD Menggunakan AI Reverse Summary Ã¢â‚¬â€ Iterasi 2
 
 **Tanggal:** 11 November 2026
 
@@ -215,7 +215,7 @@ Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggu
 
 **Status:** Pengujian AI Reverse Summary Iterasi 2 selesai. Hasil pengujian diterima dan didokumentasikan untuk melanjutkan tahapan proyek.
 
-### Pembaruan Product Backlog — Jobsheet Langkah 12
+### Pembaruan Product Backlog Ã¢â‚¬â€ Jobsheet Langkah 12
 
 **Aktivitas:** Memperbarui Product Backlog berdasarkan PRD versi 1.1 dan SRS.
 
@@ -229,14 +229,14 @@ Perubahan diterima untuk dilanjutkan ke pemeriksaan akhir sebelum commit. Penggu
 - Menerima pemetaan kebutuhan dan pembagian sprint sebagai rancangan awal.
 - Menghapus kebutuhan fasilitas kamar, pencarian, dan dashboard karena belum tercantum dalam PRD.
 - Mempertahankan KF-08 sebagai Should sesuai PRD versi 1.1.
-- Mempertahankan KF-16 sebagai Could dan tidak menjadwalkannya pada Sprint 1–3.
+- Mempertahankan KF-16 sebagai Could dan tidak menjadwalkannya pada Sprint 1Ã¢â‚¬â€œ3.
 - Meninjau kembali keputusan yang masih bergantung pada pertanyaan terbuka PRD.
 
 **Verifikasi:** Perubahan diperiksa menggunakan `git diff --check` dan `git diff`. Tidak ditemukan masalah whitespace. Isi backlog tetap perlu dikonfirmasi kepada klien sebelum implementasi.
 
 **Status:** Draf Product Backlog diperbarui, belum di-commit dan belum di-merge.
 
-### Pembuatan dan Verifikasi Activity Diagram dengan Bantuan AI — Sesi 2
+### Pembuatan dan Verifikasi Activity Diagram dengan Bantuan AI Ã¢â‚¬â€ Sesi 2
 
 **Aktivitas:** Pembuatan, evaluasi, dan penyempurnaan Activity Diagram.
 
@@ -301,7 +301,7 @@ Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek d
 
 **Status:** Revisi dokumentasi selesai dan menunggu pemeriksaan akhir sebelum commit.
 
-### Jobsheet 6 — Perancangan ERD, Normalisasi, dan Kamus Data
+### Jobsheet 6 Ã¢â‚¬â€ Perancangan ERD, Normalisasi, dan Kamus Data
 
 **Tanggal:** 13 November 2026
 
@@ -336,7 +336,7 @@ Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek d
 
 **Status:** Dokumen rancangan data telah dibuat dan sedang dalam pemeriksaan akhir sebelum commit.
 
-### Jobsheet 6 — Sesi 2: Skema SQLite dan DDL Manual
+### Jobsheet 6 Ã¢â‚¬â€ Sesi 2: Skema SQLite dan DDL Manual
 
 **Tanggal:** 13 November 2026
 
@@ -375,11 +375,11 @@ Prioritas KF-08 ditetapkan sebagai Must berdasarkan keputusan rancangan proyek d
 **Status:** DDL dua tabel berhasil dibuat dan diuji. Pemeriksaan akhir dokumentasi serta commit masih menunggu penyelesaian.
 
 
-### Catatan Jobsheet 11 — Validasi Nomor Telepon
+### Catatan Jobsheet 11 Ã¢â‚¬â€ Validasi Nomor Telepon
 
 Kesalahan AI yang paling sering muncul adalah membuat aturan validasi terlalu umum sehingga tidak sepenuhnya sesuai dengan format data yang telah ditetapkan.
 
-### Jobsheet Langkah 12 — Perancangan Arsitektur Sistem
+### Jobsheet Langkah 12 Ã¢â‚¬â€ Perancangan Arsitektur Sistem
 
 **Tanggal:** 14 November 2026
 
@@ -432,3 +432,180 @@ Masukan AI atau penelaah tidak boleh langsung diterapkan tanpa pemeriksaan silan
 
 ### Batasan
 Review ini merupakan simulasi individu dengan bantuan AI, bukan review silang kelompok atau persetujuan klien yang sebenarnya. Revisi dilakukan pada dokumentasi desain; implementasi aplikasi belum diubah.
+
+## Langkah 1 - Persiapan Lingkungan dan Branch
+**Tanggal:** 17 November 2026
+
+### Aktivitas
+Menyiapkan lingkungan pengembangan untuk melanjutkan implementasi Sistem Informasi Pengelolaan Kontrakan menggunakan Flask.
+
+### Bantuan AI
+- Membantu memeriksa kondisi branch dan sinkronisasi repositori dengan `origin/main`.
+- Membantu mengidentifikasi bahwa virtual environment yang sebelumnya aktif berasal dari direktori proyek lain.
+- Memberikan panduan membuat virtual environment khusus untuk repositori ini.
+- Membantu memeriksa konfigurasi `.gitignore` dan dependensi Flask.
+
+### Perubahan yang Dilakukan
+1. Memastikan branch `main` sudah sinkron dengan `origin/main`.
+2. Membuat branch `fitur/kerangka` dari `main`.
+3. Membuat virtual environment khusus proyek pada direktori `.venv/`.
+4. Memasang Flask versi 3.1.3.
+5. Membuat `requirements.txt` menggunakan `pip freeze`.
+6. Memperbarui `.gitignore` dengan aturan `.venv/` dan `*.db`, serta mempertahankan aturan `__pycache__/` dan `.env`.
+
+### Verifikasi
+- Python aktif berasal dari `.venv` pada repositori Sistem Informasi Pengelolaan Kontrakan.
+- Flask versi 3.1.3 berhasil terdeteksi pada virtual environment proyek.
+- `requirements.txt` memuat Flask dan dependensinya.
+- `.gitignore` memuat seluruh aturan yang diwajibkan.
+- `git check-ignore` memastikan `.venv` tidak dilacak Git.
+- Branch aktif adalah `fitur/kerangka`.
+
+### Hasil dan Evaluasi
+Lingkungan pengembangan berhasil disiapkan. Pemisahan virtual environment dilakukan agar dependensi proyek tidak tercampur dengan proyek Python lainnya.
+
+**Status:** Langkah 1 selesai. Perubahan `.gitignore`, `requirements.txt`, dan jurnal belum di-commit karena akan diperiksa bersama perubahan berikutnya sesuai alur jobsheet.
+
+## Langkah 2 - Spesifikasi Fitur Kecil
+**Tanggal:** 17 November 2026
+
+### Aktivitas
+Menentukan entitas pertama dan menyusun lima fitur kecil beserta kriteria penerimaannya berdasarkan PRD dan kamus data.
+
+### Keputusan Kelompok
+Kelompok menyetujui entitas **kamar** sebagai entitas pertama karena merupakan entitas induk yang tidak bergantung pada tabel lain melalui foreign key.
+
+### Spesifikasi Fitur
+
+| No. | Fitur kecil | Kriteria penerimaan | KF |
+|---|---|---|---|
+| F1 | Kerangka proyek | Aplikasi dapat dijalankan dan basis data dibuat menggunakan schema.sql. | Ã¢â‚¬â€ |
+| F2 | Daftar kamar | Sistem menampilkan data kamar yang tersimpan. Status ketersediaan ditampilkan berdasarkan kondisi periode sewa. | KF-03, KF-05 |
+| F3 | Tambah kamar | Pemilik dapat menyimpan kamar dengan nomor unik dan harga sewa tidak negatif. Data yang berhasil disimpan muncul dalam daftar kamar. | KF-02 |
+| F4 | Ubah kamar | Pemilik dapat mengubah nomor kamar dan harga sewa dengan nilai valid. Nomor kamar harus tetap unik dan harga sewa tidak boleh negatif. | KF-04 |
+| F5 | Hapus kamar | Usulan sementara: penghapusan ditolak jika kamar masih direferensikan oleh data sewa. Aturan penghapusan kamar yang memiliki riwayat sewa masih menunggu konfirmasi. | Belum ditetapkan |
+
+### Batasan Perubahan Data
+- Atribut kamar yang dapat dikelola adalah nomor_kamar dan harga_sewa.
+- id_kamar dibuat otomatis dan tidak diubah melalui form.
+- Status ketersediaan tidak diubah langsung karena ditentukan berdasarkan periode sewa.
+- Penghapusan kamar harus mempertimbangkan integritas referensial dan riwayat sewa.
+
+### Hasil dan Evaluasi
+Entitas pertama dan urutan fitur telah ditetapkan. F1 sampai F4 memiliki dasar kebutuhan pada PRD. F5 masih berupa usulan karena PRD belum menetapkan aturan penghapusan kamar secara lengkap.
+
+**Status:** Langkah 2 selesai. Belum ada perubahan kode aplikasi, skema database, atau struktur tabel.
+
+## Langkah 3 - Siklus 1: Kerangka Proyek
+
+**Tanggal:** 17 November 2026
+
+### Tujuan
+Membangun kerangka awal aplikasi Sistem Informasi Pengelolaan Kontrakan menggunakan Flask dan SQLite berdasarkan aturan proyek, arsitektur sistem, serta skema database yang telah disepakati.
+
+### Ringkasan Prompt
+Meminta AI menyusun kerangka aplikasi Flask yang terdiri dari `app.py`, `routes.py`, `models.py`, `services.py`, dan `templates/base.html`. Aplikasi menggunakan SQLite dengan pengaturan foreign key aktif, inisialisasi database berdasarkan `docs/desain/schema.sql`, dan kunci rahasia dari variabel lingkungan.
+
+### Hasil
+- Membuat aplikasi Flask dengan fungsi inisialisasi.
+- Membuat routing beranda yang mengarahkan pengguna ke halaman `/kamar`.
+- Membuat koneksi SQLite dan fungsi `init_db()`.
+- Menyiapkan `services.py` sebagai berkas kosong.
+- Membuat template dasar HTML dengan navigasi sementara.
+- Menyiapkan database `instance/kontrakan.db` berdasarkan skema proyek.
+
+### Keputusan Sementara
+- Database menggunakan nama `kontrakan.db` dan disimpan pada folder `instance/`.
+- Struktur database tetap mengikuti `docs/desain/schema.sql`.
+- `models.py` menjadi satu-satunya lapisan yang mengakses SQLite secara langsung.
+- Menu navigasi masih berupa kerangka dan akan disesuaikan dengan wireframe.
+- Belum ada implementasi CRUD pada tahap ini.
+
+### Hasil Pengujian
+- Aplikasi berhasil dijalankan menggunakan python app.py.
+- Endpoint / mengarahkan pengguna ke /kamar.
+- Endpoint /kamar menghasilkan HTTP 200.
+- Database memiliki lima tabel.
+- Dua trigger berhasil ditemukan.
+- Foreign key aktif dengan nilai 1.
+
+**Status:** Berhasil diverifikasi.
+
+
+## Langkah 3 - Membuat Kerangka Proyek
+
+### 1. Tujuan
+Membuat kerangka awal aplikasi Sistem Informasi Pengelolaan Kontrakan menggunakan Flask dan SQLite sesuai aturan proyek serta struktur direktori yang telah ditentukan.
+
+### 2. Ringkasan Prompt
+Meminta AI membuat kerangka aplikasi yang terdiri dari `app.py`, `routes.py`, `models.py`, `services.py`, dan `templates/base.html`. Aplikasi menggunakan Flask dan pustaka standar Python, koneksi SQLite mengaktifkan foreign key, serta database dibentuk berdasarkan `docs/desain/schema.sql`. Tidak menambahkan fitur CRUD pada tahap ini.
+
+### 3. Hasil
+- Flask berhasil dijalankan menggunakan virtual environment `.venv`.
+- Aplikasi dapat dijalankan melalui `python app.py`.
+- Halaman `/` berhasil mengarahkan pengguna ke `/kamar`.
+- Endpoint `/kamar` berhasil memberikan respons HTTP 200.
+- File `models.py` menyediakan koneksi SQLite dan mengaktifkan `PRAGMA foreign_keys = ON`.
+- Database berhasil dibuat di `instance/kontrakan.db`.
+- Validasi database menunjukkan lima tabel: `akun_pengguna`, `kamar`, `penyewa`, `sewa`, dan `pembayaran`.
+- Dua trigger pencegah periode sewa tumpang tindih berhasil ditemukan.
+- Nilai `PRAGMA foreign_keys` menunjukkan `1` (aktif).
+- Template dasar dan navigasi awal berhasil dibuat.
+- `services.py` masih kosong dan belum ada fitur CRUD.
+
+### 4. Keputusan Sementara
+- Entitas awal yang akan dikerjakan adalah `kamar`, berdasarkan hasil Langkah 2.
+- Navigasi pada template masih sementara dan perlu dicocokkan kembali dengan wireframe.
+- Pengembangan saat ini dibatasi pada kerangka aplikasi, belum mencakup operasi tambah, tampil, ubah, atau hapus data.
+- Secret key Flask diatur melalui variabel lingkungan `FLASK_SECRET_KEY`.
+
+### 5. Hasil Pengujian
+- Aplikasi berhasil dijalankan menggunakan `python app.py`.
+- Endpoint `/` mengarahkan pengguna ke `/kamar`.
+- Endpoint `/kamar` menghasilkan HTTP 200.
+- Database `instance/kontrakan.db` memiliki lima tabel.
+- Dua trigger berhasil ditemukan.
+- Foreign key aktif dengan nilai `1`.
+
+**Status:** Berhasil diverifikasi.
+
+## Langkah 4 - Review Kerangka Proyek dan Commit
+
+**Tanggal:** 17 November 2026
+
+### Hasil Review
+
+Kerangka proyek Flask telah diperiksa berdasarkan checklist Appendix C.
+
+1. Struktur file dan pemisahan tanggung jawab sudah sesuai dengan kerangka proyek.
+2. Nama tabel dan struktur database mengikuti `docs/desain/schema.sql`.
+3. SQL belum digunakan untuk fitur CRUD pada tahap ini. Seluruh akses database dipusatkan di `models.py`.
+4. `routes.py` hanya menangani route dan respons HTTP. `services.py` disiapkan untuk logika bisnis pada tahap berikutnya.
+5. Pemeriksaan validasi input, duplikasi data, dan penanganan kegagalan CRUD belum diterapkan karena fitur CRUD belum dibuat.
+6. Operasi update dan delete belum tersedia pada tahap kerangka proyek.
+7. Secret key diambil dari environment variable `FLASK_SECRET_KEY`, bukan ditulis langsung di source code. Mode debug diberi catatan bahwa penggunaannya hanya untuk pengembangan lokal.
+8. Dependensi Flask dicatat dalam `requirements.txt`.
+9. Perubahan dibatasi pada file yang diperlukan untuk membangun kerangka proyek.
+10. Template menggunakan sintaks Jinja2 untuk menampilkan variabel.
+11. Tampilan pesan berhasil dan gagal akan diperiksa ketika fitur CRUD mulai dibuat.
+12. Fungsi setiap file dan alur dasar aplikasi telah dipelajari.
+
+### Keputusan Review
+
+- **Accept:** Struktur proyek, pemisahan tanggung jawab, penggunaan environment variable, dan konfigurasi dependensi.
+- **Change:** Inisialisasi database disesuaikan agar hanya membuat database ketika file database belum tersedia. Catatan keamanan ditambahkan pada penggunaan mode debug.
+- **Belum diterapkan:** Validasi CRUD, penanganan kesalahan operasi data, serta pesan berhasil dan gagal karena fitur tersebut belum menjadi bagian dari kerangka awal.
+
+### Hasil Pengujian
+
+- Pemeriksaan sintaks Python menggunakan `py_compile`: berhasil.
+- Jumlah tabel database: 5.
+- Jumlah trigger: 2.
+- Foreign key aktif pada koneksi pemeriksaan: 1.
+- `git diff --check`: tidak menemukan kesalahan whitespace.
+
+### Kesimpulan
+
+Kerangka proyek Flask dan inisialisasi database berhasil diperiksa. Perubahan siap disiapkan untuk commit.
+
+**Status:** Review berhasil.
