@@ -635,4 +635,36 @@ Kerangka proyek Flask dan inisialisasi database berhasil diperiksa. Perubahan si
 ### Catatan
 Tombol tambah dan edit belum diaktifkan karena proses CRUD dilaksanakan pada langkah berikutnya. Status ketersediaan dihitung dari periode sewa tanpa mengubah skema database.
 
+## Langkah 6 - Siklus 3: Tambah Data Kamar
+
+**Tujuan:** Membuat form tambah kamar dengan validasi masukan dan penyimpanan data ke database.
+
+**Implementasi:**
+- Membuat fungsi `validate_kamar()` pada `services.py` untuk memvalidasi nomor kamar dan harga sewa.
+- Membuat fungsi `create_kamar()` pada `models.py` untuk menyimpan data menggunakan SQL berparameter.
+- Menambahkan rute GET dan POST `/kamar/tambah` pada `routes.py`.
+- Membuat template `templates/kamar_form.html`.
+- Mengaktifkan tombol Tambah Kamar pada halaman daftar.
+- Menambahkan flash message untuk pemberitahuan keberhasilan penyimpanan.
+
+**Hasil pengujian:**
+
+| No. | Masukan uji | Hasil diharapkan | Hasil nyata / lulus? |
+|---:|---|---|---|
+| 1 | Semua kolom valid: C-01, harga 850000 | Tersimpan, pesan sukses, tampil di daftar | Lulus. Data tersimpan satu kali dan respons redirect ke `/kamar`. |
+| 2 | Nomor kamar kosong | Ditolak, pesan galat, data tidak tersimpan | Lulus. Pesan validasi tampil dan isian harga tetap dipertahankan. |
+| 3 | Harga -5 | Ditolak dengan pesan galat | Lulus. Harga negatif ditolak. |
+| 4 | Harga abc | Ditolak dengan pesan galat | Lulus. Teks pada kolom angka ditolak. |
+| 5 | Nomor kamar A-01 yang sudah ada | Ditolak dengan pesan "sudah ada" | Lulus. Data duplikat ditolak dan data lama tidak bertambah. |
+
+**Pengujian tambahan:**
+- Halaman form tambah kamar menghasilkan HTTP 200.
+- Kolom Nomor Kamar dan Harga Sewa tampil.
+- Kesalahan validasi mempertahankan isian pengguna.
+- Pengujian menggunakan database sementara agar database utama tidak terpengaruh.
+
+**Kesimpulan:** Keenam skenario pengujian yang dijalankan berhasil. Fitur tambah kamar telah memenuhi validasi masukan, penanganan duplikasi, penyimpanan data, dan pola Post–Redirect–Get.
+
+**Status:** Implementasi dan pengujian Langkah 6 selesai.
+
 **Status:** Langkah 5 selesai dan pengujian berhasil.

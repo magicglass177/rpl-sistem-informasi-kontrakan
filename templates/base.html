@@ -218,6 +218,52 @@
                 min-width: 650px;
             }
         }
+
+        .form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    max-width: 420px;
+    padding: 10px;
+    border: 1px solid #777;
+    font-size: 13px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 9px;
+    margin-top: 22px;
+}
+
+.field-error {
+    display: block;
+    margin-top: 6px;
+    color: #a00000;
+}
+
+.message {
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #777;
+}
+
+.message.success {
+    background: #e9f5e9;
+    color: #145214;
+}
+
+.message.error {
+    background: #fbeaea;
+    color: #8a0000;
+}
     </style>
 </head>
 
@@ -264,5 +310,13 @@
             © 2026 Sistem Informasi Pengelolaan Kontrakan
         </footer>
     </main>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="message {{ category }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endwith %}
 </body>
 </html>

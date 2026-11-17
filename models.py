@@ -1,5 +1,6 @@
 import sqlite3
 from pathlib import Path
+from decimal import Decimal
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -80,6 +81,45 @@ def get_all_kamar(kata_kunci=""):
             query,
             (f"%{kata_kunci.strip()}%",)
         ).fetchall()
+
+    finally:
+        connection.close()
+
+
+def create_kamar(nomor_kamar, harga_sewa):
+    """
+    Menyimpan data kamar baru.
+
+    Hasil:
+    - (True, None) jika berhasil.
+    - (False, 'duplicate') jika nomor kamar sudah digunakan.
+    - (False, 'database') jika terjadi kesalahan database lainnya.
+    """
+    connection = get_db_connection()
+
+    try:
+        connection.execute(
+            """
+            INSERT INTO kamar (nomor_kamar, harga_sewa)
+            VALUES (?, ?)
+            """,
+            (nomor_kamar, str(Decimal(harga_sewa)))
+        )
+
+        connection.commit()
+        return True, None
+
+    except sqlite3.IntegrityError as error:
+        connection.rollback()
+
+        if "UNIQUE constraint failed: kamar.nomor_kamar" in str(error):
+            return False, "duplicate"
+
+        return False, "database"
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
 
     finally:
         connection.close()
