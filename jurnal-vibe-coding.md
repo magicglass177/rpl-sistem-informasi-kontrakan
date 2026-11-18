@@ -668,3 +668,43 @@ Tombol tambah dan edit belum diaktifkan karena proses CRUD dilaksanakan pada lan
 **Status:** Implementasi dan pengujian Langkah 6 selesai.
 
 **Status:** Langkah 5 selesai dan pengujian berhasil.
+
+## Langkah 8 - Mengubah Data Kamar
+
+**Tujuan:** Menambahkan fitur ubah data kamar dengan validasi, penanganan data yang tidak ditemukan, dan perlindungan terhadap nomor kamar duplikat.
+
+**Implementasi:**
+1. Menambahkan fungsi `get_kamar_by_id()` pada `models.py` untuk mengambil data kamar berdasarkan ID.
+2. Menambahkan fungsi `update_kamar()` untuk memperbarui nomor kamar dan harga sewa.
+3. Menambahkan rute GET dan POST `/kamar/<id_kamar>/ubah` pada `routes.py`.
+4. Menggunakan kembali `kamar_form.html` untuk form tambah dan ubah kamar.
+5. Mengisi form ubah dengan data kamar sebelumnya.
+6. Mengganti tombol Edit pada daftar kamar dengan tautan menuju form ubah.
+
+**Validasi dan keamanan:**
+- Nomor kamar wajib diisi dan maksimal 20 karakter.
+- Harga sewa wajib berupa angka dan tidak boleh negatif.
+- Nomor kamar yang sudah digunakan ditolak.
+- ID kamar tidak ditemukan menghasilkan halaman 404.
+- Hanya `nomor_kamar` dan `harga_sewa` yang dapat diubah melalui form.
+
+**Hasil Pengujian:**
+
+| No. | Pengujian | Hasil |
+|---|---|---|
+| 1 | Form ubah menampilkan data lama | Berhasil |
+| 2 | Mengubah harga sewa | Berhasil |
+| 3 | Mengubah nomor menjadi nomor duplikat | Ditolak |
+| 4 | Membuka `/kamar/999/ubah` | HTTP 404 |
+| 5 | Mengosongkan nomor kamar | Ditolak |
+| 6 | Memasukkan harga negatif | Ditolak |
+
+**Hasil:** Seluruh pengujian berhasil. Fitur ubah data kamar dapat digunakan sesuai kebutuhan Langkah 8.
+
+**File yang diubah:**
+- `models.py`
+- `routes.py`
+- `templates/kamar_form.html`
+- `templates/kamar_list.html`
+
+**Status:** Implementasi dan pengujian selesai. Siap di-commit.

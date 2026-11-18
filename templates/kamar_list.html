@@ -51,11 +51,11 @@
                         {{ kamar["status_ketersediaan"] }}
                     </span>
                 </td>
-                <td>
-                    <button class="button" type="button" disabled
-                            title="Fitur edit dibuat pada langkah berikutnya">
+               <td>
+                    <a class="button"
+                    href="{{ url_for('main.ubah_kamar', id_kamar=kamar['id_kamar']) }}">
                         Edit
-                    </button>
+                    </a>
                 </td>
             </tr>
             {% else %}
