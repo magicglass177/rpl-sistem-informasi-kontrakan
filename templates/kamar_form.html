@@ -3,8 +3,15 @@
 
 {% block content %}
 <section class="page-heading">
-    <h1>Tambah Kamar</h1>
-    <p>Masukkan informasi kamar kontrakan yang baru.</p>
+    <h1>{{ judul_form }}</h1>
+
+    <p>
+        {% if judul_form == "Ubah Kamar" %}
+            Perbarui informasi kamar kontrakan.
+        {% else %}
+            Masukkan informasi kamar kontrakan yang baru.
+        {% endif %}
+    </p>
 </section>
 
 <section class="table-card">
@@ -14,7 +21,7 @@
         </div>
     {% endif %}
 
-    <form method="POST" action="{{ url_for('main.tambah_kamar') }}">
+    <form method="POST" action="{{ action_url }}">
         <div class="form-group">
             <label for="nomor_kamar">Nomor Kamar</label>
             <input
@@ -58,7 +65,7 @@
 
         <div class="form-actions">
             <button class="button" type="submit">
-                Simpan
+                {{ teks_tombol }}
             </button>
 
             <a class="button"

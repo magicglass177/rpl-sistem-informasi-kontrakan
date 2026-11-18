@@ -123,3 +123,64 @@ def create_kamar(nomor_kamar, harga_sewa):
 
     finally:
         connection.close()
+
+def get_kamar_by_id(id_kamar):
+    """Mengambil satu data kamar berdasarkan ID."""
+    connection = get_db_connection()
+
+    try:
+        return connection.execute(
+            """
+            SELECT id_kamar, nomor_kamar, harga_sewa
+            FROM kamar
+            WHERE id_kamar = ?
+            """,
+            (id_kamar,)
+        ).fetchone()
+
+    finally:
+        connection.close()
+
+
+def update_kamar(id_kamar, nomor_kamar, harga_sewa):
+    """
+    Memperbarui data kamar.
+
+    Hasil:
+    - (True, None) jika berhasil.
+    - (False, 'duplicate') jika nomor kamar sudah digunakan.
+    - (False, 'database') jika terjadi kesalahan database.
+    """
+    connection = get_db_connection()
+
+    try:
+        connection.execute(
+            """
+            UPDATE kamar
+            SET nomor_kamar = ?, harga_sewa = ?
+            WHERE id_kamar = ?
+            """,
+            (
+                nomor_kamar,
+                str(Decimal(harga_sewa)),
+                id_kamar,
+            )
+        )
+
+        connection.commit()
+        return True, None
+
+    except sqlite3.IntegrityError as error:
+        connection.rollback()
+
+        if "UNIQUE constraint failed: kamar.nomor_kamar" in str(error):
+            return False, "duplicate"
+
+        return False, "database"
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()
