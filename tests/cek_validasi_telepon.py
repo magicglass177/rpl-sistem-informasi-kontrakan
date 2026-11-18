@@ -71,7 +71,7 @@ for nomor in nomor_tidak_valid:
 
 connection.close()
 
-print("\\n=== RINGKASAN ===")
+print("\n=== RINGKASAN ===")
 print(f"Nomor valid diuji       : {len(nomor_valid)}")
 print(f"Nomor tidak valid diuji : {len(nomor_tidak_valid)}")
 print("HASIL: Seluruh pengujian validasi nomor telepon berhasil.")

@@ -154,7 +154,7 @@ def ubah_kamar(id_kamar):
             teks_tombol="Simpan Perubahan",
         ), 400
 
-    # GET: isi form dengan data lama.
+   # GET: isi form dengan data lama.
     return render_template(
         "kamar_form.html",
         page_title="Ubah Kamar",

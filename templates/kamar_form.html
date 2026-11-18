@@ -4,13 +4,14 @@
 {% block content %}
 <section class="page-heading">
     <h1>{{ judul_form }}</h1>
-<p>
-    {% if judul_form == "Ubah Kamar" %}
-        Perbarui informasi kamar kontrakan.
-    {% else %}
-        Masukkan informasi kamar kontrakan yang baru.
-    {% endif %}
-</p>
+
+    <p>
+        {% if judul_form == "Ubah Kamar" %}
+            Perbarui informasi kamar kontrakan.
+        {% else %}
+            Masukkan informasi kamar kontrakan yang baru.
+        {% endif %}
+    </p>
 </section>
 
 <section class="table-card">
@@ -64,8 +65,8 @@
 
         <div class="form-actions">
             <button class="button" type="submit">
-    {{ teks_tombol }}
-</button>
+                {{ teks_tombol }}
+            </button>
 
             <a class="button"
                href="{{ url_for('main.daftar_kamar') }}">
