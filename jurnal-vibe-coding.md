@@ -1186,4 +1186,196 @@ Memastikan fitur (pencarian, penyaringan, refactoring) berada pada PR/commit ter
 **Proporsi kumulatif Jobsheet 9 + 10:** Terima 20/29 (68,97%), Ubah 8/29 (27,59%), Tolak 1/29 (3,45%). Entri jurnal baru ≥ 8 dan bertanda `[Debug]` = 2 (ditambah 1 dari Jobsheet 9, total 3).
 
 **Jenis galat AI yang ditemui:** nama kolom salah, variabel salah ketik, pencarian tidak mengekspor karakter wildcard, validasi awal tidak sesuai kamus data, dan duplikasi render_template.
-PY
+
+
+---
+
+# Jobsheet 11 — Antarmuka, Validasi, Autentikasi, dan Otorisasi Peran
+
+**Tanggal:** 21 November 2026
+
+## Siklus 1 — Matriks akses dan akun awal ber-hash
+
+### Tujuan
+Menetapkan dua peran (pemilik, kasir) dan membuat akun awal tanpa kata sandi di repositori.
+
+### Aktivitas
+Menyusun matriks akses pada `docs/spesifikasi-fitur-akses.md`, menambahkan kolom `peran` pada
+`schema.sql`, fungsi `buat_pengguna` di `services.py`, dan skrip `scripts/buat_pengguna.py`
+yang membaca kata sandi dengan `getpass`.
+
+### Hasil AI
+AI menghasilkan fungsi validasi akun dan skrip pembuatan akun. Skrip lama masih menggunakan
+kata sandi dari variabel lingkungan, sehingga diganti.
+
+### Keputusan
+- **Ubah.**
+
+### Alasan
+Sesuai Lampiran A.1: kata sandi dibaca dari terminal, panjang minimal 8, peran dibatasi
+allowlist, dan hash memakai `generate_password_hash` Werkzeug.
+
+### Hasil Uji
+Kolom `password_hash` berawalan `scrypt:`/`pbkdf2:` dan berbeda untuk kata sandi yang sama.
+
+## Siklus 2 — Login dan logout dengan sesi
+
+### Tujuan
+Mengganti penjagaan sesi lama dengan alur login/logout yang aman.
+
+### Aktivitas
+`services.autentikasi` memakai `check_password_hash` dan `_HASH_PALSU`; rute login memakai
+`session.clear()`, hanya menyimpan `pengguna_id`, memvalidasi `next` dengan `_tujuan_aman`,
+dan logout hanya lewat POST.
+
+### Keputusan
+- **Terima** dengan penyesuaian pesan galat.
+
+### Alasan
+Satu pesan galat untuk dua kasus mencegah user enumeration; cookie HttpOnly dan SameSite=Lax
+mengurangi risiko pencurian sesi.
+
+### Hasil Uji
+Lima uji Langkah 4 lulus: kredensial benar, kata sandi salah, username tidak ada, `next`
+luar situs, dan akses setelah logout.
+
+## Siklus 3 — Pembatasan peran di sisi server
+
+### Tujuan
+Menegakkan matriks akses pada semua rute, termasuk POST.
+
+### Aktivitas
+Membuat `peran_diperlukan(*peran)`, `muat_pengguna()` pada `before_request`, context processor
+`pengguna`, serta halaman `403.html` melalui error handler.
+
+### Keputusan
+- **Ubah** pada penempatan decorator.
+
+### Alasan
+Rute kelola kamar/penyewa dan laporan dibatasi pemilik; modul sewa dan pembayaran dapat
+diakses kedua peran yang sudah login. Tautan tersembunyi bukan pengamanan utama.
+
+### Hasil Uji
+Tamu dialihkan ke login; kasir mendapat 403 pada GET dan POST tambah kamar; pemilik berhasil.
+
+## Siklus 4 — [Debug] Kode keamanan hasil AI
+
+### Tujuan
+Meninjau lebih ketat kode keamanan yang dihasilkan AI.
+
+### Aktivitas / Temuan
+Dua galat ditemukan dengan membaca traceback dan menjalankan `ast.parse`:
+1. AI menulis `@hanya_pemilih`, padahal fungsi yang tersedia bernama `hanya_pemilik`.
+   Akibatnya semua rute yang memakainya akan menimbulkan `NameError` saat modul dimuat.
+2. Pemeriksaan `next` ditulis `"\" not in tujuan` dalam bentuk escape yang rusak, sehingga
+   file `routes.py` mengalami `SyntaxError`. Tanpa perbaikan, open redirect tidak tertutup.
+
+### Keputusan
+- **Ubah** keduanya; tambah uji regresi untuk 403 dan open redirect.
+
+### Alasan
+Kode keamanan AI tidak boleh diterima tanpa dijalankan: galat nama dan escape sederhana
+membuat seluruh kontrol akses tidak aktif.
+
+### Hasil Uji
+`ast.parse` lulus; `tests/uji_cepat.py` membuktikan 403 dan alihkan internal.
+
+## Siklus 5 — Templat induk dan satu berkas CSS
+
+### Tujuan
+Menyesuaikan tampilan dengan wireframe dan daftar periksa C.1.
+
+### Aktivitas
+Memindahkan seluruh gaya sebaris ke `static/style.css` dengan variabel `:root`,
+menulis ulang `base.html` agar menu mengikuti peran, dan menyembunyikan kolom/tombol aksi
+bagi kasir pada daftar kamar dan penyewa.
+
+### Keputusan
+- **Terima.**
+
+### Alasan
+Satu sumber gaya dan satu tempat definisi menu memudahkan konsistensi; `role="alert"` untuk
+galat dan `role="status"` untuk sukses meningkatkan keterbacaan.
+
+### Hasil Uji
+Seluruh halaman dirender dengan templat yang sama dan tidak ada gaya sebaris berulang.
+
+## Siklus 6 — Validasi dua lapis
+
+### Tujuan
+Memastikan atribut HTML5 tidak menggantikan validasi server.
+
+### Aktivitas
+Menambahkan `maxlength`, `autocomplete`, dan atribut HTML5 lainnya pada form;validasi
+`services.validate_*` tetap dipertahankan dan pesan galat spesifik tidak diubah.
+
+### Keputusan
+- **Terima.**
+
+### Alasan
+Lapis klien hanya kenyamanan dan dapat dilewati melalui alat pengembang; lapis server
+tetap menjadi satu-satunya penentu.
+
+### Hasil Uji
+Kiriman harga "abc" dan nomor kosong tetap ditolak server dengan isian yang dipertahankan.
+
+## Siklus 7 — Integrasi alur dua peran
+
+### Tujuan
+Menjalankan alur Langkah 10 tanpa langkah manual pada basis data.
+
+### Aktivitas
+Login pemilik → tambah/ubah kamar → catat sewa dan pembayaran → logout → login kasir →
+coba alamat tambah kamar dan POST hapus → logout.
+
+### Keputusan
+- **Terima.**
+
+### Alasan
+Alur berjalan dari antarmuka; perubahan peran langsung berlaku karena peran dibaca dari
+basis data setiap permintaan.
+
+### Hasil Uji
+`tests/uji_cepat.py` dan 53 pengujian unit lulus.
+
+## Siklus 8 — Uji otomatis, tinjauan keamanan, dan PR
+
+### Tujuan
+Membuktikan fitur dan menyiapkan checkpoint.
+
+### Aktivitas
+Menambahkan 17 kelompok pernyataan uji login/peran pada `uji_cepat.py`, menulis
+`docs/temuan-keamanan.md` dengan delapan temuan (lima sudah diperbaiki, tiga ditunda),
+serta memperbarui rencana sprint.
+
+### Keputusan
+- **Terima.**
+
+### Alasan
+Temuan yang belum dapat dikerjakan hari ini tercatat untuk Pertemuan 12 sesuai jobsheet.
+
+### Hasil Uji
+`SEMUA UJI LULUS`; `python -m unittest discover -s tests` → 53 tests OK.
+
+## Rekap Keputusan Jobsheet 11
+
+| No | Siklus | Keputusan |
+|---:|---|---|
+| 1 | Matriks akses dan akun awal | Ubah |
+| 2 | Login dan logout | Terima |
+| 3 | Pembatasan peran | Ubah |
+| 4 | Debug kode keamanan AI | Ubah |
+| 5 | Templat induk dan CSS | Terima |
+| 6 | Validasi dua lapis | Terima |
+| 7 | Integrasi dua peran | Terima |
+| 8 | Uji, tinjauan, PR | Terima |
+
+**Proporsi Jobsheet 11:** Terima 5/8 (62,50%), Ubah 3/8 (37,50%), Tolak 0/8 (0%).
+Entri baru = 8 (termasuk 1 entri khusus keamanan AI dan 1 entri `[Debug]`).
+
+**Proporsi kumulatif Jobsheet 9 + 10 + 11:** Terima 25/37 (67,57%), Ubah 11/37 (29,73%),
+Tolak 1/37 (2,70%).
+
+**Jenis galat AI yang ditemui:** decorator never-defined, escape backslash pada validasi
+`next`, skrip akun memakai environment variable, dan pesan galat login yang membocorkan
+keberadaan akun.
