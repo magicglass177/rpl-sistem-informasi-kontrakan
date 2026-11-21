@@ -523,3 +523,66 @@ def create_sewa(id_kamar, id_penyewa, tanggal_mulai, tanggal_selesai, tanggal_ja
 
     finally:
         connection.close()
+
+
+from werkzeug.security import check_password_hash, generate_password_hash
+
+
+def get_akun_by_username(username):
+    """Mengambil akun pengguna berdasarkan username."""
+    connection = get_db_connection()
+
+    try:
+        return connection.execute(
+            """
+            SELECT id_akun, username, password_hash
+            FROM akun_pengguna
+            WHERE username = ?
+            """,
+            (username.strip(),),
+        ).fetchone()
+
+    finally:
+        connection.close()
+
+
+def create_akun(username, password):
+    """
+    Membuat akun pengguna baru.
+
+    Hasil:
+    - (True, None) jika berhasil.
+    - (False, 'duplicate') jika username sudah ada.
+    - (False, 'database') jika terjadi kesalahan database.
+    """
+    connection = get_db_connection()
+
+    try:
+        connection.execute(
+            """
+            INSERT INTO akun_pengguna (username, password_hash)
+            VALUES (?, ?)
+            """,
+            (username.strip(), generate_password_hash(password)),
+        )
+        connection.commit()
+        return True, None
+
+    except sqlite3.IntegrityError:
+        connection.rollback()
+        return False, "duplicate"
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()
+
+
+def verify_password(stored_hash, password):
+    """Memeriksa password terhadap hash yang tersimpan."""
+    try:
+        return check_password_hash(stored_hash, password)
+    except (TypeError, ValueError):
+        return False

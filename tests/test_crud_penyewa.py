@@ -37,6 +37,12 @@ class TestCrudPenyewa(unittest.TestCase):
     def setUp(self):
         self._kosongkan_database()
 
+        models.create_akun("admin", "rahasia")
+        self.client.post(
+            "/login",
+            data={"username": "admin", "password": "rahasia"},
+        )
+
         berhasil, status = models.create_penyewa(
             "Andi Pratama",
             "081234567890",

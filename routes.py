@@ -5,10 +5,13 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 
 from models import (
+    create_akun,
+    get_akun_by_username,
     create_kamar,
     create_penyewa,
     create_sewa,
@@ -18,6 +21,7 @@ from models import (
     get_all_penyewa,
     get_all_sewa,
     get_kamar_by_id,
+    verify_password,
     get_penyewa_by_id,
     get_sewa_by_id,
     update_kamar,
@@ -29,6 +33,59 @@ from services import validate_kamar, validate_penyewa, validate_sewa
 
 
 main = Blueprint("main", __name__)
+
+@main.before_request
+def wajib_login():
+    """Membatasi akses ke halaman pengelolaan bagi pengguna yang belum login."""
+    if request.endpoint in {"main.login"}:
+        return
+
+    if request.endpoint and request.endpoint.startswith("static"):
+        return
+
+    if not session.get("id_akun"):
+        return redirect(url_for("main.login", next=request.path))
+
+
+@main.route("/login", methods=["GET", "POST"])
+def login():
+    if session.get("id_akun"):
+        return redirect(url_for("main.daftar_kamar"))
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+
+        akun = get_akun_by_username(username)
+
+        if akun and verify_password(akun["password_hash"], password):
+            session.clear()
+            session["id_akun"] = akun["id_akun"]
+            session["username"] = akun["username"]
+            flash("Login berhasil.", "success")
+
+            tujuan = request.args.get("next", "")
+            if tujuan.startswith("/"):
+                return redirect(tujuan)
+
+            return redirect(url_for("main.daftar_kamar"))
+
+        flash("Username atau password salah.", "danger")
+
+    return render_template(
+        "login.html",
+        page_title="Login",
+        active_page=None,
+        data={"username": request.form.get("username", "") if request.method == "POST" else ""},
+        errors={},
+    )
+
+
+@main.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    flash("Anda telah logout.", "success")
+    return redirect(url_for("main.login"))
 
 
 @main.route("/")

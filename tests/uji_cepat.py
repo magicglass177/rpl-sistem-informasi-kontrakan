@@ -41,6 +41,12 @@ def main():
     finally:
         connection.close()
 
+    models.create_akun("admin", "rahasia")
+    client.post(
+        "/login",
+        data={"username": "admin", "password": "rahasia"},
+    )
+
     # 1. Daftar kamar (keadaan kosong).
     response = client.get("/kamar")
     cek(response.status_code == 200, "Daftar kamar tidak dapat dibuka.")

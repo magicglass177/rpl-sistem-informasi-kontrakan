@@ -38,6 +38,12 @@ class TestCrudKamar(unittest.TestCase):
     def setUp(self):
         self._kosongkan_database()
 
+        models.create_akun("admin", "rahasia")
+        self.client.post(
+            "/login",
+            data={"username": "admin", "password": "rahasia"},
+        )
+
         models.create_kamar("A-01", "850000")
         models.create_kamar("B-01", "750000")
 

@@ -296,7 +296,14 @@
         <div class="user-info">
             <div class="avatar">[P]</div>
             <span>Pemilik Kontrakan</span>
-            <button class="logout" type="button" disabled>Logout</button>
+            {% if session.get('username') %}
+                <span class="avatar">{{ session.get('username') }}</span>
+                <form method="POST" action="{{ url_for('main.logout') }}" style="display: inline;">
+                    <button class="logout" type="submit">Logout</button>
+                </form>
+            {% else %}
+                <a class="button" href="{{ url_for('main.login') }}">Login</a>
+            {% endif %}
         </div>
     </header>
 
