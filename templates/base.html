@@ -5,285 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ page_title }} - Sistem Informasi Pengelolaan Kontrakan</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: #111;
-            background: #fff;
-            font-size: 13px;
-        }
-
-        .topbar {
-            min-height: 61px;
-            border: 1px solid #222;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 20px;
-        }
-
-        .brand,
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo,
-        .avatar {
-            border: 1px solid #222;
-            padding: 9px;
-            font-size: 11px;
-        }
-
-        .brand strong {
-            font-size: 14px;
-        }
-
-        .logout {
-            border: 1px solid #222;
-            padding: 8px 12px;
-            background: white;
-        }
-
-        .sidebar {
-            position: absolute;
-            top: 61px;
-            left: 0;
-            width: 209px;
-            min-height: 793px;
-            border: 1px solid #222;
-            padding: 28px 13px;
-        }
-
-        .sidebar h3 {
-            font-size: 11px;
-            margin: 0 8px 12px;
-            padding-bottom: 9px;
-            border-bottom: 1px solid #222;
-        }
-
-        .sidebar a,
-        .sidebar span {
-            display: block;
-            border: 1px solid #999;
-            padding: 11px 12px;
-            margin-bottom: 8px;
-            color: #111;
-            text-decoration: none;
-        }
-
-        .sidebar a.active {
-            border: 2px solid #222;
-            background: #eee;
-            font-weight: bold;
-        }
-
-        .sidebar span {
-            color: #555;
-        }
-
-        .content {
-            margin-left: 209px;
-            padding: 22px 24px;
-        }
-
-        .breadcrumb {
-            margin: 0 0 18px;
-            font-size: 11px;
-        }
-
-        .page-heading {
-            border-bottom: 2px solid #222;
-            padding-bottom: 10px;
-            margin-bottom: 19px;
-        }
-
-        .page-heading h1 {
-            margin: 0 0 6px;
-            font-size: 21px;
-        }
-
-        .page-heading p {
-            margin: 0;
-            color: #444;
-        }
-
-        .toolbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 9px 13px;
-            border: 1px solid #222;
-            background: white;
-            color: #111;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .button:disabled {
-            color: #555;
-            cursor: not-allowed;
-        }
-
-        .table-card {
-            border: 1px solid #222;
-            padding: 17px;
-        }
-
-        .search-form {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .search-form input,
-        .search-form select {
-            width: 257px;
-            padding: 9px;
-            border: 1px solid #555;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #888;
-            padding: 12px 8px;
-            text-align: left;
-        }
-
-        th {
-            background: #eee;
-        }
-
-        .status {
-            display: inline-block;
-            border: 1px solid #555;
-            padding: 3px 8px;
-            font-size: 11px;
-        }
-
-        .empty-state {
-            padding: 24px;
-            text-align: center;
-            color: #555;
-        }
-
-        .table-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 13px;
-            font-size: 11px;
-        }
-
-        footer {
-            border-top: 1px solid #777;
-            margin-top: 22px;
-            padding-top: 12px;
-            font-size: 11px;
-        }
-
-        @media (max-width: 760px) {
-            .sidebar {
-                position: static;
-                width: 100%;
-                min-height: auto;
-            }
-
-            .content {
-                margin-left: 0;
-                padding: 18px;
-            }
-
-            .table-card {
-                overflow-x: auto;
-            }
-
-            table {
-                min-width: 650px;
-            }
-        }
-
-        .form-group {
-    margin-bottom: 18px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 7px;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    max-width: 420px;
-    padding: 10px;
-    border: 1px solid #777;
-    font-size: 13px;
-    font-family: inherit;
-}
-
-.form-group textarea {
-    min-height: 90px;
-    resize: vertical;
-}
-
-.form-actions {
-    display: flex;
-    gap: 9px;
-    margin-top: 22px;
-}
-
-.field-error {
-    display: block;
-    margin-top: 6px;
-    color: #a00000;
-}
-
-.message {
-    padding: 12px;
-    margin-bottom: 16px;
-    border: 1px solid #777;
-}
-
-.message.success {
-    background: #e9f5e9;
-    color: #145214;
-}
-
-.message.error {
-    background: #fbeaea;
-    color: #8a0000;
-}
-
-.message.warning {
-    background: #fff8e1;
-    color: #7a4b00;
-}
-
-.message.danger {
-    background: #fbeaea;
-    color: #8a0000;
-}
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -294,10 +16,10 @@
         </div>
 
         <div class="user-info">
-            <div class="avatar">[P]</div>
-            <span>Pemilik Kontrakan</span>
-            {% if session.get('username') %}
-                <span class="avatar">{{ session.get('username') }}</span>
+            {% if pengguna %}
+                <div class="avatar">[P]</div>
+                <span>{{ pengguna['username'] }} ({{ pengguna['peran'] }})</span>
+
                 <form method="POST" action="{{ url_for('main.logout') }}" style="display: inline;">
                     <button class="logout" type="submit">Logout</button>
                 </form>
@@ -311,40 +33,50 @@
         <h3>MENU UTAMA</h3>
 
         <nav aria-label="Navigasi utama">
-            <span>[1] Dashboard</span>
+            {% if pengguna %}
+                <span>[1] Dashboard</span>
 
-            <a
-                href="{{ url_for('main.daftar_kamar') }}"
-                class="{% if active_page == 'kamar' %}active{% endif %}"
-            >
-                [2] Kamar
-            </a>
+                <a
+                    href="{{ url_for('main.daftar_kamar') }}"
+                    class="{% if active_page == 'kamar' %}active{% endif %}"
+                >
+                    [2] Kamar
+                </a>
 
-            <a
-                href="{{ url_for('main.daftar_penyewa') }}"
-                class="{% if active_page == 'penyewa' %}active{% endif %}"
-            >
-                [3] Penyewa
-            </a>
+                {% if pengguna['peran'] == 'pemilik' %}
+                    <a
+                        href="{{ url_for('main.daftar_penyewa') }}"
+                        class="{% if active_page == 'penyewa' %}active{% endif %}"
+                    >
+                        [3] Penyewa
+                    </a>
+                {% endif %}
 
-            <a
-                href="{{ url_for('main.daftar_sewa') }}"
-                class="{% if active_page == 'sewa' %}active{% endif %}"
-            >
-                [4] Periode Sewa
-            </a>
-            <a
-                href="{{ url_for('main.daftar_pembayaran') }}"
-                class="{% if active_page == 'pembayaran' %}active{% endif %}"
-            >
-                [5] Pembayaran
-            </a>
-            <a
-                href="{{ url_for('main.laporan_pembayaran') }}"
-                class="{% if active_page == 'laporan' %}active{% endif %}"
-            >
-                [6] Laporan
-            </a>
+                <a
+                    href="{{ url_for('main.daftar_sewa') }}"
+                    class="{% if active_page == 'sewa' %}active{% endif %}"
+                >
+                    [4] Periode Sewa
+                </a>
+
+                <a
+                    href="{{ url_for('main.daftar_pembayaran') }}"
+                    class="{% if active_page == 'pembayaran' %}active{% endif %}"
+                >
+                    [5] Pembayaran
+                </a>
+
+                {% if pengguna['peran'] == 'pemilik' %}
+                    <a
+                        href="{{ url_for('main.laporan_pembayaran') }}"
+                        class="{% if active_page == 'laporan' %}active{% endif %}"
+                    >
+                        [6] Laporan
+                    </a>
+                {% endif %}
+            {% else %}
+                <span>Masuk untuk melihat menu.</span>
+            {% endif %}
         </nav>
     </aside>
 
@@ -353,7 +85,10 @@
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% for category, message in messages %}
-                <div class="message {{ category }}" role="alert">
+                <div
+                    class="message {{ category }}"
+                    role="{% if category in ['danger', 'error'] %}alert{% else %}status{% endif %}"
+                >
                     {{ message }}
                 </div>
             {% endfor %}

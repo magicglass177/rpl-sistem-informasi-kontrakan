@@ -19,6 +19,9 @@
                 id="username"
                 name="username"
                 required
+                maxlength="30"
+                autocomplete="username"
+                autofocus
                 value="{{ data.get('username', '') }}"
                 placeholder="Contoh: admin"
             >
@@ -31,6 +34,7 @@
                 id="password"
                 name="password"
                 required
+                autocomplete="current-password"
                 placeholder="Masukkan password"
             >
         </div>

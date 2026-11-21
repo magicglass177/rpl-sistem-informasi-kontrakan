@@ -9,9 +9,11 @@
 <div class="toolbar">
     <span>Kelola data kamar kontrakan.</span>
 
-    <a class="button" href="{{ url_for('main.tambah_kamar') }}">
-    + Tambah Kamar
-</a>
+    {% if pengguna and pengguna['peran'] == 'pemilik' %}
+        <a class="button" href="{{ url_for('main.tambah_kamar') }}">
+            + Tambah Kamar
+        </a>
+    {% endif %}
 </div>
 
 <section class="table-card">
@@ -34,7 +36,9 @@
                 <th>Nomor Kamar</th>
                 <th>Harga Sewa</th>
                 <th>Status Ketersediaan</th>
-                <th style="width: 14%;">Aksi</th>
+                {% if pengguna and pengguna['peran'] == 'pemilik' %}
+                    <th style="width: 14%;">Aksi</th>
+                {% endif %}
             </tr>
         </thead>
 
@@ -51,6 +55,7 @@
                         {{ kamar["status_ketersediaan"] }}
                     </span>
                 </td>
+                {% if pengguna and pengguna['peran'] == 'pemilik' %}
                 <td>
                     <a class="button"
                        href="{{ url_for('main.ubah_kamar', id_kamar=kamar['id_kamar']) }}">
@@ -68,10 +73,11 @@
                         </button>
                     </form>
                 </td>
+                {% endif %}
             </tr>
             {% else %}
             <tr>
-                <td colspan="5" class="empty-state">
+                <td colspan="{{ 4 if pengguna and pengguna['peran'] != 'pemilik' else 5 }}" class="empty-state">
                     Belum ada data
                     {% if kata_kunci %}
                         kamar dengan nomor "{{ kata_kunci }}"
