@@ -1660,3 +1660,33 @@ Mutasi membuktikan uji benar-benar mengikat aturan batas, bukan sekadar "tidak e
 Sebelum perbaikan: 1 failed, 29 passed. Sesudah perbaikan: 2 failed, 28 passed
 (TC-06 → D-02, TC-27 → D-01). Mutasi M1 (`harga < 0` → `<= 0`) gagalkan TC-01;
 M2 (`> 20` → `>= 20`) gagalkan TC-13; M3 (`<= 0` → `< 0`) gagalkan TC-30.
+
+
+## Siklus 3 — Uji alur, akses, dan laporan cacat (Langkah 9–10)
+
+### Tujuan
+Melengkapi uji otomatis dengan alur inti, matriks akses, dan penolakan CSRF,
+lalu melaporkan cacat nyata dengan bukti sebelum perbaikan.
+
+### Aktivitas
+Menambahkan `test_alur_kontrakan.py`, `test_akses.py`, `test_pembayaran.py`, dan
+`test_autentikasi.py`. Uji eksploratif Lampiran E.2 dijalankan pada basis data
+sementara. Total fungsi uji pytest menjadi 18 fungsi (belum termasuk uji lama).
+
+### Hasil AI
+AI mengusulkan matriks akses dengan `/penyewa` = 403 untuk kasir. Saya koreksi:
+halaman daftar memakai `@semua_peran`; hanya mutasi yang terlarang. AI juga
+mengusulkan perbandingan `response.data` mentah untuk pesan login, yang gagal
+karena field username diisi ulang — saya ganti dengan asersi pesan spesifik.
+
+### Keputusan
+- **Ubah** (dua harapan uji dikoreksi; tiga cacat dilaporkan).
+
+### Alasan
+Kegagalan karena uji salah harus diperbaiki pada ujinya, bukan dengan melonggarkan
+kode. Tiga kegagalan lain benar-benar menyimpang dari PRD/kamus data sehingga
+dicatat sebagai D-01, D-02, dan D-03.
+
+### Hasil Uji
+Sebelum koreksi uji: 5 failed, 106 passed. Sesudah koreksi: 3 failed,
+108 passed, 23 subtests — tepat tiga cacat nyata.
