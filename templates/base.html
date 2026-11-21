@@ -333,7 +333,12 @@
             >
                 [4] Periode Sewa
             </a>
-            <span>[5] Pembayaran</span>
+            <a
+                href="{{ url_for('main.daftar_pembayaran') }}"
+                class="{% if active_page == 'pembayaran' %}active{% endif %}"
+            >
+                [5] Pembayaran
+            </a>
             <span>[6] Laporan</span>
         </nav>
     </aside>

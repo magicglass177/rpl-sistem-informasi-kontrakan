@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>Daftar Pembayaran</h1>
+    <p>Kelola pembayaran sewa kontrakan.</p>
+</section>
+
+<div class="toolbar">
+    <span>Data pembayaran yang tercatat pada sistem.</span>
+    <a class="button" href="{{ url_for('main.tambah_pembayaran') }}">+ Tambah Pembayaran</a>
+</div>
+
+<section class="table-card">
+    <form class="search-form" method="GET" action="{{ url_for('main.daftar_pembayaran') }}">
+        <input type="search" name="q" placeholder="Cari nama penyewa atau nomor kamar..." value="{{ kata_kunci }}" aria-label="Cari pembayaran">
+        <select name="status" aria-label="Saring status pembayaran">
+            <option value="">Semua status</option>
+            <option value="Lunas" {% if status == "Lunas" %}selected{% endif %}>Lunas</option>
+            <option value="Belum Lunas" {% if status == "Belum Lunas" %}selected{% endif %}>Belum Lunas</option>
+            <option value="Terlambat" {% if status == "Terlambat" %}selected{% endif %}>Terlambat</option>
+        </select>
+        <button class="button" type="submit">Cari</button>
+        <a class="button" href="{{ url_for('main.daftar_pembayaran') }}">Atur ulang</a>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 6%;">No.</th>
+                <th>Tanggal Bayar</th>
+                <th>Jumlah Bayar</th>
+                <th>Penyewa</th>
+                <th>Kamar</th>
+                <th>Total Bayar</th>
+                <th>Tagihan</th>
+                <th>Status</th>
+                <th style="width: 10%;">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in daftar_pembayaran %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ p["tanggal_pembayaran"] }}</td>
+                <td>Rp{{ "{:,.0f}".format(p["jumlah_bayar"]).replace(",", ".") }}</td>
+                <td>{{ p["nama_penyewa"] }}</td>
+                <td>{{ p["nomor_kamar"] }}</td>
+                <td>Rp{{ "{:,.0f}".format(p["total_bayar"]).replace(",", ".") }}</td>
+                <td>Rp{{ "{:,.0f}".format(p["tagihan"]).replace(",", ".") }}</td>
+                <td><span class="status">{{ p["status_pembayaran"] }}</span></td>
+                <td>
+                    <form method="POST" action="{{ url_for('main.hapus_pembayaran', id_pembayaran=p['id_pembayaran']) }}" onsubmit="return confirm('Hapus pembayaran ini?');">
+                        <button class="button" type="submit">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9" class="empty-state">
+                    {% if kata_kunci or status %}
+                        Tidak ada pembayaran yang cocok.
+                    {% else %}
+                        Belum ada pembayaran yang tersimpan.
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="table-footer">
+        <span>Menampilkan {{ daftar_pembayaran|length }} data pembayaran</span>
+        <span>Total data: {{ daftar_pembayaran|length }}</span>
+    </div>
+</section>
+{% endblock %}

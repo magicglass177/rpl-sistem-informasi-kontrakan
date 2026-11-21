@@ -13,14 +13,18 @@ from models import (
     create_akun,
     get_akun_by_username,
     create_kamar,
+    create_pembayaran,
     create_penyewa,
     create_sewa,
     delete_kamar,
+    delete_pembayaran,
     delete_penyewa,
     get_all_kamar,
+    get_all_pembayaran,
     get_all_penyewa,
     get_all_sewa,
     get_kamar_by_id,
+    get_pembayaran_by_id,
     verify_password,
     get_penyewa_by_id,
     get_sewa_by_id,
@@ -29,7 +33,12 @@ from models import (
 )
 from datetime import date
 
-from services import validate_kamar, validate_penyewa, validate_sewa
+from services import (
+    validate_kamar,
+    validate_pembayaran,
+    validate_penyewa,
+    validate_sewa,
+)
 
 
 main = Blueprint("main", __name__)
@@ -535,3 +544,106 @@ def tambah_sewa():
         action_url=url_for("main.tambah_sewa"),
         teks_tombol="Simpan",
     )
+
+
+@main.route("/pembayaran")
+def daftar_pembayaran():
+    kata_kunci = request.args.get("q", "").strip()
+    status = request.args.get("status", "").strip()
+    daftar_pembayaran = get_all_pembayaran(kata_kunci, status)
+
+    return render_template(
+        "pembayaran_list.html",
+        page_title="Daftar Pembayaran",
+        active_page="pembayaran",
+        daftar_pembayaran=daftar_pembayaran,
+        kata_kunci=kata_kunci,
+        status=status,
+    )
+
+
+@main.route("/pembayaran/tambah", methods=["GET", "POST"])
+def tambah_pembayaran():
+    daftar_sewa = get_all_sewa()
+
+    if request.method == "POST":
+        data_bersih, errors = validate_pembayaran(request.form)
+
+        if errors:
+            return render_template(
+                "pembayaran_form.html",
+                page_title="Tambah Pembayaran",
+                active_page="pembayaran",
+                data=data_bersih,
+                errors=errors,
+                daftar_sewa=daftar_sewa,
+                judul_form="Tambah Pembayaran",
+                action_url=url_for("main.tambah_pembayaran"),
+                teks_tombol="Simpan",
+            ), 400
+
+        berhasil, status = create_pembayaran(
+            data_bersih["id_sewa"],
+            data_bersih["tanggal_pembayaran"],
+            data_bersih["jumlah_bayar"],
+        )
+
+        if berhasil:
+            flash("Data pembayaran berhasil ditambahkan.", "success")
+            return redirect(url_for("main.daftar_pembayaran"))
+
+        if status == "sewa_not_found":
+            errors["id_sewa"] = "Periode sewa tidak ditemukan."
+        else:
+            errors["database"] = (
+                "Data pembayaran gagal disimpan karena terjadi "
+                "kesalahan database."
+            )
+
+        return render_template(
+            "pembayaran_form.html",
+            page_title="Tambah Pembayaran",
+            active_page="pembayaran",
+            data=data_bersih,
+            errors=errors,
+            daftar_sewa=daftar_sewa,
+            judul_form="Tambah Pembayaran",
+            action_url=url_for("main.tambah_pembayaran"),
+            teks_tombol="Simpan",
+        ), 400
+
+    data_awal = {
+        "id_sewa": "",
+        "tanggal_pembayaran": "",
+        "jumlah_bayar": "",
+    }
+
+    return render_template(
+        "pembayaran_form.html",
+        page_title="Tambah Pembayaran",
+        active_page="pembayaran",
+        data=data_awal,
+        errors={},
+        daftar_sewa=daftar_sewa,
+        judul_form="Tambah Pembayaran",
+        action_url=url_for("main.tambah_pembayaran"),
+        teks_tombol="Simpan",
+    )
+
+
+@main.route("/pembayaran/<int:id_pembayaran>/hapus", methods=["POST"])
+def hapus_pembayaran(id_pembayaran):
+    berhasil, status = delete_pembayaran(id_pembayaran)
+
+    if berhasil:
+        flash("Data pembayaran berhasil dihapus.", "success")
+    elif status == "not_found":
+        abort(404)
+    else:
+        flash(
+            "Data pembayaran gagal dihapus karena terjadi kesalahan "
+            "database. Silakan coba kembali.",
+            "danger",
+        )
+
+    return redirect(url_for("main.daftar_pembayaran"))

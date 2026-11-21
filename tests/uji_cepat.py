@@ -128,6 +128,48 @@ def main():
     cek(berhasil, f"Transaksi valid gagal: {status}")
     cek(len(models.get_all_sewa()) == jumlah_sebelum + 1, "Transaksi valid tidak tersimpan.")
 
+    # 9. Pembayaran bertahap dan status lunas.
+    id_kamar_bayar = next(
+        kamar["id_kamar"] for kamar in models.get_all_kamar()
+        if kamar["nomor_kamar"] == "B-01"
+    )
+    berhasil, status = models.create_sewa(
+        id_kamar_bayar,
+        id_penyewa,
+        "2026-03-01",
+        "2026-03-31",
+        "2026-03-15",
+        "750000",
+    )
+    cek(berhasil, f"Transaksi sewa untuk pembayaran gagal: {status}")
+
+    id_sewa_bayar = models.get_all_sewa()[0]["id_sewa"]
+    berhasil, status = models.create_pembayaran(
+        id_sewa_bayar,
+        "2026-03-10",
+        "750000",
+    )
+    cek(berhasil, f"Pembayaran valid gagal: {status}")
+    cek(len(models.get_all_pembayaran()) == 1, "Pembayaran valid tidak tersimpan.")
+
+    pembayaran = models.get_all_pembayaran()[0]
+    cek(
+        pembayaran["status_pembayaran"] == "Lunas",
+        "Status pembayaran tidak menjadi Lunas.",
+    )
+
+    # 10. Pembayaran dengan induk tidak ada ditolak.
+    berhasil, status = models.create_pembayaran(
+        999999,
+        "2026-03-10",
+        "100000",
+    )
+    cek(not berhasil, "Pembayaran dengan sewa tidak ada seharusnya gagal.")
+    cek(
+        len(models.get_all_pembayaran()) == 1,
+        "Pembayaran tidak valid meninggalkan data.",
+    )
+
     print("=" * 50)
     print("SEMUA UJI LULUS")
     print("=" * 50)

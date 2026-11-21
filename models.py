@@ -586,3 +586,206 @@ def verify_password(stored_hash, password):
         return check_password_hash(stored_hash, password)
     except (TypeError, ValueError):
         return False
+
+
+def _status_pembayaran(total_bayar, tagihan, tanggal_jatuh_tempo):
+    """Menghitung status pembayaran berdasarkan total bayar dan jatuh tempo."""
+    if total_bayar >= tagihan:
+        return "Lunas"
+
+    if tanggal_jatuh_tempo and str(tanggal_jatuh_tempo) < _tanggal_hari_ini():
+        return "Terlambat"
+
+    return "Belum Lunas"
+
+
+def _tanggal_hari_ini():
+    from datetime import date
+
+    return date.today().isoformat()
+
+
+def get_all_pembayaran(kata_kunci="", status=""):
+    """Mengambil seluruh pembayaran dengan JOIN ke sewa, penyewa, dan kamar."""
+    connection = get_db_connection()
+
+    try:
+        kata = kata_kunci.strip()
+        pola = f"%{_escape_like(kata)}%"
+
+        rows = connection.execute(
+            """
+            SELECT
+                p.id_pembayaran,
+                p.id_sewa,
+                p.tanggal_pembayaran,
+                p.jumlah_bayar,
+                s.id_kamar,
+                s.id_penyewa,
+                s.tanggal_mulai,
+                s.tanggal_selesai,
+                s.tanggal_jatuh_tempo,
+                s.harga_sewa_disepakati,
+                pe.nama AS nama_penyewa,
+                k.nomor_kamar AS nomor_kamar
+            FROM pembayaran AS p
+            JOIN sewa AS s ON s.id_sewa = p.id_sewa
+            JOIN penyewa AS pe ON pe.id_penyewa = s.id_penyewa
+            JOIN kamar AS k ON k.id_kamar = s.id_kamar
+            WHERE pe.nama LIKE ? ESCAPE '\\'
+               OR k.nomor_kamar LIKE ? ESCAPE '\\'
+            ORDER BY p.tanggal_pembayaran DESC, p.id_pembayaran DESC
+            """,
+            (pola, pola),
+        ).fetchall()
+
+        hasil = []
+
+        for row in rows:
+            total_bayar = connection.execute(
+                """
+                SELECT COALESCE(SUM(jumlah_bayar), 0) AS total
+                FROM pembayaran
+                WHERE id_sewa = ?
+                """,
+                (row["id_sewa"],),
+            ).fetchone()["total"]
+
+            item = dict(row)
+            item["total_bayar"] = total_bayar
+            item["tagihan"] = row["harga_sewa_disepakati"]
+            item["status_pembayaran"] = _status_pembayaran(
+                total_bayar,
+                row["harga_sewa_disepakati"],
+                row["tanggal_jatuh_tempo"],
+            )
+            hasil.append(item)
+
+        if status in {"Lunas", "Belum Lunas", "Terlambat"}:
+            hasil = [
+                item for item in hasil
+                if item["status_pembayaran"] == status
+            ]
+
+        return hasil
+
+    finally:
+        connection.close()
+
+
+def get_pembayaran_by_id(id_pembayaran):
+    """Mengambil satu pembayaran berdasarkan ID, lengkap dengan data sewa."""
+    connection = get_db_connection()
+
+    try:
+        row = connection.execute(
+            """
+            SELECT
+                p.id_pembayaran,
+                p.id_sewa,
+                p.tanggal_pembayaran,
+                p.jumlah_bayar,
+                s.id_kamar,
+                s.id_penyewa,
+                s.tanggal_mulai,
+                s.tanggal_selesai,
+                s.tanggal_jatuh_tempo,
+                s.harga_sewa_disepakati,
+                pe.nama AS nama_penyewa,
+                k.nomor_kamar AS nomor_kamar
+            FROM pembayaran AS p
+            JOIN sewa AS s ON s.id_sewa = p.id_sewa
+            JOIN penyewa AS pe ON pe.id_penyewa = s.id_penyewa
+            JOIN kamar AS k ON k.id_kamar = s.id_kamar
+            WHERE p.id_pembayaran = ?
+            """,
+            (id_pembayaran,),
+        ).fetchone()
+
+        if row is None:
+            return None
+
+        total_bayar = connection.execute(
+            """
+            SELECT COALESCE(SUM(jumlah_bayar), 0) AS total
+            FROM pembayaran
+            WHERE id_sewa = ?
+            """,
+            (row["id_sewa"],),
+        ).fetchone()["total"]
+
+        item = dict(row)
+        item["total_bayar"] = total_bayar
+        item["tagihan"] = row["harga_sewa_disepakati"]
+        item["status_pembayaran"] = _status_pembayaran(
+            total_bayar,
+            row["harga_sewa_disepakati"],
+            row["tanggal_jatuh_tempo"],
+        )
+        return item
+
+    finally:
+        connection.close()
+
+
+def create_pembayaran(id_sewa, tanggal_pembayaran, jumlah_bayar):
+    """Menyimpan satu pembayaran."""
+    connection = get_db_connection()
+
+    try:
+        sewa = connection.execute(
+            "SELECT 1 FROM sewa WHERE id_sewa = ?",
+            (id_sewa,),
+        ).fetchone()
+
+        if sewa is None:
+            return False, "sewa_not_found"
+
+        connection.execute(
+            """
+            INSERT INTO pembayaran (id_sewa, tanggal_pembayaran, jumlah_bayar)
+            VALUES (?, ?, ?)
+            """,
+            (id_sewa, tanggal_pembayaran, str(jumlah_bayar)),
+        )
+        connection.commit()
+        return True, None
+
+    except sqlite3.IntegrityError:
+        connection.rollback()
+        return False, "database"
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()
+
+
+def delete_pembayaran(id_pembayaran):
+    """Menghapus satu pembayaran."""
+    connection = get_db_connection()
+
+    try:
+        row = connection.execute(
+            "SELECT 1 FROM pembayaran WHERE id_pembayaran = ?",
+            (id_pembayaran,),
+        ).fetchone()
+
+        if row is None:
+            return False, "not_found"
+
+        connection.execute(
+            "DELETE FROM pembayaran WHERE id_pembayaran = ?",
+            (id_pembayaran,),
+        )
+        connection.commit()
+        return True, None
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()

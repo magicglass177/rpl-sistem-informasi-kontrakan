@@ -198,3 +198,54 @@ def validate_sewa(data):
             )
 
     return data_bersih, errors
+
+
+def validate_pembayaran(data):
+    """Memvalidasi data pembayaran sebelum diteruskan ke model."""
+    id_sewa_raw = data.get("id_sewa", "").strip()
+    tanggal_pembayaran = data.get("tanggal_pembayaran", "").strip()
+    jumlah_input = data.get("jumlah_bayar", "").strip()
+
+    errors = {}
+    data_bersih = {
+        "id_sewa": id_sewa_raw,
+        "tanggal_pembayaran": tanggal_pembayaran,
+        "jumlah_bayar": jumlah_input,
+    }
+
+    try:
+        id_sewa = int(id_sewa_raw)
+        if id_sewa <= 0:
+            raise ValueError
+        data_bersih["id_sewa"] = id_sewa
+    except (TypeError, ValueError):
+        errors["id_sewa"] = "Pilih periode sewa."
+
+    try:
+        from datetime import date
+
+        date.fromisoformat(tanggal_pembayaran)
+    except ValueError:
+        errors["tanggal_pembayaran"] = (
+            "Tanggal pembayaran harus berformat TTTT-BB-HH."
+        )
+
+    if not jumlah_input:
+        errors["jumlah_bayar"] = "Jumlah bayar wajib diisi."
+    else:
+        try:
+            from decimal import Decimal, InvalidOperation
+
+            jumlah = Decimal(jumlah_input)
+
+            if not jumlah.is_finite():
+                errors["jumlah_bayar"] = "Jumlah bayar harus berupa angka yang valid."
+            elif jumlah <= 0:
+                errors["jumlah_bayar"] = "Jumlah bayar harus lebih dari 0."
+            else:
+                data_bersih["jumlah_bayar"] = str(jumlah)
+
+        except InvalidOperation:
+            errors["jumlah_bayar"] = "Jumlah bayar harus berupa angka."
+
+    return data_bersih, errors

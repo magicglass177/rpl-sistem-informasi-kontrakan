@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>{{ judul_form }}</h1>
+    <p>Masukkan informasi pembayaran yang baru.</p>
+</section>
+
+<section class="table-card">
+    {% if errors.get("database") %}
+        <div class="message error">{{ errors["database"] }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ action_url }}">
+        <div class="form-group">
+            <label for="id_sewa">Periode Sewa</label>
+            <select id="id_sewa" name="id_sewa" required aria-describedby="sewa-error">
+                <option value="">-- pilih periode sewa --</option>
+                {% for sewa in daftar_sewa %}
+                    <option value="{{ sewa['id_sewa'] }}" {% if data.get('id_sewa')|string == sewa['id_sewa']|string %}selected{% endif %}>
+                        {{ sewa['nama_penyewa'] }} - {{ sewa['nomor_kamar'] }} ({{ sewa['tanggal_mulai'] }} s/d {{ sewa['tanggal_selesai'] }})
+                    </option>
+                {% endfor %}
+            </select>
+            {% if errors.get("id_sewa") %}
+                <small class="field-error" id="sewa-error">{{ errors["id_sewa"] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="tanggal_pembayaran">Tanggal Pembayaran</label>
+            <input type="date" id="tanggal_pembayaran" name="tanggal_pembayaran" required value="{{ data.get('tanggal_pembayaran', '') }}" aria-describedby="tanggal-error">
+            {% if errors.get("tanggal_pembayaran") %}
+                <small class="field-error" id="tanggal-error">{{ errors["tanggal_pembayaran"] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="jumlah_bayar">Jumlah Bayar (Rp)</label>
+            <input type="number" id="jumlah_bayar" name="jumlah_bayar" min="0.01" step="any" required value="{{ data.get('jumlah_bayar', '') }}" placeholder="Contoh: 850000" aria-describedby="jumlah-error">
+            {% if errors.get("jumlah_bayar") %}
+                <small class="field-error" id="jumlah-error">{{ errors["jumlah_bayar"] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button class="button" type="submit">{{ teks_tombol }}</button>
+            <a class="button" href="{{ url_for('main.daftar_pembayaran') }}">Batal</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
