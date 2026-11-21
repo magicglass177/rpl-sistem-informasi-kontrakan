@@ -11,6 +11,7 @@ from flask import (
 from models import (
     create_kamar,
     create_penyewa,
+    create_sewa,
     delete_kamar,
     delete_penyewa,
     get_all_kamar,
@@ -22,7 +23,9 @@ from models import (
     update_kamar,
     update_penyewa,
 )
-from services import validate_kamar, validate_penyewa
+from datetime import date
+
+from services import validate_kamar, validate_penyewa, validate_sewa
 
 
 main = Blueprint("main", __name__)
@@ -396,4 +399,90 @@ def daftar_sewa():
         active_page="sewa",
         daftar_sewa=daftar_sewa,
         kata_kunci=kata_kunci,
+    )
+
+
+
+@main.route("/sewa/tambah", methods=["GET", "POST"])
+def tambah_sewa():
+    daftar_kamar = get_all_kamar()
+    daftar_penyewa = get_all_penyewa()
+
+    if request.method == "POST":
+        data_bersih, errors = validate_sewa(request.form)
+
+        if errors:
+            return render_template(
+                "sewa_form.html",
+                page_title="Tambah Periode Sewa",
+                active_page="sewa",
+                data=data_bersih,
+                errors=errors,
+                daftar_kamar=daftar_kamar,
+                daftar_penyewa=daftar_penyewa,
+                judul_form="Tambah Periode Sewa",
+                action_url=url_for("main.tambah_sewa"),
+                teks_tombol="Simpan",
+            ), 400
+
+        berhasil, status = create_sewa(
+            data_bersih["id_kamar"],
+            data_bersih["id_penyewa"],
+            data_bersih["tanggal_mulai"],
+            data_bersih["tanggal_selesai"],
+            data_bersih["tanggal_jatuh_tempo"],
+            data_bersih["harga_sewa_disepakati"],
+        )
+
+        if berhasil:
+            flash("Data periode sewa berhasil ditambahkan.", "success")
+            return redirect(url_for("main.daftar_sewa"))
+
+        if status == "kamar_not_found":
+            errors["id_kamar"] = "Kamar tidak ditemukan."
+        elif status == "penyewa_not_found":
+            errors["id_penyewa"] = "Penyewa tidak ditemukan."
+        elif status == "overlap":
+            errors["tanggal_selesai"] = (
+                "Periode sewa kamar bertumpang tindih."
+            )
+        else:
+            errors["database"] = (
+                "Data periode sewa gagal disimpan karena terjadi "
+                "kesalahan database."
+            )
+
+        return render_template(
+            "sewa_form.html",
+            page_title="Tambah Periode Sewa",
+            active_page="sewa",
+            data=data_bersih,
+            errors=errors,
+            daftar_kamar=daftar_kamar,
+            daftar_penyewa=daftar_penyewa,
+            judul_form="Tambah Periode Sewa",
+            action_url=url_for("main.tambah_sewa"),
+            teks_tombol="Simpan",
+        ), 400
+
+    data_awal = {
+        "id_kamar": "",
+        "id_penyewa": "",
+        "tanggal_mulai": date.today().isoformat(),
+        "tanggal_selesai": "",
+        "tanggal_jatuh_tempo": "",
+        "harga_sewa_disepakati": "",
+    }
+
+    return render_template(
+        "sewa_form.html",
+        page_title="Tambah Periode Sewa",
+        active_page="sewa",
+        data=data_awal,
+        errors={},
+        daftar_kamar=daftar_kamar,
+        daftar_penyewa=daftar_penyewa,
+        judul_form="Tambah Periode Sewa",
+        action_url=url_for("main.tambah_sewa"),
+        teks_tombol="Simpan",
     )

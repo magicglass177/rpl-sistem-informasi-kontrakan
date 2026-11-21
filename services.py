@@ -1,4 +1,5 @@
 import re
+from datetime import date
 from decimal import Decimal, InvalidOperation
 
 
@@ -100,5 +101,100 @@ def validate_penyewa(data):
 
     if not alamat:
         errors["alamat"] = "Alamat wajib diisi."
+
+    return data_bersih, errors
+
+
+def validate_sewa(data):
+    """
+    Memvalidasi data periode sewa sebelum diteruskan ke model.
+
+    Mengembalikan:
+    - (data_bersih, {}) jika valid.
+    - (data_bersih, errors) jika terdapat kesalahan.
+    """
+    id_kamar_raw = data.get("id_kamar", "").strip()
+    id_penyewa_raw = data.get("id_penyewa", "").strip()
+    tanggal_mulai = data.get("tanggal_mulai", "").strip()
+    tanggal_selesai = data.get("tanggal_selesai", "").strip()
+    tanggal_jatuh_tempo = data.get("tanggal_jatuh_tempo", "").strip()
+    harga_input = data.get("harga_sewa_disepakati", "").strip()
+
+    errors = {}
+    data_bersih = {
+        "id_kamar": id_kamar_raw,
+        "id_penyewa": id_penyewa_raw,
+        "tanggal_mulai": tanggal_mulai,
+        "tanggal_selesai": tanggal_selesai,
+        "tanggal_jatuh_tempo": tanggal_jatuh_tempo,
+        "harga_sewa_disepakati": harga_input,
+    }
+
+    try:
+        id_kamar = int(id_kamar_raw)
+        if id_kamar <= 0:
+            raise ValueError
+        data_bersih["id_kamar"] = id_kamar
+    except (TypeError, ValueError):
+        errors["id_kamar"] = "Pilih kamar."
+
+    try:
+        id_penyewa = int(id_penyewa_raw)
+        if id_penyewa <= 0:
+            raise ValueError
+        data_bersih["id_penyewa"] = id_penyewa
+    except (TypeError, ValueError):
+        errors["id_penyewa"] = "Pilih penyewa."
+
+    try:
+        tanggal_mulai_obj = date.fromisoformat(tanggal_mulai)
+    except ValueError:
+        errors["tanggal_mulai"] = "Tanggal mulai harus berformat TTTT-BB-HH."
+        tanggal_mulai_obj = None
+
+    try:
+        tanggal_selesai_obj = date.fromisoformat(tanggal_selesai)
+    except ValueError:
+        errors["tanggal_selesai"] = "Tanggal selesai harus berformat TTTT-BB-HH."
+        tanggal_selesai_obj = None
+
+    if (
+        tanggal_mulai_obj is not None
+        and tanggal_selesai_obj is not None
+        and tanggal_selesai_obj < tanggal_mulai_obj
+    ):
+        errors["tanggal_selesai"] = (
+            "Tanggal selesai tidak boleh lebih awal dari tanggal mulai."
+        )
+
+    if tanggal_jatuh_tempo:
+        try:
+            date.fromisoformat(tanggal_jatuh_tempo)
+        except ValueError:
+            errors["tanggal_jatuh_tempo"] = (
+                "Tanggal jatuh tempo harus berformat TTTT-BB-HH."
+            )
+
+    if not harga_input:
+        errors["harga_sewa_disepakati"] = "Harga sewa disepakati wajib diisi."
+    else:
+        try:
+            harga = Decimal(harga_input)
+
+            if not harga.is_finite():
+                errors["harga_sewa_disepakati"] = (
+                    "Harga sewa harus berupa angka yang valid."
+                )
+            elif harga < 0:
+                errors["harga_sewa_disepakati"] = (
+                    "Harga sewa tidak boleh negatif."
+                )
+            else:
+                data_bersih["harga_sewa_disepakati"] = str(harga)
+
+        except InvalidOperation:
+            errors["harga_sewa_disepakati"] = (
+                "Harga sewa harus berupa angka."
+            )
 
     return data_bersih, errors
