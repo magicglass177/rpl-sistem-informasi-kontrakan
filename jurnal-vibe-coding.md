@@ -1690,3 +1690,31 @@ dicatat sebagai D-01, D-02, dan D-03.
 ### Hasil Uji
 Sebelum koreksi uji: 5 failed, 106 passed. Sesudah koreksi: 3 failed,
 108 passed, 23 subtests — tepat tiga cacat nyata.
+
+
+## Siklus 4 — Perbaiki D-01: format tanggal kompak (Langkah 11)
+
+### Tujuan
+Menolak tanggal `YYYYMMDD` di validasi, bukan di basis data.
+
+### Aktivitas
+Menambahkan `_format_tanggal_valid()` yang memeriksa pola `[0-9]{4}-[0-9]{2}-[0-9]{2}`
+sebelum `date.fromisoformat()`. Dipakai pada `tanggal_mulai`, `tanggal_selesai`,
+`tanggal_jatuh_tempo`, dan `tanggal_pembayaran`. Pesan galat lama dipertahankan
+persis agar uji lama tidak berubah.
+
+### Hasil AI
+AI mengusulkan mengganti seluruh blok `try/except` dengan satu helper baru,
+termasuk mengubah pesan galatnya. Saya menolak perubahan pesan karena
+`cek_fitur_ubah_kamar.py` dan `test_crud_kamar.py` mengecek teks lama.
+
+### Keputusan
+- **Ubah** (hanya pemeriksaan format yang ditambahkan).
+
+### Alasan
+Perbaikan sekecil mungkin: validasi kini menolak lebih awal, sehingga pengguna
+melihat pesan "harus berformat TTTT-BB-HH" alih-alih "kesalahan database".
+
+### Hasil Uji
+`pytest -k "tanggal_sewa or tanggal_pembayaran or urutan_tanggal"` → 4 passed.
+Uji penuh → 2 failed (D-02, D-03), 109 passed: tidak ada regresi.

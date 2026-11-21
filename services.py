@@ -16,6 +16,21 @@ def _bilangan(teks):
     return int(teks) if teks.isdigit() else None
 
 
+def _format_tanggal_valid(teks):
+    """Tanggal harus persis TTTT-BB-HH dan benar di kalender.
+
+    date.fromisoformat() pada Python 3.11+ menerima format kompak YYYYMMDD,
+    sehingga pola harus diperiksa lebih dulu agar sesuai kamus data dan skema.
+    """
+    if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", teks or ""):
+        return False
+    try:
+        date.fromisoformat(teks)
+        return True
+    except ValueError:
+        return False
+
+
 def validasi_pengguna_baru(username, password, peran):
     """Mengembalikan daftar galat validasi akun baru."""
     galat = []
@@ -214,17 +229,17 @@ def validate_sewa(data):
     except (TypeError, ValueError):
         errors["id_penyewa"] = "Pilih penyewa."
 
-    try:
-        tanggal_mulai_obj = date.fromisoformat(tanggal_mulai)
-    except ValueError:
+    if not _format_tanggal_valid(tanggal_mulai):
         errors["tanggal_mulai"] = "Tanggal mulai harus berformat TTTT-BB-HH."
         tanggal_mulai_obj = None
+    else:
+        tanggal_mulai_obj = date.fromisoformat(tanggal_mulai)
 
-    try:
-        tanggal_selesai_obj = date.fromisoformat(tanggal_selesai)
-    except ValueError:
+    if not _format_tanggal_valid(tanggal_selesai):
         errors["tanggal_selesai"] = "Tanggal selesai harus berformat TTTT-BB-HH."
         tanggal_selesai_obj = None
+    else:
+        tanggal_selesai_obj = date.fromisoformat(tanggal_selesai)
 
     if (
         tanggal_mulai_obj is not None
@@ -235,13 +250,10 @@ def validate_sewa(data):
             "Tanggal selesai tidak boleh lebih awal dari tanggal mulai."
         )
 
-    if tanggal_jatuh_tempo:
-        try:
-            date.fromisoformat(tanggal_jatuh_tempo)
-        except ValueError:
-            errors["tanggal_jatuh_tempo"] = (
-                "Tanggal jatuh tempo harus berformat TTTT-BB-HH."
-            )
+    if tanggal_jatuh_tempo and not _format_tanggal_valid(tanggal_jatuh_tempo):
+        errors["tanggal_jatuh_tempo"] = (
+            "Tanggal jatuh tempo harus berformat TTTT-BB-HH."
+        )
 
     if not harga_input:
         errors["harga_sewa_disepakati"] = "Harga sewa disepakati wajib diisi."
@@ -289,11 +301,7 @@ def validate_pembayaran(data):
     except (TypeError, ValueError):
         errors["id_sewa"] = "Pilih periode sewa."
 
-    try:
-        from datetime import date
-
-        date.fromisoformat(tanggal_pembayaran)
-    except ValueError:
+    if not _format_tanggal_valid(tanggal_pembayaran):
         errors["tanggal_pembayaran"] = (
             "Tanggal pembayaran harus berformat TTTT-BB-HH."
         )
