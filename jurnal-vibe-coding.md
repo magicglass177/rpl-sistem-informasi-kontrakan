@@ -1798,3 +1798,29 @@ berubah; SQL tetap berparameter, pesan galat lama dipertahankan, tidak ada
 ### Hasil Uji
 `pytest` → 111 passed, 23 subtests; `uji_cepat.py` → SEMUA UJI LULUS;
 `unittest discover` → 59 tests OK. Tabel test case diperbarui dengan hasil akhir.
+
+
+## Siklus 8 — Rencana UAT (Langkah 13)
+
+### Tujuan
+Menyiapkan validasi bersama klien yang terpisah dari pengujian teknis.
+
+### Aktivitas
+Menyusun `docs/pengujian/rencana-uat.md`: tujuan, peserta, lingkungan, data
+karangan, 7 skenario dalam bahasa klien, kriteria lulus yang terukur, dan cara
+merekam temuan. Kotak konfirmasi jadwal sengaja dibiarkan kosong.
+
+### Hasil AI
+AI mengusulkan mengisi tanggal UAT dengan tanggal rekaan agar tampak lengkap.
+Saya menolak: jadwal harus disepakati klien, bukan dibuat-buat.
+
+### Keputusan
+- **Tolak** tanggal rekaan; **Terima** struktur rencana.
+
+### Alasan
+Jobshet melarang manipulasi hasil dan mensyaratkan jadwal disetujui klien.
+Mencantumkan tanggal palsu akan menyesatkan dosen dan klien.
+
+### Hasil Uji
+Rencana memuat 7 skenario (≥ 5) dan 4 kriteria lulus; status penjadwalan dicatat
+jujur sebagai belum terkonfirmasi.
