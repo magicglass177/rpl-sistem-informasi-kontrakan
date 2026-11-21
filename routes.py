@@ -50,18 +50,32 @@ def daftar_kamar():
     )
 
 
+def _render_form_kamar(data, errors, judul_form, action_url, teks_tombol):
+    """Menghilangkan duplikasi render_template pada rute tambah dan ubah kamar."""
+    return render_template(
+        "kamar_form.html",
+        page_title=judul_form,
+        active_page="kamar",
+        data=data,
+        errors=errors,
+        judul_form=judul_form,
+        action_url=action_url,
+        teks_tombol=teks_tombol,
+    )
+
+
 @main.route("/kamar/tambah", methods=["GET", "POST"])
 def tambah_kamar():
     if request.method == "POST":
         data_bersih, errors = validate_kamar(request.form)
 
         if errors:
-            return render_template(
-                "kamar_form.html",
-                page_title="Tambah Kamar",
-                active_page="kamar",
-                data=data_bersih,
-                errors=errors,
+            return _render_form_kamar(
+                data_bersih,
+                errors,
+                "Tambah Kamar",
+                url_for("main.tambah_kamar"),
+                "Simpan",
             ), 400
 
         berhasil, status = create_kamar(
@@ -83,26 +97,20 @@ def tambah_kamar():
                 "kesalahan database."
             )
 
-        return render_template(
-            "kamar_form.html",
-            page_title="Tambah Kamar",
-            active_page="kamar",
-            data=data_bersih,
-            errors=errors,
-            judul_form="Tambah Kamar",
-            action_url=url_for("main.tambah_kamar"),
-            teks_tombol="Simpan",
+        return _render_form_kamar(
+            data_bersih,
+            errors,
+            "Tambah Kamar",
+            url_for("main.tambah_kamar"),
+            "Simpan",
         ), 400
 
-    return render_template(
-        "kamar_form.html",
-        page_title="Tambah Kamar",
-        active_page="kamar",
-        data={"nomor_kamar": "", "harga_sewa": ""},
-        errors={},
-        judul_form="Tambah Kamar",
-        action_url=url_for("main.tambah_kamar"),
-        teks_tombol="Simpan",
+    return _render_form_kamar(
+        {"nomor_kamar": "", "harga_sewa": ""},
+        {},
+        "Tambah Kamar",
+        url_for("main.tambah_kamar"),
+        "Simpan",
     )
 
 @main.route("/kamar/<int:id_kamar>/ubah", methods=["GET", "POST"])
@@ -117,18 +125,12 @@ def ubah_kamar(id_kamar):
         data_bersih, errors = validate_kamar(request.form)
 
         if errors:
-            return render_template(
-                "kamar_form.html",
-                page_title="Ubah Kamar",
-                active_page="kamar",
-                data=data_bersih,
-                errors=errors,
-                judul_form="Ubah Kamar",
-                action_url=url_for(
-                    "main.ubah_kamar",
-                    id_kamar=id_kamar
-                ),
-                teks_tombol="Simpan Perubahan",
+            return _render_form_kamar(
+                data_bersih,
+                errors,
+                "Ubah Kamar",
+                url_for("main.ubah_kamar", id_kamar=id_kamar),
+                "Simpan Perubahan",
             ), 400
 
         berhasil, status = update_kamar(
@@ -151,36 +153,24 @@ def ubah_kamar(id_kamar):
                 "kesalahan database."
             )
 
-        return render_template(
-            "kamar_form.html",
-            page_title="Ubah Kamar",
-            active_page="kamar",
-            data=data_bersih,
-            errors=errors,
-            judul_form="Ubah Kamar",
-            action_url=url_for(
-                "main.ubah_kamar",
-                id_kamar=id_kamar
-            ),
-            teks_tombol="Simpan Perubahan",
+        return _render_form_kamar(
+            data_bersih,
+            errors,
+            "Ubah Kamar",
+            url_for("main.ubah_kamar", id_kamar=id_kamar),
+            "Simpan Perubahan",
         ), 400
 
-   # GET: isi form dengan data lama.
-    return render_template(
-        "kamar_form.html",
-        page_title="Ubah Kamar",
-        active_page="kamar",
-        data={
+    # GET: isi form dengan data lama.
+    return _render_form_kamar(
+        {
             "nomor_kamar": kamar["nomor_kamar"],
             "harga_sewa": str(kamar["harga_sewa"]),
         },
-        errors={},
-        judul_form="Ubah Kamar",
-        action_url=url_for(
-            "main.ubah_kamar",
-            id_kamar=id_kamar
-        ),
-        teks_tombol="Simpan Perubahan",
+        {},
+        "Ubah Kamar",
+        url_for("main.ubah_kamar", id_kamar=id_kamar),
+        "Simpan Perubahan",
     )
 
 
