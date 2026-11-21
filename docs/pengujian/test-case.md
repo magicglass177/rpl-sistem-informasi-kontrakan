@@ -75,14 +75,19 @@ Harapan ditulis **sebelum** menjalankan uji, berdasarkan PRD/kamus data/skema �
 | TC-38 | KF-07 | Pelanggaran | Dua sewa pada kamar sama dengan periode bertumpang tindih | Yang kedua ditolak, pesan tumpang tindih |  |  |
 | TC-39 | KF-15 | Normal | Lihat laporan dengan periode yang memuat satu pembayaran | Pembayaran itu tampil dalam daftar laporan |  |  |
 
-**Komposisi:** 39 test case; BVA 12 (TC-01, 02, 05, 06, 12, 13, 14, 20, 21, 22, 26, 30, 31), pelanggaran 19, normal 7. Memenuhi syarat ≥ 20, ≥ 6 BVA, ≥ 6 pelanggaran, ≥ 3 normal.
+**Komposisi:** 39 test case; BVA 13 (TC-01, 02, 05, 06, 12, 13, 14, 20, 21, 22, 26, 30, 31), pelanggaran 19, normal 7. Memenuhi syarat ≥ 20, ≥ 6 BVA, ≥ 6 pelanggaran, ≥ 3 normal.
 
 ## Hasil menjalankan (Langkah 7 — diisi setelah pytest)
 
 | Informasi | Nilai |
 |---|---|
-| Perintah | `python -m pytest -q tests` |
-| Jumlah fungsi uji (pytest) | lihat bagian bawah setelah implementasi |
-| Lulus |  |
-| Gagal |  |
-| Kegagalan → calon cacat | TC-06 → D-02; TC-27 → D-01; TC-37 → D-03 |
+| Perintah | `python -m pytest -q tests/test_validasi.py` |
+| Draf AI sebelum ditinjau | 1 failed, 29 passed |
+| Setelah perbaikan asersi | 2 failed, 28 passed |
+| Fungsi uji di `test_validasi.py` | 8 fungsi (30 kasus parametrize) |
+| Mutasi manual | 3 dari 3 tertangkap (M1→TC-01, M2→TC-13, M3→TC-30) |
+| Kegagalan → calon cacat | TC-06 → D-02; TC-27 → D-01; TC-37 → D-03 (uji alur, Langkah 9) |
+
+Catatan: TC-27 pada draf AI **salah lulus** karena galatnya berasal dari
+`tanggal_selesai`, bukan dari format `tanggal_mulai`. Setelah asersi dibuat
+spesifik (`assert "tanggal_mulai" in galat`), cacat D-01 baru terlihat.

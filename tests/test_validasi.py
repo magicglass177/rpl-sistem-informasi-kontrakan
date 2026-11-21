@@ -56,6 +56,9 @@ def test_harga_sewa(harga, valid):
     assert (galat == {}) is valid
     if valid:
         assert data["harga_sewa"] == harga.strip()
+    else:
+        # Diperbaiki: periksa kunci galat yang tepat, bukan sekadar "ada galat".
+        assert "harga_sewa" in galat
 
 
 # TC-12..TC-15: nomor kamar (kamus data: 1-20 karakter, wajib, unik)
@@ -92,29 +95,36 @@ def test_no_telepon(telepon, valid):
     ("", False),                 # TC-25
 ])
 def test_nama_penyewa(nama, valid):
-    # DRAF AI: asersi ini dangkal — selalu benar karena galat adalah dict.
-    _, galat = services.validate_penyewa(penyewa(nama=nama))
-    assert galat is not None
+    data, galat = services.validate_penyewa(penyewa(nama=nama))
+    # Diperbaiki: asersi dangkal diganti pemeriksaan kunci yang spesifik.
+    assert ("nama" in galat) is (not valid)
+    if valid:
+        assert data["nama"] == nama
 
 
 # TC-26..TC-28: tanggal mulai sewa
-@pytest.mark.parametrize("tanggal, valid", [
-    ("2026-03-01", True),        # TC-26
-    ("20261108", False),         # TC-27 format kompak harus ditolak
-    ("2026-02-30", False),       # TC-28 tidak ada di kalender
+@pytest.mark.parametrize("tanggal, valid, kunci", [
+    ("2026-03-01", True, None),     # TC-26
+    ("20261108", False, "tanggal_mulai"),  # TC-27 format kompak ditolak
+    ("2026-02-30", False, "tanggal_mulai"),  # TC-28 tidak ada di kalender
 ])
-def test_tanggal_sewa(tanggal, valid):
+def test_tanggal_sewa(tanggal, valid, kunci):
     _, galat = services.validate_sewa(sewa(tanggal_mulai=tanggal))
     assert (galat == {}) is valid
+    # Diperbaiki: periksa bahwa galat memang berasal dari isian tanggal mulai.
+    # Pada draf AI, TC-27 salah lulus karena galatnya berasal dari tanggal
+    # selesai yang lebih awal, bukan dari format tanggal kompak.
+    if kunci:
+        assert kunci in galat
 
 
 # TC-29: urutan tanggal
 def test_urutan_tanggal():
-    # DRAF AI: asersi ini lemah — hanya memeriksa ada galat, bukan galat mana.
     _, galat = services.validate_sewa(
         sewa(tanggal_mulai="2026-03-01", tanggal_selesai="2026-02-28")
     )
-    assert galat
+    # Diperbaiki: sebut kunci galatnya, jangan hanya "ada galat".
+    assert "tanggal_selesai" in galat
 
 
 # TC-30..TC-32: jumlah bayar (kamus data: > 0)

@@ -1631,3 +1631,32 @@ Draf belum dijadikan dasar penerimaan sebelum ditinjau.
 ### Hasil Uji
 `pytest -q tests/test_validasi.py` → 1 failed, 29 passed. Kegagalan TC-06
 (harga 11 digit diterima) sudah tertangkap; TC-27 masih salah lulus.
+
+
+## Siklus 2 — Pemeriksaan mandiri uji AI dan mutasi manual (Langkah 6)
+
+### Tujuan
+Memastikan asersi uji berasal dari spesifikasi dan cukup kuat menangkap cacat.
+
+### Aktivitas
+Empat pemeriksaan Bagian 2.4 diterapkan pada 8 fungsi uji. Tiga asersi diperbaiki:
+`test_nama_penyewa` (dangkal), `test_urutan_tanggal` (tidak menyebut kunci), dan
+`test_tanggal_sewa` (salah lulus pada TC-27). Tiga mutasi diterapkan satu per satu
+pada `services.py`, diuji, lalu dikembalikan dengan menimpa dari salinan asli.
+
+### Hasil AI
+Draf AI melewatkan format tanggal kompak: TC-27 awalnya lulus karena galat datang
+dari tanggal selesai, bukan dari `tanggal_mulai`. Setelah asersi dibuat spesifik,
+TC-27 gagal dan mengungkap cacat D-01.
+
+### Keputusan
+- **Ubah** (tiga asersi diperbaiki; mutasi M1–M3 semuanya tertangkap).
+
+### Alasan
+Asersi `assert galat is not None` selalu benar karena `galat` adalah dict.
+Mutasi membuktikan uji benar-benar mengikat aturan batas, bukan sekadar "tidak error".
+
+### Hasil Uji
+Sebelum perbaikan: 1 failed, 29 passed. Sesudah perbaikan: 2 failed, 28 passed
+(TC-06 → D-02, TC-27 → D-01). Mutasi M1 (`harga < 0` → `<= 0`) gagalkan TC-01;
+M2 (`> 20` → `>= 20`) gagalkan TC-13; M3 (`<= 0` → `< 0`) gagalkan TC-30.
