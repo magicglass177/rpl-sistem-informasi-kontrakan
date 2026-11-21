@@ -1771,3 +1771,30 @@ jadi lebih kecil.
 ### Hasil Uji
 TC-37 lulus; `uji_cepat.py` SEMUA UJI LULUS; 59 unittest OK;
 pytest 111 passed, 23 subtests. Ketiga cacat kini berstatus Diperbaiki.
+
+
+## Siklus 7 — Regresi penuh dan tinjau diff (Langkah 12)
+
+### Tujuan
+Memastikan ketiga perbaikan tidak merusak fitur lama dan tidak membuka celah baru.
+
+### Aktivitas
+Menjalankan `pytest`, `uji_cepat.py`, dan `unittest discover`, lalu membaca
+`git diff main...HEAD` dengan daftar periksa Jobshet 12.
+
+### Hasil AI
+AI mengusulkan menyederhanakan uji alur yang "terlalu banyak". Saya menolak:
+setiap uji alur memetakan satu KF dan harus tetap ada.
+
+### Keputusan
+- **Tolak** usulan penghapusan uji; **Terima** perbaikan lainnya.
+
+### Alasan
+Mengurangi uji demi kecepatan menyembunyikan regresi. Diff ditinjau: hanya
+helper `_format_tanggal_valid`, `_harga_dalam_batas`, dan escape `LIKE` yang
+berubah; SQL tetap berparameter, pesan galat lama dipertahankan, tidak ada
+`debug=True`, kunci rahasia, atau berkas `.db` baru.
+
+### Hasil Uji
+`pytest` → 111 passed, 23 subtests; `uji_cepat.py` → SEMUA UJI LULUS;
+`unittest discover` → 59 tests OK. Tabel test case diperbarui dengan hasil akhir.
