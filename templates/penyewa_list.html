@@ -9,9 +9,11 @@
 <div class="toolbar">
     <span>Data penyewa yang tercatat pada sistem.</span>
 
-    <a class="button" href="{{ url_for('main.tambah_penyewa') }}">
-        + Tambah Penyewa
-    </a>
+    {% if pengguna and pengguna['peran'] == 'pemilik' %}
+        <a class="button" href="{{ url_for('main.tambah_penyewa') }}">
+            + Tambah Penyewa
+        </a>
+    {% endif %}
 </div>
 
 <section class="table-card">
@@ -34,7 +36,9 @@
                 <th>Nama</th>
                 <th>No. Telepon</th>
                 <th>Alamat</th>
-                <th style="width: 14%;">Aksi</th>
+                {% if pengguna and pengguna['peran'] == 'pemilik' %}
+                    <th style="width: 14%;">Aksi</th>
+                {% endif %}
             </tr>
         </thead>
 
@@ -45,6 +49,7 @@
                 <td>{{ penyewa["nama"] }}</td>
                 <td>{{ penyewa["no_telepon"] }}</td>
                 <td>{{ penyewa["alamat"] }}</td>
+                {% if pengguna and pengguna['peran'] == 'pemilik' %}
                 <td>
                     <a class="button"
                        href="{{ url_for('main.ubah_penyewa', id_penyewa=penyewa['id_penyewa']) }}">
@@ -62,10 +67,11 @@
                         </button>
                     </form>
                 </td>
+                {% endif %}
             </tr>
             {% else %}
             <tr>
-                <td colspan="5" class="empty-state">
+                <td colspan="{{ 4 if pengguna and pengguna['peran'] != 'pemilik' else 5 }}" class="empty-state">
                     Belum ada data
                     {% if kata_kunci %}
                         penyewa dengan kata kunci "{{ kata_kunci }}"

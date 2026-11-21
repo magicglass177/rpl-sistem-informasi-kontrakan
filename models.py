@@ -9,6 +9,34 @@ DB_PATH = INSTANCE_DIR / "kontrakan.db"
 SCHEMA_PATH = BASE_DIR / "docs" / "desain" / "schema.sql"
 
 
+def _migrasi_akun_pengguna():
+    """
+    Menambahkan kolom peran pada basis data yang sudah ada.
+    Skema baru sudah menyertakan kolom tersebut; migrasi ini untuk basis data lama.
+    """
+    connection = get_db_connection()
+
+    try:
+        kolom = [
+            row[1]
+            for row in connection.execute("PRAGMA table_info(akun_pengguna)")
+        ]
+
+        if "peran" not in kolom:
+            connection.execute(
+                """
+                ALTER TABLE akun_pengguna
+                ADD COLUMN peran TEXT NOT NULL
+                DEFAULT 'pemilik'
+                CHECK (peran IN ('pemilik', 'kasir'))
+                """
+            )
+
+        connection.commit()
+    finally:
+        connection.close()
+
+
 def get_db_connection():
     """
     Membuat koneksi SQLite dan mengaktifkan foreign key.
@@ -29,6 +57,7 @@ def init_db():
     INSTANCE_DIR.mkdir(parents=True, exist_ok=True)
 
     if DB_PATH.exists():
+        _migrasi_akun_pengguna()
         return
 
     if not SCHEMA_PATH.exists():
@@ -528,42 +557,17 @@ def create_sewa(id_kamar, id_penyewa, tanggal_mulai, tanggal_selesai, tanggal_ja
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-def get_akun_by_username(username):
-    """Mengambil akun pengguna berdasarkan username."""
-    connection = get_db_connection()
-
-    try:
-        return connection.execute(
-            """
-            SELECT id_akun, username, password_hash
-            FROM akun_pengguna
-            WHERE username = ?
-            """,
-            (username.strip(),),
-        ).fetchone()
-
-    finally:
-        connection.close()
-
-
-def create_akun(username, password):
-    """
-    Membuat akun pengguna baru.
-
-    Hasil:
-    - (True, None) jika berhasil.
-    - (False, 'duplicate') jika username sudah ada.
-    - (False, 'database') jika terjadi kesalahan database.
-    """
+def tambah_pengguna(username, password_hash, peran):
+    """Menyimpan akun pengguna baru."""
     connection = get_db_connection()
 
     try:
         connection.execute(
             """
-            INSERT INTO akun_pengguna (username, password_hash)
-            VALUES (?, ?)
+            INSERT INTO akun_pengguna (username, password_hash, peran)
+            VALUES (?, ?, ?)
             """,
-            (username.strip(), generate_password_hash(password)),
+            (username.strip(), password_hash, peran),
         )
         connection.commit()
         return True, None
@@ -578,6 +582,52 @@ def create_akun(username, password):
 
     finally:
         connection.close()
+
+
+def cari_pengguna(username):
+    """Mencari akun pengguna berdasarkan username."""
+    connection = get_db_connection()
+
+    try:
+        return connection.execute(
+            """
+            SELECT id_akun, username, peran, password_hash
+            FROM akun_pengguna
+            WHERE username = ?
+            """,
+            (username.strip(),),
+        ).fetchone()
+
+    finally:
+        connection.close()
+
+
+def ambil_pengguna(id_akun):
+    """Mengambil akun pengguna berdasarkan ID."""
+    connection = get_db_connection()
+
+    try:
+        return connection.execute(
+            """
+            SELECT id_akun, username, peran, password_hash
+            FROM akun_pengguna
+            WHERE id_akun = ?
+            """,
+            (id_akun,),
+        ).fetchone()
+
+    finally:
+        connection.close()
+
+
+def get_akun_by_username(username):
+    """Mengambil akun pengguna berdasarkan username."""
+    return cari_pengguna(username)
+
+
+def create_akun(username, password, peran):
+    """Membuat akun pengguna baru."""
+    return tambah_pengguna(username, generate_password_hash(password), peran)
 
 
 def verify_password(stored_hash, password):

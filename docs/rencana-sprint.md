@@ -100,12 +100,12 @@
 | 2 | Form periode sewa dan validasi tanggal | 1 | Belum |
 | 3 | Pencegahan sewa bertumpang tindih (trigger + pesan) | 1 | Sebagian (trigger sudah ada) |
 | 4 | Form pembayaran bertahap | 1 | Belum |
-| 5 | Login, logout, dan pembatasan akses | 2 | Belum |
-| 6 | Peran pemilik dan pengelola **[Asumsi]** | 2 | Belum |
-| 7 | Penyempurnaan antarmuka dan pesan galat | 2 | Sebagian |
-| 8 | Status pembayaran | 2 | Belum |
+| 5 | Login, logout, dan pembatasan akses | 2 | Selesai |
+| 6 | Peran pemilik dan kasir | 2 | Selesai |
+| 7 | Penyempurnaan antarmuka dan pesan galat | 2 | Selesai |
+| 8 | Status pembayaran | 2 | Selesai |
 | 9 | Riwayat pembayaran dan jatuh tempo | 3 | Belum |
-| 10 | Laporan pendapatan | 3 | Belum |
+| 10 | Laporan pendapatan | 3 | Selesai |
 | 11 | Uji beban 100 kamar | 3 | Belum |
 | 12 | UAT dan rilis v1.0 | 3 | Belum |
 | 13 | Laporan Bab 4 dan demo | 4 | Belum |
@@ -150,4 +150,35 @@
 5. Status pembayaran (KF-11).
 
 **Checkpoint Minggu 12:** minimal 10 KF dan 4 KNF terimplementasi; autentikasi berjalan; tidak ada temuan keamanan kritis; pengujian otomatis minimal 8 test case.
-PY
+
+
+---
+
+## 8. Checkpoint Minggu 12 — Jobsheet 11 (RTM-2)
+
+### Fitur yang didemokan (prototipe 5 menit)
+
+1. Login dengan kata sandi ter-hash; pesan galat sama untuk username dan kata sandi salah.
+2. Dua peran: pemilik (akses penuh) dan kasir (akses terbatas), dengan menu yang berubah.
+3. Fitur inti: CRUD kamar dan penyewa, periode sewa, pembayaran, serta laporan pendapatan.
+4. Penegakan akses di server: tamu dialihkan ke login, peran salah mendapat halaman 403,
+   termasuk untuk permintaan POST.
+5. Validasi dua lapis dan pesan sukses/galat dengan `role="status"`/`role="alert"`.
+
+### Bukti yang disiapkan
+
+- Hash kata sandi pada basis data (tanpa menampilkan kata sandi asli).
+- Tabel uji login dan uji peran pada `docs/spesifikasi-fitur-akses.md`.
+- Tangkapan layar tampilan pemilik, tampilan kasir, dan halaman 403.
+- `docs/temuan-keamanan.md` berisi delapan temuan dengan tindakan.
+- `SEMUA UJI LULUS` dan 53 pengujian unit dengan status OK.
+
+### Fitur tertunda dan rencana
+
+| Fitur tertunda | Rencana penyelesaian |
+|---|---|
+| Batas percobaan login | Pertemuan 12: pembatasan percobaan + jeda waktu, disertai uji pencegah |
+| Token CSRF untuk POST | Pertemuan 12: token pada semua form dan penolakan permintaan tanpa token |
+| Cookie `Secure` | Pertemuan 14: aktifkan bersama HTTPS saat deployment |
+| UAT dengan klien nyata | Minggu 13-14 sesuai jadwal dosen |
+| Uji beban 100 kamar | Sprint 3, setelah UAT awal |

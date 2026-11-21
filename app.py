@@ -18,6 +18,10 @@ def create_app():
 
     app.config["SECRET_KEY"] = secret_key
 
+    # HttpOnly dan SameSite=Lax pada cookie sesi (Werkzeug/Flask).
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
     Path(app.instance_path).mkdir(
         parents=True,
         exist_ok=True

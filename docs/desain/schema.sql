@@ -5,7 +5,10 @@ CREATE TABLE IF NOT EXISTS akun_pengguna (
     username TEXT NOT NULL UNIQUE
         CHECK (length(trim(username)) BETWEEN 1 AND 50),
     password_hash TEXT NOT NULL
-        CHECK (length(trim(password_hash)) BETWEEN 1 AND 255)
+        CHECK (length(trim(password_hash)) BETWEEN 1 AND 255),
+    peran TEXT NOT NULL
+        DEFAULT 'pemilik'
+        CHECK (peran IN ('pemilik', 'kasir'))
 );
 
 CREATE TABLE IF NOT EXISTS kamar (
