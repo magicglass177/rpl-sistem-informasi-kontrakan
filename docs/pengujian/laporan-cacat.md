@@ -78,9 +78,11 @@ FAILED tests/test_tanggal_sewa[20261108-False-tanggal_mulai]
 - **Penyebab:** `get_all_kamar` dan `get_all_penyewa` menyusun pola `f"%{kata}%"`
   tanpa memanggil `_escape_like()`, berbeda dengan `get_all_sewa` dan
   `get_all_pembayaran`.
-- **Perbaikan:** (diisi setelah commit perbaikan)
+- **Perbaikan:** commit `e29c837` — `_escape_like()` + `ESCAPE '\'` pada
+  `get_all_kamar` dan `get_all_penyewa`.
 - **Uji regresi:** `tests/test_alur_kontrakan.py::test_pencarian_kamar_tidak_memakai_wildcard`
-- **Status:** Terbuka
+  → lulus; seluruh uji hijau.
+- **Status:** Diperbaiki
 
 ---
 

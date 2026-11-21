@@ -1745,3 +1745,29 @@ mengubah kontrak pesan yang sudah diuji pada Jobshet 9–12.
 ### Hasil Uji
 `uji_cepat.py` → SEMUA UJI LULUS; 59 unittest OK; pytest → 1 failed (D-03),
 110 passed, 23 subtests. Tidak ada regresi.
+
+
+## Siklus 6 — Perbaiki D-03: wildcard pada pencarian (Langkah 11)
+
+### Tujuan
+Membaca `%` dan `_` sebagai huruf biasa pada pencarian kamar dan penyewa.
+
+### Aktivitas
+`get_all_kamar` dan `get_all_penyewa` kini memanggil `_escape_like()` dan
+menambahkan klausa `ESCAPE '\'`, mengikuti pola yang sudah dipakai
+`get_all_sewa` dan `get_all_pembayaran`.
+
+### Hasil AI
+AI mengusulkan mengganti seluruh query dengan parameter baru. Saya memilih
+perubahan sekecil mungkin: hanya pola dan klausa `ESCAPE` yang disentuh.
+
+### Keputusan
+- **Ubah** (dua fungsi pencarian, tanpa mengubah perilaku filter lain).
+
+### Alasan
+Konsistensi antarmodul lebih penting daripada penulisan ulang; risiko regresi
+jadi lebih kecil.
+
+### Hasil Uji
+TC-37 lulus; `uji_cepat.py` SEMUA UJI LULUS; 59 unittest OK;
+pytest 111 passed, 23 subtests. Ketiga cacat kini berstatus Diperbaiki.
