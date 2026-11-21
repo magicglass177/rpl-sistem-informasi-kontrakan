@@ -1428,3 +1428,28 @@ Risiko tertinggi ditutup lebih dulu; temuan CSP ditunda karena bukan bagian dari
 
 ### Hasil Uji
 Tinjauan tercatat; `main` tetap lulus `uji_cepat.py` sebelum perbaikan dimulai.
+
+
+## Siklus 3 — Perlindungan CSRF
+
+### Tujuan
+Menutup temuan P-01: semua perubahan data harus disertai token yang tidak diketahui situs lain.
+
+### Aktivitas
+Menambahkan `csrf_token()` di `app.py`, mendaftarkannya sebagai global Jinja, memeriksa token
+pada `before_request` dengan `secrets.compare_digest`, dan memasukkan input tersembunyi ke
+seluruh formulir POST. Pengujian disesuaikan memakai pembungkus `post()` yang menyetel token.
+
+### Hasil AI
+AI menghasilkan fungsi token dan pemeriksaan dengan benar, tetapi pada draf awal hanya
+formulir halaman yang disebut; form logout pada `base.html` terlewat.
+
+### Keputusan
+- **Ubah** (menambahkan token pada form logout setelah mencari semua `method="POST"`).
+
+### Alasan
+Satu formulir yang terlewat tetap membuka celah; pemeriksaan dengan `grep` memastikan 9 form
+semua memiliki token.
+
+### Hasil Uji
+POST tanpa token → 400; `uji_cepat.py` dan 53 pengujian unit tetap lulus.

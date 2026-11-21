@@ -24,6 +24,20 @@ os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret-key")
 
 from app import create_app
 
+def _token(klien):
+    """Ambil atau buat token CSRF pada sesi klien uji."""
+    with klien.session_transaction() as sesi:
+        if "csrf_token" not in sesi:
+            sesi["csrf_token"] = "token-uji"
+        return sesi["csrf_token"]
+
+
+def post(klien, url, **kwargs):
+    """Kirim POST dengan token CSRF yang sah."""
+    data = dict(kwargs.pop("data", None) or {})
+    data.setdefault("csrf_token", _token(klien))
+    return klien.post(url, data=data, **kwargs)
+
 
 class TestCrudPenyewa(unittest.TestCase):
     """Pengujian CRUD penyewa melalui rute Flask dan database sementara."""
@@ -39,7 +53,7 @@ class TestCrudPenyewa(unittest.TestCase):
 
         if models.get_akun_by_username("admin") is None:
             models.create_akun("admin", "rahasia", "pemilik")
-        self.client.post(
+        post(self.client, 
             "/login",
             data={"username": "admin", "password": "rahasia"},
         )
@@ -143,7 +157,7 @@ class TestCrudPenyewa(unittest.TestCase):
     # ---------- Create ----------
 
     def test_06_tambah_penyewa_valid(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/penyewa/tambah",
             data={
                 "nama": "Siti Aminah",
@@ -159,7 +173,7 @@ class TestCrudPenyewa(unittest.TestCase):
         self.assertIn("Siti Aminah", halaman)
 
     def test_07_tambah_penyewa_nama_kosong_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/penyewa/tambah",
             data={
                 "nama": "",
@@ -176,7 +190,7 @@ class TestCrudPenyewa(unittest.TestCase):
         self.assertEqual(len(models.get_all_penyewa()), 1)
 
     def test_08_tambah_penyewa_alamat_kosong_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/penyewa/tambah",
             data={
                 "nama": "Siti Aminah",
@@ -201,7 +215,7 @@ class TestCrudPenyewa(unittest.TestCase):
 
         for indeks, nomor in enumerate(daftar_nomor, start=1):
             with self.subTest(nomor=nomor):
-                response = self.client.post(
+                response = post(self.client, 
                     "/penyewa/tambah",
                     data={
                         "nama": f"Penyewa Batas {indeks}",
@@ -227,7 +241,7 @@ class TestCrudPenyewa(unittest.TestCase):
 
         for nomor in daftar_nomor:
             with self.subTest(nomor=nomor):
-                response = self.client.post(
+                response = post(self.client, 
                     "/penyewa/tambah",
                     data={
                         "nama": "Penyewa Tidak Valid",
@@ -245,7 +259,7 @@ class TestCrudPenyewa(unittest.TestCase):
         self.assertEqual(len(models.get_all_penyewa()), 1)
 
     def test_11_isian_di_trim_sebelum_disimpan(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/penyewa/tambah",
             data={
                 "nama": "  Siti Aminah  ",
@@ -265,7 +279,7 @@ class TestCrudPenyewa(unittest.TestCase):
 
     def test_12_nomor_telepon_sama_boleh_digunakan_dua_penyewa(self):
         # Kamus data menetapkan nomor telepon belum UNIQUE.
-        response = self.client.post(
+        response = post(self.client, 
             "/penyewa/tambah",
             data={
                 "nama": "Budi Santoso",
@@ -289,7 +303,7 @@ class TestCrudPenyewa(unittest.TestCase):
         self.assertIn("Jalan Melati No. 10", halaman)
 
     def test_14_ubah_penyewa_valid(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/penyewa/{self.id_andi}/ubah",
             data={
                 "nama": "Andi Pratama Putra",
@@ -313,7 +327,7 @@ class TestCrudPenyewa(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_16_ubah_penyewa_dengan_telepon_tidak_valid_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/penyewa/{self.id_andi}/ubah",
             data={
                 "nama": "Andi Pratama",
@@ -331,7 +345,7 @@ class TestCrudPenyewa(unittest.TestCase):
     # ---------- Delete ----------
 
     def test_17_hapus_penyewa_lewat_post(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/penyewa/{self.id_andi}/hapus",
             follow_redirects=True,
         )
@@ -351,7 +365,7 @@ class TestCrudPenyewa(unittest.TestCase):
         id_kamar = self._tambah_kamar()
         self._tambah_sewa(id_kamar, self.id_andi)
 
-        response = self.client.post(
+        response = post(self.client, 
             f"/penyewa/{self.id_andi}/hapus",
             follow_redirects=True,
         )
@@ -362,7 +376,7 @@ class TestCrudPenyewa(unittest.TestCase):
         self.assertIsNotNone(models.get_penyewa_by_id(self.id_andi))
 
     def test_20_hapus_penyewa_tidak_ditemukan_404(self):
-        response = self.client.post("/penyewa/999999/hapus")
+        response = post(self.client, "/penyewa/999999/hapus")
         self.assertEqual(response.status_code, 404)
 
     # ---------- Keamanan ----------
@@ -370,7 +384,7 @@ class TestCrudPenyewa(unittest.TestCase):
     def test_21_sql_injection_pada_alamat_disimpan_sebagai_teks(self):
         payload = "Robert'); DROP TABLE penyewa;--"
 
-        response = self.client.post(
+        response = post(self.client, 
             "/penyewa/tambah",
             data={
                 "nama": "Robert",
@@ -402,7 +416,7 @@ class TestCrudPenyewa(unittest.TestCase):
         self.assertEqual(tersimpan["alamat"], payload)
 
     def test_22_teks_html_di_escape_oleh_jinja(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/penyewa/tambah",
             data={
                 "nama": "<b>tes</b>",

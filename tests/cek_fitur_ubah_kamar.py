@@ -25,6 +25,20 @@ os.environ["FLASK_SECRET_KEY"] = "test-only-secret-key"
 # Import aplikasi setelah lokasi database diganti.
 from app import app as flask_app
 
+def _token(klien):
+    """Ambil atau buat token CSRF pada sesi klien uji."""
+    with klien.session_transaction() as sesi:
+        if "csrf_token" not in sesi:
+            sesi["csrf_token"] = "token-uji"
+        return sesi["csrf_token"]
+
+
+def post(klien, url, **kwargs):
+    """Kirim POST dengan token CSRF yang sah."""
+    data = dict(kwargs.pop("data", None) or {})
+    data.setdefault("csrf_token", _token(klien))
+    return klien.post(url, data=data, **kwargs)
+
 
 class TestFiturUbahKamar(unittest.TestCase):
 
@@ -65,7 +79,7 @@ class TestFiturUbahKamar(unittest.TestCase):
         self.assertIn(b'value="850000"', response.data)
 
     def test_02_perubahan_kamar_berhasil_disimpan(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_pertama}/ubah",
             data={
                 "nomor_kamar": "A-01-UPDATED",
@@ -88,7 +102,7 @@ class TestFiturUbahKamar(unittest.TestCase):
         )
 
     def test_03_nomor_kamar_duplikat_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_pertama}/ubah",
             data={
                 "nomor_kamar": "B-02",
@@ -107,7 +121,7 @@ class TestFiturUbahKamar(unittest.TestCase):
         )
 
     def test_04_harga_negatif_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_pertama}/ubah",
             data={
                 "nomor_kamar": "A-01-UPDATED",
@@ -123,7 +137,7 @@ class TestFiturUbahKamar(unittest.TestCase):
         )
 
     def test_05_nomor_kamar_kosong_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_pertama}/ubah",
             data={
                 "nomor_kamar": "",
@@ -140,7 +154,7 @@ class TestFiturUbahKamar(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_07_post_id_kamar_tidak_ditemukan(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/999999/ubah",
             data={
                 "nomor_kamar": "C-03",

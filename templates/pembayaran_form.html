@@ -12,6 +12,7 @@
     {% endif %}
 
     <form method="POST" action="{{ action_url }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label for="id_sewa">Periode Sewa</label>
             <select id="id_sewa" name="id_sewa" required aria-describedby="sewa-error">

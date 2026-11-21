@@ -25,6 +25,20 @@ os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret-key")
 
 from app import create_app
 
+def _token(klien):
+    """Ambil atau buat token CSRF pada sesi klien uji."""
+    with klien.session_transaction() as sesi:
+        if "csrf_token" not in sesi:
+            sesi["csrf_token"] = "token-uji"
+        return sesi["csrf_token"]
+
+
+def post(klien, url, **kwargs):
+    """Kirim POST dengan token CSRF yang sah."""
+    data = dict(kwargs.pop("data", None) or {})
+    data.setdefault("csrf_token", _token(klien))
+    return klien.post(url, data=data, **kwargs)
+
 
 class TestCrudKamar(unittest.TestCase):
     """Pengujian CRUD kamar melalui rute Flask dan database sementara."""
@@ -40,7 +54,7 @@ class TestCrudKamar(unittest.TestCase):
 
         if models.get_akun_by_username("admin") is None:
             models.create_akun("admin", "rahasia", "pemilik")
-        self.client.post(
+        post(self.client, 
             "/login",
             data={"username": "admin", "password": "rahasia"},
         )
@@ -144,7 +158,7 @@ class TestCrudKamar(unittest.TestCase):
     # ---------- Create ----------
 
     def test_05_tambah_kamar_valid(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": "C-01", "harga_sewa": "900000"},
             follow_redirects=True,
@@ -162,7 +176,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertEqual(float(kamar["harga_sewa"]), 900000.0)
 
     def test_06_tambah_kamar_nomor_kosong_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": "", "harga_sewa": "850000"},
         )
@@ -175,7 +189,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertEqual(len(models.get_all_kamar()), 2)
 
     def test_07_tambah_kamar_harga_negatif_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": "C-02", "harga_sewa": "-5"},
         )
@@ -188,7 +202,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertEqual(len(models.get_all_kamar()), 2)
 
     def test_08_tambah_kamar_harga_teks_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": "C-03", "harga_sewa": "abc"},
         )
@@ -200,7 +214,7 @@ class TestCrudKamar(unittest.TestCase):
         )
 
     def test_09_tambah_kamar_duplikat_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": "A-01", "harga_sewa": "900000"},
         )
@@ -213,7 +227,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertEqual(len(models.get_all_kamar()), 2)
 
     def test_10_tambah_kamar_nomor_terlalu_panjang_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": "X" * 21, "harga_sewa": "900000"},
         )
@@ -235,7 +249,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertIn('value="850000"', halaman)
 
     def test_12_ubah_kamar_valid(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_a01}/ubah",
             data={"nomor_kamar": "A-01-UPDATED", "harga_sewa": "950000"},
             follow_redirects=True,
@@ -250,7 +264,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertEqual(float(kamar["harga_sewa"]), 950000.0)
 
     def test_13_ubah_kamar_menjadi_duplikat_ditolak(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_a01}/ubah",
             data={"nomor_kamar": "B-01", "harga_sewa": "850000"},
         )
@@ -272,7 +286,7 @@ class TestCrudKamar(unittest.TestCase):
     # ---------- Delete ----------
 
     def test_15_hapus_kamar_lewat_post(self):
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_a01}/hapus",
             follow_redirects=True,
         )
@@ -292,7 +306,7 @@ class TestCrudKamar(unittest.TestCase):
         id_penyewa = self._tambah_penyewa()
         self._tambah_sewa(self.id_a01, id_penyewa)
 
-        response = self.client.post(
+        response = post(self.client, 
             f"/kamar/{self.id_a01}/hapus",
             follow_redirects=True,
         )
@@ -303,7 +317,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertIsNotNone(models.get_kamar_by_id(self.id_a01))
 
     def test_18_hapus_kamar_tidak_ditemukan_404(self):
-        response = self.client.post("/kamar/999999/hapus")
+        response = post(self.client, "/kamar/999999/hapus")
         self.assertEqual(response.status_code, 404)
 
     # ---------- Keamanan ----------
@@ -312,7 +326,7 @@ class TestCrudKamar(unittest.TestCase):
         payload = "';DROP TABLE kamar"
         self.assertLessEqual(len(payload), 20)
 
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": payload, "harga_sewa": "800000"},
         )
@@ -340,7 +354,7 @@ class TestCrudKamar(unittest.TestCase):
         self.assertEqual(tersimpan["nomor_kamar"], payload)
 
     def test_20_teks_html_di_escape_oleh_jinja(self):
-        response = self.client.post(
+        response = post(self.client, 
             "/kamar/tambah",
             data={"nomor_kamar": "<b>tes</b>", "harga_sewa": "800000"},
             follow_redirects=True,
