@@ -318,7 +318,12 @@
                 [3] Penyewa
             </a>
 
-            <span>[4] Periode Sewa</span>
+            <a
+                href="{{ url_for('main.daftar_sewa') }}"
+                class="{% if active_page == 'sewa' %}active{% endif %}"
+            >
+                [4] Periode Sewa
+            </a>
             <span>[5] Pembayaran</span>
             <span>[6] Laporan</span>
         </nav>

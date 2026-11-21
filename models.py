@@ -376,3 +376,66 @@ def delete_kamar(id_kamar):
 
     finally:
         connection.close()
+
+def get_all_sewa(kata_kunci=""):
+    """
+    Mengambil seluruh periode sewa dengan JOIN ke penyewa dan kamar.
+    Pencarian mencakup nama penyewa dan nomor kamar.
+    """
+    connection = get_db_connection()
+
+    try:
+        pola = f"%{kata_kunci.strip()}%"
+
+        return connection.execute(
+            """
+            SELECT
+                s.id_sewa,
+                s.id_kamar,
+                s.id_penyewa,
+                s.tanggal_mulai,
+                s.tanggal_selesai,
+                s.tanggal_jatuh_tempo,
+                s.harga_sewa_disepakati,
+                p.nama AS nama_penyewa,
+                k.nomor_kamar AS nomor_kamar
+            FROM sewa AS s
+            JOIN penyewa AS p ON p.id_penyewa = s.id_penyewa
+            JOIN kamar AS k ON k.id_kamar = s.id_kamar
+            WHERE p.nama LIKE ? OR k.nomor_kamar LIKE ?
+            ORDER BY s.tanggal_mulai DESC, s.id_sewa DESC
+            """,
+            (pola, pola)
+        ).fetchall()
+
+    finally:
+        connection.close()
+
+
+def get_sewa_by_id(id_sewa):
+    """Mengambil satu periode sewa berdasarkan ID, lengkap dengan nama induk."""
+    connection = get_db_connection()
+
+    try:
+        return connection.execute(
+            """
+            SELECT
+                s.id_sewa,
+                s.id_kamar,
+                s.id_penyewa,
+                s.tanggal_mulai,
+                s.tanggal_selesai,
+                s.tanggal_jatuh_tempo,
+                s.harga_sewa_disepakati,
+                p.nama AS nama_penyewa,
+                k.nomor_kamar AS nomor_kamar
+            FROM sewa AS s
+            JOIN penyewa AS p ON p.id_penyewa = s.id_penyewa
+            JOIN kamar AS k ON k.id_kamar = s.id_kamar
+            WHERE s.id_sewa = ?
+            """,
+            (id_sewa,)
+        ).fetchone()
+
+    finally:
+        connection.close()

@@ -15,8 +15,10 @@ from models import (
     delete_penyewa,
     get_all_kamar,
     get_all_penyewa,
+    get_all_sewa,
     get_kamar_by_id,
     get_penyewa_by_id,
+    get_sewa_by_id,
     update_kamar,
     update_penyewa,
 )
@@ -380,3 +382,18 @@ def hapus_penyewa(id_penyewa):
         )
 
     return redirect(url_for("main.daftar_penyewa"))
+
+
+
+@main.route("/sewa")
+def daftar_sewa():
+    kata_kunci = request.args.get("q", "").strip()
+    daftar_sewa = get_all_sewa(kata_kunci)
+
+    return render_template(
+        "sewa_list.html",
+        page_title="Daftar Periode Sewa",
+        active_page="sewa",
+        daftar_sewa=daftar_sewa,
+        kata_kunci=kata_kunci,
+    )

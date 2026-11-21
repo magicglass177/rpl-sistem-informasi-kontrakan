@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>Daftar Periode Sewa</h1>
+    <p>Kelola periode sewa kamar kontrakan.</p>
+</section>
+
+<div class="toolbar">
+    <span>Data periode sewa yang tercatat pada sistem.</span>
+
+    <a class="button" href="{{ url_for('main.daftar_sewa') }}">
+        + Tambah Periode Sewa
+    </a>
+</div>
+
+<section class="table-card">
+    <form class="search-form" method="GET"
+          action="{{ url_for('main.daftar_sewa') }}">
+        <input
+            type="search"
+            name="q"
+            placeholder="Cari nama penyewa atau nomor kamar..."
+            value="{{ kata_kunci }}"
+            aria-label="Cari periode sewa"
+        >
+        <button class="button" type="submit">Cari</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 6%;">No.</th>
+                <th>Tanggal Mulai</th>
+                <th>Tanggal Selesai</th>
+                <th>Jatuh Tempo</th>
+                <th>Penyewa</th>
+                <th>Kamar</th>
+                <th>Harga Disepakati</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for sewa in daftar_sewa %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ sewa["tanggal_mulai"] }}</td>
+                <td>{{ sewa["tanggal_selesai"] }}</td>
+                <td>{{ sewa["tanggal_jatuh_tempo"] or "-" }}</td>
+                <td>{{ sewa["nama_penyewa"] }}</td>
+                <td>{{ sewa["nomor_kamar"] }}</td>
+                <td>
+                    Rp{{ "{:,.0f}".format(sewa["harga_sewa_disepakati"]).replace(",", ".") }}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="empty-state">
+                    Belum ada data
+                    {% if kata_kunci %}
+                        periode sewa dengan kata kunci "{{ kata_kunci }}"
+                    {% else %}
+                        periode sewa yang tersimpan
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="table-footer">
+        <span>
+            Menampilkan {{ daftar_sewa|length }} data periode sewa
+        </span>
+        <span>
+            Total data: {{ daftar_sewa|length }}
+        </span>
+    </div>
+</section>
+{% endblock %}
