@@ -204,3 +204,26 @@
 - Temuan 11 (penyimpanan batas login di memori): minggu 13.
 - Temuan 13 (`pip-audit` tidak tersedia): minggu 13.
 - UAT klien dan uji beban: minggu 13-14.
+
+---
+
+## 10. Penutup Sprint 3 — Hasil Jobsheet 13
+
+| No | Item | Status | Keterangan |
+|---:|---|---|---|
+| 1 | Test case | Selesai | 39 test case, 8 KF terlacak, KF tanpa uji = 0 |
+| 2 | Uji otomatis | Selesai | 29 fungsi uji baru; 111 passed + 23 subtests |
+| 3 | Mutasi manual | Selesai | 3 dari 3 tertangkap; M1→TC-01, M2→TC-13, M3→TC-30 |
+| 4 | Cacat | Selesai | 3 cacat diperbaiki dengan commit terpisah dan uji regresi |
+| 5 | Rilis v1.0 | Minggu 14 | Tag `v1.0.0` setelah UAT dan perbaikan kecil |
+| 6 | UAT klien | Minggu 14 | Rencana 7 skenario siap; jadwal belum dikonfirmasi klien |
+| 7 | Kuesioner kegunaan | Minggu 14 | Dilaksanakan bersama UAT |
+| 8 | Rate limit multi-proses | Minggu 13-14 | Penyimpanan bersama untuk `percobaan.py` |
+| 9 | CSP ketat + HTTPS | Minggu 14 | Pindahkan `onsubmit` ke JS lokal |
+| 10 | Audit dependensi | Minggu 13-14 | `pip-audit` bila lingkungan mengizinkan |
+
+### Catatan
+
+Dokumen `docs/laporan-pengujian.html` siap dicetak ke PDF untuk LMS.
+Tidak ada kata sandi, kunci rahasia, atau berkas `.db` yang ditambahkan.
+

@@ -102,13 +102,13 @@ def get_all_kamar(kata_kunci=""):
                     ELSE 'Tersedia'
                 END AS status_ketersediaan
             FROM kamar AS k
-            WHERE k.nomor_kamar LIKE ?
+            WHERE k.nomor_kamar LIKE ? ESCAPE '\\'
             ORDER BY k.nomor_kamar ASC
         """
 
         return connection.execute(
             query,
-            (f"%{kata_kunci.strip()}%",)
+            (f"%{_escape_like(kata_kunci.strip())}%",)
         ).fetchall()
 
     finally:
@@ -223,15 +223,15 @@ def get_all_penyewa(kata_kunci=""):
     connection = get_db_connection()
 
     try:
-        pola = f"%{kata_kunci.strip()}%"
+        pola = f"%{_escape_like(kata_kunci.strip())}%"
 
         return connection.execute(
             """
             SELECT id_penyewa, nama, no_telepon, alamat
             FROM penyewa
-            WHERE nama LIKE ?
-               OR no_telepon LIKE ?
-               OR alamat LIKE ?
+            WHERE nama LIKE ? ESCAPE '\\'
+               OR no_telepon LIKE ? ESCAPE '\\'
+               OR alamat LIKE ? ESCAPE '\\'
             ORDER BY nama COLLATE NOCASE ASC
             """,
             (pola, pola, pola)

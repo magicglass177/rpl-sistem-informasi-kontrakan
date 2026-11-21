@@ -1600,3 +1600,278 @@ Tolak 2/45 (4,44%).
 **Jenis galat AI yang ditemui:** open redirect dicek setengah, IDOR terlewat, form logout
 terlewat, username log belum memakai `%r`, konfigurasi produksi kehilangan kompatibilitas
 nama variabel, dan saran penghapusan uji lama.
+
+
+---
+
+# Jobsheet 13 — Pengujian: Test Case, pytest, Laporan Cacat, dan Rencana UAT
+
+## Siklus 1 — Draf uji pytest dari test case (Langkah 5)
+
+### Tujuan
+Mengubah tabel test case menjadi uji otomatis pytest tanpa melihat implementasi kode.
+
+### Aktivitas
+Prompt diberikan berupa tabel test case (39 baris) dan signature fungsi validasi.
+AI diminta memakai `@pytest.mark.parametrize` dan nilai harapan dari kolom
+"Hasil diharapkan", bukan dari keluaran kode. Hasil disimpan di `tests/test_validasi.py`.
+
+### Hasil AI
+Draf berisi 8 fungsi uji dengan 30 kasus parametrize. Dua asersi terbukti lemah:
+`test_nama_penyewa` memakai `assert galat is not None` (selalu benar), dan
+`test_urutan_tanggal` hanya memeriksa ada galat tanpa menyebut kuncinya.
+
+### Keputusan
+- **Ubah** (draf diterima sebagai titik awal, asersi akan diperbaiki pada Siklus 2).
+
+### Alasan
+Menyesuaikan alur Jobshet 13: draf dibuat dari spesifikasi, lalu diperiksa secara mandiri.
+Draf belum dijadikan dasar penerimaan sebelum ditinjau.
+
+### Hasil Uji
+`pytest -q tests/test_validasi.py` → 1 failed, 29 passed. Kegagalan TC-06
+(harga 11 digit diterima) sudah tertangkap; TC-27 masih salah lulus.
+
+
+## Siklus 2 — Pemeriksaan mandiri uji AI dan mutasi manual (Langkah 6)
+
+### Tujuan
+Memastikan asersi uji berasal dari spesifikasi dan cukup kuat menangkap cacat.
+
+### Aktivitas
+Empat pemeriksaan Bagian 2.4 diterapkan pada 8 fungsi uji. Tiga asersi diperbaiki:
+`test_nama_penyewa` (dangkal), `test_urutan_tanggal` (tidak menyebut kunci), dan
+`test_tanggal_sewa` (salah lulus pada TC-27). Tiga mutasi diterapkan satu per satu
+pada `services.py`, diuji, lalu dikembalikan dengan menimpa dari salinan asli.
+
+### Hasil AI
+Draf AI melewatkan format tanggal kompak: TC-27 awalnya lulus karena galat datang
+dari tanggal selesai, bukan dari `tanggal_mulai`. Setelah asersi dibuat spesifik,
+TC-27 gagal dan mengungkap cacat D-01.
+
+### Keputusan
+- **Ubah** (tiga asersi diperbaiki; mutasi M1–M3 semuanya tertangkap).
+
+### Alasan
+Asersi `assert galat is not None` selalu benar karena `galat` adalah dict.
+Mutasi membuktikan uji benar-benar mengikat aturan batas, bukan sekadar "tidak error".
+
+### Hasil Uji
+Sebelum perbaikan: 1 failed, 29 passed. Sesudah perbaikan: 2 failed, 28 passed
+(TC-06 → D-02, TC-27 → D-01). Mutasi M1 (`harga < 0` → `<= 0`) gagalkan TC-01;
+M2 (`> 20` → `>= 20`) gagalkan TC-13; M3 (`<= 0` → `< 0`) gagalkan TC-30.
+
+
+## Siklus 3 — Uji alur, akses, dan laporan cacat (Langkah 9–10)
+
+### Tujuan
+Melengkapi uji otomatis dengan alur inti, matriks akses, dan penolakan CSRF,
+lalu melaporkan cacat nyata dengan bukti sebelum perbaikan.
+
+### Aktivitas
+Menambahkan `test_alur_kontrakan.py`, `test_akses.py`, `test_pembayaran.py`, dan
+`test_autentikasi.py`. Uji eksploratif Lampiran E.2 dijalankan pada basis data
+sementara. Total fungsi uji pytest menjadi 18 fungsi (belum termasuk uji lama).
+
+### Hasil AI
+AI mengusulkan matriks akses dengan `/penyewa` = 403 untuk kasir. Saya koreksi:
+halaman daftar memakai `@semua_peran`; hanya mutasi yang terlarang. AI juga
+mengusulkan perbandingan `response.data` mentah untuk pesan login, yang gagal
+karena field username diisi ulang — saya ganti dengan asersi pesan spesifik.
+
+### Keputusan
+- **Ubah** (dua harapan uji dikoreksi; tiga cacat dilaporkan).
+
+### Alasan
+Kegagalan karena uji salah harus diperbaiki pada ujinya, bukan dengan melonggarkan
+kode. Tiga kegagalan lain benar-benar menyimpang dari PRD/kamus data sehingga
+dicatat sebagai D-01, D-02, dan D-03.
+
+### Hasil Uji
+Sebelum koreksi uji: 5 failed, 106 passed. Sesudah koreksi: 3 failed,
+108 passed, 23 subtests — tepat tiga cacat nyata.
+
+
+## Siklus 4 — Perbaiki D-01: format tanggal kompak (Langkah 11)
+
+### Tujuan
+Menolak tanggal `YYYYMMDD` di validasi, bukan di basis data.
+
+### Aktivitas
+Menambahkan `_format_tanggal_valid()` yang memeriksa pola `[0-9]{4}-[0-9]{2}-[0-9]{2}`
+sebelum `date.fromisoformat()`. Dipakai pada `tanggal_mulai`, `tanggal_selesai`,
+`tanggal_jatuh_tempo`, dan `tanggal_pembayaran`. Pesan galat lama dipertahankan
+persis agar uji lama tidak berubah.
+
+### Hasil AI
+AI mengusulkan mengganti seluruh blok `try/except` dengan satu helper baru,
+termasuk mengubah pesan galatnya. Saya menolak perubahan pesan karena
+`cek_fitur_ubah_kamar.py` dan `test_crud_kamar.py` mengecek teks lama.
+
+### Keputusan
+- **Ubah** (hanya pemeriksaan format yang ditambahkan).
+
+### Alasan
+Perbaikan sekecil mungkin: validasi kini menolak lebih awal, sehingga pengguna
+melihat pesan "harus berformat TTTT-BB-HH" alih-alih "kesalahan database".
+
+### Hasil Uji
+`pytest -k "tanggal_sewa or tanggal_pembayaran or urutan_tanggal"` → 4 passed.
+Uji penuh → 2 failed (D-02, D-03), 109 passed: tidak ada regresi.
+
+
+## Siklus 5 — Perbaiki D-02: batas DECIMAL(12,2) (Langkah 11)
+
+### Tujuan
+Menolak harga/jumlah di luar batas tipe yang ditetapkan kamus data.
+
+### Aktivitas
+Menambahkan `_harga_dalam_batas()` yang memeriksa bentuk desimal tetap dengan
+pola maksimal 10 digit bulat dan 2 digit desimal. Dipakai pada `harga_sewa`,
+`harga_sewa_disepakati`, dan `jumlah_bayar`. Pesan galat lama tidak diubah.
+
+### Hasil AI
+AI mengusulkan mengganti pesan "Harga sewa tidak boleh negatif." dengan pesan
+baru yang menggabungkan semua aturan. Saya menolak karena dua berkas uji lama
+mencocokkan teks tersebut persis.
+
+### Keputusan
+- **Ubah** (cabang batas baru ditambahkan setelah cabang negatif).
+
+### Alasan
+Dengan menjaga pesan lama, perbaikan hanya menutup celah batas atas tanpa
+mengubah kontrak pesan yang sudah diuji pada Jobshet 9–12.
+
+### Hasil Uji
+`uji_cepat.py` → SEMUA UJI LULUS; 59 unittest OK; pytest → 1 failed (D-03),
+110 passed, 23 subtests. Tidak ada regresi.
+
+
+## Siklus 6 — Perbaiki D-03: wildcard pada pencarian (Langkah 11)
+
+### Tujuan
+Membaca `%` dan `_` sebagai huruf biasa pada pencarian kamar dan penyewa.
+
+### Aktivitas
+`get_all_kamar` dan `get_all_penyewa` kini memanggil `_escape_like()` dan
+menambahkan klausa `ESCAPE '\'`, mengikuti pola yang sudah dipakai
+`get_all_sewa` dan `get_all_pembayaran`.
+
+### Hasil AI
+AI mengusulkan mengganti seluruh query dengan parameter baru. Saya memilih
+perubahan sekecil mungkin: hanya pola dan klausa `ESCAPE` yang disentuh.
+
+### Keputusan
+- **Ubah** (dua fungsi pencarian, tanpa mengubah perilaku filter lain).
+
+### Alasan
+Konsistensi antarmodul lebih penting daripada penulisan ulang; risiko regresi
+jadi lebih kecil.
+
+### Hasil Uji
+TC-37 lulus; `uji_cepat.py` SEMUA UJI LULUS; 59 unittest OK;
+pytest 111 passed, 23 subtests. Ketiga cacat kini berstatus Diperbaiki.
+
+
+## Siklus 7 — Regresi penuh dan tinjau diff (Langkah 12)
+
+### Tujuan
+Memastikan ketiga perbaikan tidak merusak fitur lama dan tidak membuka celah baru.
+
+### Aktivitas
+Menjalankan `pytest`, `uji_cepat.py`, dan `unittest discover`, lalu membaca
+`git diff main...HEAD` dengan daftar periksa Jobshet 12.
+
+### Hasil AI
+AI mengusulkan menyederhanakan uji alur yang "terlalu banyak". Saya menolak:
+setiap uji alur memetakan satu KF dan harus tetap ada.
+
+### Keputusan
+- **Tolak** usulan penghapusan uji; **Terima** perbaikan lainnya.
+
+### Alasan
+Mengurangi uji demi kecepatan menyembunyikan regresi. Diff ditinjau: hanya
+helper `_format_tanggal_valid`, `_harga_dalam_batas`, dan escape `LIKE` yang
+berubah; SQL tetap berparameter, pesan galat lama dipertahankan, tidak ada
+`debug=True`, kunci rahasia, atau berkas `.db` baru.
+
+### Hasil Uji
+`pytest` → 111 passed, 23 subtests; `uji_cepat.py` → SEMUA UJI LULUS;
+`unittest discover` → 59 tests OK. Tabel test case diperbarui dengan hasil akhir.
+
+
+## Siklus 8 — Rencana UAT (Langkah 13)
+
+### Tujuan
+Menyiapkan validasi bersama klien yang terpisah dari pengujian teknis.
+
+### Aktivitas
+Menyusun `docs/pengujian/rencana-uat.md`: tujuan, peserta, lingkungan, data
+karangan, 7 skenario dalam bahasa klien, kriteria lulus yang terukur, dan cara
+merekam temuan. Kotak konfirmasi jadwal sengaja dibiarkan kosong.
+
+### Hasil AI
+AI mengusulkan mengisi tanggal UAT dengan tanggal rekaan agar tampak lengkap.
+Saya menolak: jadwal harus disepakati klien, bukan dibuat-buat.
+
+### Keputusan
+- **Tolak** tanggal rekaan; **Terima** struktur rencana.
+
+### Alasan
+Jobshet melarang manipulasi hasil dan mensyaratkan jadwal disetujui klien.
+Mencantumkan tanggal palsu akan menyesatkan dosen dan klien.
+
+### Hasil Uji
+Rencana memuat 7 skenario (≥ 5) dan 4 kriteria lulus; status penjadwalan dicatat
+jujur sebagai belum terkonfirmasi.
+
+## Siklus 9 — Melengkapi pengujian dan laporan (Langkah 15)
+
+### Tujuan
+Memastikan setiap KF memiliki uji, menyiapkan luaran akhir, dan menutup Sprint 3.
+
+### Aktivitas
+Memeriksa matriks keterlacakan (KF tanpa uji = 0), menyiapkan laporan pengujian
+siap cetak, memperbarui `docs/rencana-sprint.md`, dan merekap keputusan.
+
+### Hasil AI
+AI mengusulkan menandai jadwal UAT sebagai "selesai" karena rencana sudah ditulis.
+Saya menolak: rencana bukan persetujuan klien.
+
+### Keputusan
+- **Terima** struktur laporan; **Tolak** penandaan jadwal UAT sebagai selesai.
+
+### Alasan
+Membedakan "direncanakan" dan "disetujui" sesuai etika jobsheet. Klien nyata
+belum dihubungi dari lingkungan ini.
+
+### Hasil Uji
+Pemeriksaan akhir: 111 pytest passed, 23 subtests; `uji_cepat.py` SEMUA UJI LULUS;
+59 unittest OK; tiga cacat Diperbaiki.
+
+## Rekap Keputusan Jobsheet 13
+
+| No | Siklus | Keputusan |
+|---:|---|---|
+| 1 | Draf uji dari test case | Ubah |
+| 2 | Pemeriksaan uji AI + 3 mutasi | Ubah |
+| 3 | Uji alur, akses, laporan cacat | Ubah |
+| 4 | Perbaikan D-01 | Ubah |
+| 5 | Perbaikan D-02 | Ubah |
+| 6 | Perbaikan D-03 | Ubah |
+| 7 | Regresi dan tinjau diff | Tolak |
+| 8 | Rencana UAT | Tolak |
+| 9 | Melengkapi pengujian dan laporan | Terima |
+
+**Proporsi Jobsheet 13:** Ubah 6/9 (66,67%), Tolak 2/9 (22,22%),
+Terima 1/9 (11,11%). Entri baru = 9 (≥ 8), termasuk satu entri tentang
+uji AI lemah (Siklus 2) dan dua entri tentang kelemahan yang ditemukan manusia.
+
+**Proporsi kumulatif Jobsheet 9 + 10 + 11 + 12 + 13:**
+Terima 27/54 (50,00%), Ubah 23/54 (42,59%), Tolak 4/54 (7,41%).
+
+**Jenis galat AI yang ditemui:** asersi `assert galat is not None`, format
+tanggal kompak terlewat, matriks akses `/penyewa` keliru, perbandingan HTML
+login terlalu kuat, usulan mengubah pesan galat lama, usulan tanggal UAT rekaan,
+dan usulan menghapus uji alur.
+
