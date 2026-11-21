@@ -1379,3 +1379,52 @@ Tolak 1/37 (2,70%).
 **Jenis galat AI yang ditemui:** decorator never-defined, escape backslash pada validasi
 `next`, skrip akun memakai environment variable, dan pesan galat login yang membocorkan
 keberadaan akun.
+
+
+---
+
+# Jobsheet 12 — Code Review, Keamanan Dasar, dan Checkpoint
+
+## Siklus 1 — Perbaikan kasus latihan dengan bantuan AI
+
+### Tujuan
+Memperbaiki satu per satu temuan pada `kasus_rentan.py` dan meninjau kualitas perbaikan AI.
+
+### Aktivitas
+AI diminta memperbaiki SQL injection, hash MD5, hapus via GET, open redirect, IDOR,
+dan penanganan galat. Setiap hasil dibaca kembali dengan daftar periksa Lampiran C.
+
+### Hasil AI
+AI benar memakai SQL berparameter, `generate_password_hash`, pesan galat umum, dan POST+403.
+Namun AI hanya mengecek `next.startswith('/')` dan tidak menyertakan pemeriksaan kepemilikan
+pada rute catatan.
+
+### Keputusan
+- **Ubah** (dua perbaikan dikoreksi manual).
+
+### Alasan
+`//situs-jahat` tetap diterima oleh pemeriksaan sederhana; tanpa `pengguna_id`, IDOR tetap ada.
+Ini membuktikan tinjauan AI tidak boleh dijadikan satu-satunya pemeriksaan.
+
+### Hasil Uji
+SQL injection → 401; `next` luar → `/`; catatan kasir → 404; hapus GET → 405.
+
+## Siklus 2 — Tinjauan mandiri proyek sendiri
+
+### Tujuan
+Menerapkan Lampiran C pada kode kelompok dan merangkum temuan dengan format Lampiran D.1.
+
+### Aktivitas
+Meninjau `app.py`, `routes.py`, `services.py`, `models.py`, templat, dan `requirements.txt`;
+menggabungkan dengan `docs/temuan-keamanan.md`; menulis tujuh temuan pada
+`docs/laporan-temuan.md`.
+
+### Keputusan
+- **Ubah**: lima temuan dijadwalkan diperbaiki hari ini (CSRF, batas login, log, konfigurasi, header).
+- **Ditolak**: pemeriksaan kepemilikan data per akun, karena data kontrakan bersifat bersama.
+
+### Alasan
+Risiko tertinggi ditutup lebih dulu; temuan CSP ditunda karena bukan bagian dari alur hari ini.
+
+### Hasil Uji
+Tinjauan tercatat; `main` tetap lulus `uji_cepat.py` sebelum perbaikan dimulai.
