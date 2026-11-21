@@ -877,3 +877,313 @@ Memeriksa jurnal, menghitung proporsi keputusan, menyusun rencana Sprint 1–4, 
 Rencana Sprint 1–4 untuk RTM-2 disimpan pada `docs/rencana-sprint.md`, termasuk status baseline, target checkpoint Minggu 12, papan tugas, dan risiko. Pekerjaan Minggu berikutnya diprioritaskan pada periode sewa, pembayaran, dan autentikasi.
 
 **Status:** Jurnal dan rencana sprint lengkap.
+
+
+# Jobsheet 10 — Relasi, Pencarian, Debugging, dan Refactoring
+
+## Langkah 3 - Siklus 1: Daftar Periode Sewa dengan JOIN
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menampilkan periode sewa dengan nama penyewa dan nomor kamar melalui JOIN.
+
+### Hasil AI
+AI menambahkan `get_all_sewa()` dan `get_sewa_by_id()` dengan JOIN ke `penyewa` dan `kamar`, alias kolom yang jelas, serta rute dan template daftar.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Hasil sesuai spesifikasi G1; SQL berparameter; lapisan benar; uji manual lulus.
+
+### Hasil Uji
+Daftar menampilkan nama penyewa dan nomor kamar; keadaan kosong menampilkan "Belum ada periode sewa".
+
+**Status:** Selesai.
+
+---
+
+## Langkah 4 - Siklus 2: Form Tambah dengan Pilihan Induk
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menambah periode sewa dengan pilihan kamar dan penyewa dari menu pilihan.
+
+### Hasil AI
+AI menambahkan `validate_sewa()`, `create_sewa()`, rute tambah, dan template form dengan `<select>`.
+
+### Keputusan
+- **Ubah**.
+
+### Alasan
+Validasi awal disesuaikan dengan kamus data dan constraint schema; nomor telepon tidak dibuat UNIQUE; pesan galat per kolom diperjelas.
+
+### Hasil Uji
+Enam masukan uji sesuai harapan: valid tersimpan, induk kosong ditolak, jumlah 0/-3 ditolak, jumlah teks ditolak, tanggal format salah ditolak, ID induk 999 ditolak.
+
+**Status:** Selesai.
+
+---
+
+## Langkah 5 - Siklus 3: Transaksi Dua Tabel
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menyimpan periode sewa dalam satu transaksi.
+
+### Hasil AI
+AI menempatkan INSERT sewa dalam satu koneksi dan satu commit.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Transaksi valid tersimpan; transaksi dengan ID induk tidak ada gagal tanpa meninggalkan baris sebagian.
+
+### Hasil Uji
+Stok/riwayat tidak berubah sebagian pada kegagalan; uji regresi lulus.
+
+**Status:** Selesai.
+
+---
+
+## Langkah 6 - Uji Kunci Asing dan Hapus Induk
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Memastikan kamar/penyewa yang dipakai sewa tidak dapat dihapus.
+
+### Hasil AI
+Penanganan `in_use` sudah ada dari Jobsheet 9 dan tetap berlaku untuk `sewa`.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Kamar dan penyewa yang dipakai sewa tidak terhapus; pesan "tidak dapat dihapus" tampil.
+
+### Hasil Uji
+Uji hapus induk lulus.
+
+**Status:** Selesai.
+
+---
+
+## Langkah 7 - Tinjauan Diff Modul Sewa
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Meninjau diff modul berelasi dengan daftar periksa Jobsheet 9 plus tiga pertanyaan relasi.
+
+### Temuan
+1. Pencarian awal tidak mengekspor `%` dan `_` pada LIKE — diperbaiki.
+2. Form tambah belum menampilkan pesan khusus overlap — diperbaiki.
+3. `get_all_sewa` awal tidak mendukung penyaringan status — diperbaiki.
+
+### Keputusan
+- **Ubah** untuk ketiga temuan.
+
+### Alasan
+Temuan terbukti dari pembacaan diff dan uji.
+
+**Status:** Selesai; hasil pada `docs/pengujian/tinjauan-modul-sewa.md`.
+
+---
+
+## Langkah 9 - Siklus 4: Pencarian
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menambah pencarian berdasarkan nama penyewa atau nomor kamar.
+
+### Hasil AI
+AI menambahkan parameter `q`, query `LIKE ? ESCAPE '\'`, dan escape karakter `%` dan `_`.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Keempat uji pencarian lulus: sebagian nama, kata tidak ada, `%`/`_` harfiah, dan masukan berbahaya.
+
+### Hasil Uji
+Pencarian aman dan kata kunci tetap tampil di kolom pencarian.
+
+**Status:** Selesai.
+
+---
+
+## Langkah 10 - Siklus 5: Penyaringan
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menambah penyaringan status periode sewa yang dapat digabung dengan pencarian.
+
+### Hasil AI
+AI menambahkan parameter `status` dengan daftar tetap di kode (`aktif`/`berakhir`).
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Pencarian dan penyaringan dapat digabung (`?q=...&status=...`) dan hasilnya benar.
+
+### Hasil Uji
+Filter aktif/berakhir dan gabungan lulus.
+
+**Status:** Selesai.
+
+---
+
+## Langkah 11 - Sesi Debugging Terpandu
+**Tanggal:** 21 November 2026
+
+### Debug A — Salah nama kolom
+**Gejala:** `/sewa` gagal saat query dijalankan.
+
+**Traceback ringkas:**
+```
+sqlite3.OperationalError: no such column: p.namaa
+```
+
+**Hipotesis:** nama kolom pada query tidak sesuai skema.
+
+**Prompt:** Lampiran A.6 dengan traceback lengkap, kode terkait, langkah reproduksi, perilaku yang diharapkan, dan batasan.
+
+**Penjelasan AI:** kolom `namaa` tidak ada pada tabel `penyewa`; perbaikan cukup mengganti menjadi `nama`.
+
+**Perbaikan:** mengubah `p.namaa` menjadi `p.nama`.
+
+**Uji pencegah:** `tests/uji_cepat.py` dan pembukaan `/sewa` lulus.
+
+**Keputusan:** **Ubah**.
+
+### Debug B — Salah nama variabel
+**Gejala:** `/sewa` gagal dengan `NameError`.
+
+**Traceback ringkas:**
+```
+NameError: name 'statuss' is not defined. Did you mean: 'status'?
+```
+
+**Hipotesis:** variabel pada rute salah ketik.
+
+**Prompt:** Lampiran A.6 dengan konteks lengkap.
+
+**Penjelasan AI:** `statuss` tidak didefinisikan; yang tersedia adalah `status`.
+
+**Perbaikan:** mengubah `statuss` menjadi `status`.
+
+**Uji pencegah:** `tests/uji_cepat.py` lulus.
+
+**Keputusan:** **Ubah**.
+
+**Status:** Dua catatan debugging selesai; entri bertanda `[Debug]`.
+
+---
+
+## Langkah 12 - Uji Regresi
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menyediakan skrip uji yang dapat dijalankan berkali-kali tanpa menyentuh basis data asli.
+
+### Hasil AI
+AI membuat `tests/uji_cepat.py` dengan klien uji Flask dan database sementara.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Skrip mencetak "SEMUA UJI LULUS" dan tidak menyentuh `instance/kontrakan.db`.
+
+### Hasil Uji
+Daftar, tambah valid, tambah tidak valid, ubah, hapus, pencarian, dan transaksi lulus.
+
+**Status:** Selesai.
+
+---
+
+## Langkah 13 - Siklus 6: Refactoring Kecil
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menghilangkan duplikasi `render_template` pada rute tambah dan ubah kamar.
+
+### Hasil AI
+AI mengekstrak fungsi bantu `_render_form_kamar()`.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Uji regresi lulus sebelum dan sesudah; diff hanya menyentuh bagian yang diminta; perilaku tidak berubah.
+
+### Hasil Uji
+`tests/uji_cepat.py` lulus sebelum dan sesudah refactoring.
+
+**Status:** Selesai.
+
+---
+
+## Langkah 14 - Latihan Konflik Merge
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Melatih penyelesaian konflik merge pada `templates/base.html`.
+
+### Aktivitas
+Dua branch menambah tautan berbeda pada baris yang sama. Konflik diselesaikan dengan mempertahankan kedua tautan, menghapus penanda konflik, menjalankan aplikasi dan uji, lalu commit.
+
+### Pelajaran
+Konflik harus dibaca dari penanda `<<<<<<<`, `=======`, `>>>>>>>`; kedua perubahan dapat dipertahankan bila tidak saling meniadakan; uji harus dijalankan setelah resolusi.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Tidak ada penanda konflik tersisa; aplikasi dan uji berjalan.
+
+**Status:** Selesai; tautan latihan dibersihkan setelah latihan.
+
+---
+
+## Langkah 15 - PR, Tinjauan, dan Merge
+**Tanggal:** 21 November 2026
+
+### Aktivitas
+Memastikan fitur (pencarian, penyaringan, refactoring) berada pada PR/commit terpisah, menjalankan `tests/uji_cepat.py` pada `main`, dan menggabungkan branch `fitur/modul-sewa`.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+`main` lulus `tests/uji_cepat.py` (SEMUA UJI LULUS) dan 53 pengujian unit; riwayat Git menunjukkan kontribusi.
+
+**Status:** Selesai.
+
+---
+
+## Rekap Keputusan Jobsheet 10
+
+| No. | Siklus | Keputusan |
+|---:|---|---|
+| 1 | Daftar periode sewa dengan JOIN | Terima |
+| 2 | Form tambah dengan pilihan induk | Ubah |
+| 3 | Transaksi dua tabel | Terima |
+| 4 | Uji kunci asing dan hapus induk | Terima |
+| 5 | Tinjauan diff modul sewa | Ubah |
+| 6 | Pencarian | Terima |
+| 7 | Penyaringan | Terima |
+| 8 | Debug: salah nama kolom | Ubah |
+| 9 | Debug: salah nama variabel | Ubah |
+| 10 | Uji regresi | Terima |
+| 11 | Refactoring kecil | Terima |
+| 12 | Konflik merge | Terima |
+| 13 | PR, tinjauan, dan merge | Terima |
+
+**Proporsi Jobsheet 10:** Terima 9/13 (69,23%), Ubah 4/13 (30,77%), Tolak 0/13 (0%).
+
+**Proporsi kumulatif Jobsheet 9 + 10:** Terima 20/29 (68,97%), Ubah 8/29 (27,59%), Tolak 1/29 (3,45%). Entri jurnal baru ≥ 8 dan bertanda `[Debug]` = 2 (ditambah 1 dari Jobsheet 9, total 3).
+
+**Jenis galat AI yang ditemui:** nama kolom salah, variabel salah ketik, pencarian tidak mengekspor karakter wildcard, validasi awal tidak sesuai kamus data, dan duplikasi render_template.
+PY

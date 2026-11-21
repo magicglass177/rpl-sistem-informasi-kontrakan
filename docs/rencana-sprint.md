@@ -130,3 +130,24 @@
 2. Menampilkan pesan yang jelas saat trigger menolak periode bertumpang tindih (KF-08).
 3. Menambahkan pencarian dan penyaringan pada daftar kamar dan penyewa.
 4. Menyiapkan struktur autentikasi dan hash kata sandi untuk Sprint 2.
+
+
+## 7. Status Setelah Jobsheet 10 (Minggu 10)
+
+- Modul periode sewa (`sewa`) berjalan dengan JOIN, form pilihan induk, transaksi, pencarian, dan penyaringan.
+- Uji regresi `tests/uji_cepat.py` lulus ("SEMUA UJI LULUS").
+- 53 pengujian unit lulus.
+- Refactoring `_render_form_kamar` selesai.
+- Latihan konflik merge selesai.
+- `main` telah diperbarui dan di-push.
+
+### Prioritas Sprint 2 (Minggu 11–12)
+
+1. Autentikasi dan peran (KF-01, KNF-04).
+2. Penyempurnaan antarmuka sesuai wireframe (KNF-01).
+3. Validasi sisi server untuk seluruh form.
+4. Code review dan penanganan temuan keamanan.
+5. Status pembayaran (KF-11).
+
+**Checkpoint Minggu 12:** minimal 10 KF dan 4 KNF terimplementasi; autentikasi berjalan; tidak ada temuan keamanan kritis; pengujian otomatis minimal 8 test case.
+PY
