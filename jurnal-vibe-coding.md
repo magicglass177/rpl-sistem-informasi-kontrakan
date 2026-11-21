@@ -708,3 +708,172 @@ Tombol tambah dan edit belum diaktifkan karena proses CRUD dilaksanakan pada lan
 - `templates/kamar_list.html`
 
 **Status:** Implementasi dan pengujian selesai. Siap di-commit.
+
+
+## Langkah 9 - Siklus 5: Hapus Data Kamar
+**Tanggal:** 21 November 2026
+
+### Tujuan
+Menambahkan fitur hapus kamar melalui `POST`, dengan konfirmasi, penanganan kunci asing, dan ID yang tidak ditemukan menghasilkan 404.
+
+### Ringkasan Prompt
+Menggunakan Lampiran A.5 yang disesuaikan: konteks kode saat ini; foreign key aktif; tabel `kamar` dirujuk oleh `sewa`; tujuan hapus lewat `POST`; batasan hanya POST, kegagalan FK menghasilkan pesan "tidak dapat dihapus karena sudah dipakai", 404 untuk ID tidak ditemukan, redirect ke daftar.
+
+### Hasil AI
+AI menghasilkan rute hapus, tetapi rute tersebut ditempelkan ke `models.py` dan memanggil `delete_kamar()` yang belum ada. Kode awal ditolak karena melanggar pemisahan lapisan (controller masuk ke model).
+
+### Keputusan
+- **Tolak** untuk kode rute yang ditempelkan pada `models.py`.
+- **Terima** setelah diperbaiki: `delete_kamar()` ditambahkan pada `models.py`, rute hapus ditulis ulang pada `routes.py`, dan import dibersihkan.
+
+### Alasan
+Pemisahan lapisan adalah aturan arsitektur proyek. Kode yang melanggar lapisan menimbulkan `NameError` saat aplikasi diimpor. Perbaikan dilakukan tanpa mengubah skema basis data.
+
+### Hasil Pengujian
+- Hapus kamar tidak terpakai melalui `POST`: lulus.
+- Hapus melalui `GET`: HTTP 405; data tetap ada.
+- Hapus kamar yang dipakai sewa: pesan "tidak dapat dihapus", data tetap ada.
+- Hapus ID yang tidak ada: HTTP 404.
+- 25 pengujian otomatis modul kamar lulus.
+
+**Status:** Implementasi, pengujian, dan tinjauan selesai.
+
+---
+
+## Langkah 10–11 - Uji Menyeluruh dan Tinjauan Diff
+**Tanggal:** 21 November 2026
+
+### Aktivitas
+Menjalankan seluruh skenario kriteria penerimaan F2–F5, uji injeksi SQL, uji XSS, uji skema, serta meninjau seluruh diff modul CRUD.
+
+### Hasil Uji
+Seluruh 16 skenario F2–F5 lulus. Uji injeksi SQL (`';DROP TABLE kamar`) tersimpan sebagai teks biasa dan tabel tetap ada. Uji XSS (`<b>tes</b>`) tampil apa adanya. `cek_skema.py` lulus 11/11, `cek_skema_lanjutan.py` lulus 8/8, `cek_validasi_telepon.py` lulus 6/6 dan 10/10.
+
+### Temuan Tinjauan (≥ 3)
+1. Rute hapus hasil AI ditempelkan ke `models.py` dan `delete_kamar()` belum ada — diperbaiki sekarang.
+2. Import `models` ganda di `routes.py` — diperbaiki sekarang.
+3. Flash dirender di bawah footer dan kategori `warning`/`danger` belum bergaya — diperbaiki sekarang.
+4. Konfirmasi hapus menyisipkan nomor kamar ke JavaScript tanpa escaping — diperbaiki sekarang.
+5. Model hapus belum membedakan ID tidak ditemukan dari kegagalan database — diperbaiki sekarang.
+6. `debug=True` dan belum ada autentikasi/otorisasi — dicatat untuk Minggu 12/Sprint 2.
+
+### Keputusan
+- **Ubah** untuk temuan 1–5 (perbaikan dilakukan pada sesi yang sama).
+- **Tolak** untuk saran AI awal yang menempatkan rute pada lapisan model.
+
+### Alasan
+Temuan 1–5 terbukti dari hasil pengujian dan pembacaan diff; temuan 6 bukan ruang lingkup Jobsheet 9 tetapi sudah masuk rencana sprint.
+
+**Status:** Uji dan tinjauan selesai; hasil lengkap pada `docs/pengujian/hasil-uji-modul-crud.md`.
+
+---
+
+## Langkah 12 - Sesi Debugging
+**Tanggal:** 21 November 2026
+
+### Gejala
+Menjalankan `tests/cek_fitur_ubah_kamar.py` gagal saat impor dengan `NameError: name 'main' is not defined` pada `models.py` baris 189.
+
+### Reproduksi
+1. Menjalankan `python tests/cek_fitur_ubah_kamar.py`.
+2. Traceback paling bawah menunjuk `models.py` baris 189, dekorator `@main.route`.
+
+### Penyebab
+Kode rute hasil AI ditempelkan ke lapisan model. `main`, `flash`, `redirect`, dan `url_for` hanya ada di `routes.py`. Fungsi `delete_kamar()` yang dipanggil rute juga belum dibuat.
+
+### Prompt Perbaikan
+Menggunakan Lampiran A.6: konteks kode, pesan galat lengkap, penyebab yang diharapkan, batasan jangan mengubah berkas lain, dan permintaan penjelasan penyebab dalam dua kalimat sebelum kode.
+
+### Keputusan
+- **Ubah** perbaikan AI setelah ditinjau baris demi baris.
+
+### Alasan
+Perbaikan memindahkan rute ke lapisan yang benar, menambah fungsi model, dan membersihkan import. Seluruh 53 pengujian otomatis lulus setelah perbaikan.
+
+**Status:** Debug selesai dan terdokumentasi.
+
+---
+
+## Langkah 13 - Commit, PR, dan Peninjauan Sejawat
+**Tanggal:** 21 November 2026
+
+### Aktivitas
+Menyiapkan perubahan Jobsheet 9 untuk branch fitur dan Pull Request, serta meninjau diff menggunakan Lampiran C.
+
+### Ringkasan PR
+- Fitur yang selesai: F2–F5 (CRUD kamar) dan F6–F9 (CRUD penyewa).
+- Cara menguji: jalankan `python -m unittest discover -s tests -v`; skrip `tests/cek_skema.py`, `tests/cek_skema_lanjutan.py`, dan `tests/cek_validasi_telepon.py`.
+- Bagian Penggunaan AI: kode rute hapus dan CRUD penyewa dibantu AI; bagian yang diubah/ditolak tercatat pada Langkah 9–12; entri jurnal 1–16.
+- Daftar periksa: lapisan benar, SQL berparameter, tanpa rahasia di kode, seluruh kode dipahami.
+
+### Keputusan
+- **Terima** hasil tinjauan mandiri; perubahan siap diajukan sebagai PR.
+
+### Alasan
+Seluruh 53 pengujian otomatis lulus dan daftar periksa Lampiran C terpenuhi.
+
+**Status:** Perubahan siap di-commit dan dibuka sebagai PR. Deskripsi PR disimpan pada `docs/pr-js9-crud-kamar.md`.
+
+---
+
+## Langkah 14 - Modul CRUD Entitas Kedua (Penyewa)
+**Tanggal:** 21 November 2026
+
+### Siklus 14.1 - Daftar Penyewa
+- Prompt: menambahkan `get_all_penyewa()`, rute `GET /penyewa`, dan template `penyewa_list.html` dengan pencarian.
+- Hasil AI: daftar penyewa tampil dengan kolom nama, telepon, alamat, dan aksi; pencarian berdasarkan nama, telepon, atau alamat.
+- Keputusan: **Terima**.
+- Alasan: sesuai wireframe dan kamus data, SQL berparameter, lapisan benar.
+- Hasil uji: 5 pengujian daftar dan pencarian lulus.
+
+### Siklus 14.2 - Tambah Penyewa
+- Prompt: menambahkan validasi `validate_penyewa()` sesuai kamus data (nama 1–100, nomor telepon 08/+628, alamat wajib), rute tambah, dan template form.
+- Hasil AI: validasi awal diperluas dengan pemeriksaan batas panjang dan format nomor telepon yang cocok dengan constraint schema.
+- Keputusan: **Ubah**.
+- Alasan: nomor telepon tidak boleh diperlakukan sebagai `UNIQUE` karena kamus data menyatakan keunikannya belum diputuskan; validasi diperketat agar sesuai `CHECK` pada `schema.sql`.
+- Hasil uji: 7 pengujian tambah dan validasi, termasuk batas 10/13 dan 12/15 karakter, lulus.
+
+### Siklus 14.3 - Ubah dan Hapus Penyewa
+- Prompt: menambahkan ubah dan hapus penyewa dengan penanganan 404 dan kunci asing.
+- Hasil AI: form terisi data lama; perubahan valid tersimpan; penyewa yang dipakai sewa tidak dapat dihapus dan muncul pesan.
+- Keputusan: **Terima**.
+- Alasan: sesuai kriteria penerimaan F8–F9 dan hasil pengujian.
+- Hasil uji: 8 pengujian ubah dan hapus lulus, ditambah uji injeksi SQL dan XSS.
+
+**Status:** Modul CRUD penyewa selesai dan diuji (28 pengujian lulus).
+
+---
+
+## Langkah 15 - Lengkapi Jurnal dan Rencana Sprint RTM-2
+**Tanggal:** 21 November 2026
+
+### Aktivitas
+Memeriksa jurnal, menghitung proporsi keputusan, menyusun rencana Sprint 1–4, dan menandai target checkpoint Minggu 12.
+
+### Rekap Keputusan Jurnal Jobsheet 9
+
+| No. | Siklus | Keputusan |
+|---:|---|---|
+| 1 | Persiapan lingkungan dan branch | Terima |
+| 2 | Spesifikasi fitur kecil | Terima |
+| 3 | Kerangka proyek | Ubah |
+| 4 | Review kerangka proyek | Terima |
+| 5 | Daftar kamar | Terima |
+| 6 | Tambah kamar | Terima |
+| 7 | Ubah kamar | Terima |
+| 8 | Hapus kamar (kode AI awal) | Tolak |
+| 9 | Hapus kamar (perbaikan) | Terima |
+| 10 | Uji menyeluruh F2–F5 | Terima |
+| 11 | Tinjauan diff modul CRUD | Ubah |
+| 12 | Sesi debugging | Ubah |
+| 13 | Commit, PR, peninjauan | Terima |
+| 14.1 | Daftar penyewa | Terima |
+| 14.2 | Tambah penyewa | Ubah |
+| 14.3 | Ubah dan hapus penyewa | Terima |
+
+**Proporsi sementara:** Terima 11/16 (68,75%), Ubah 4/16 (25%), Tolak 1/16 (6,25%). Total 16 siklus, memenuhi target minimal 8 siklus Jobsheet 9.
+
+### Rencana Sprint
+Rencana Sprint 1–4 untuk RTM-2 disimpan pada `docs/rencana-sprint.md`, termasuk status baseline, target checkpoint Minggu 12, papan tugas, dan risiko. Pekerjaan Minggu berikutnya diprioritaskan pada periode sewa, pembayaran, dan autentikasi.
+
+**Status:** Jurnal dan rencana sprint lengkap.
