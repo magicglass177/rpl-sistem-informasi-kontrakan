@@ -182,3 +182,25 @@
 | Cookie `Secure` | Pertemuan 14: aktifkan bersama HTTPS saat deployment |
 | UAT dengan klien nyata | Minggu 13-14 sesuai jadwal dosen |
 | Uji beban 100 kamar | Sprint 3, setelah UAT awal |
+
+
+---
+
+## 9. Sprint 3 (Minggu 13-14) — Tindak Lanjut Checkpoint
+
+| No | Item | Target | Rencana / tenggat |
+|---:|---|---|---|
+| 1 | Pengujian | ≥ 20 test case, ≥ 8 otomatis | Sudah terpenuhi: 21 kelompok uji di `uji_cepat.py` dan 59 pengujian unit; tambah uji UAT dari klien |
+| 2 | UAT dengan klien nyata | Skenario dan tanda tangan/ Tanggapan | Minggu 13, jadwal menyesuaikan dosen |
+| 3 | Rilis v1.0 | Tag `v1.0.0` di `main` | Minggu 14 setelah UAT dan perbaikan kecil |
+| 4 | Rate limit multi-proses | Penyimpanan bersama (basis data/cache) | Minggu 13; `percobaan.py` tetap dipakai sebagai acuan logika |
+| 5 | CSP ketat + HTTPS | Pindahkan `onsubmit` ke JS lokal, aktifkan Secure | Minggu 14, bersamaan dengan deployment produksi |
+| 6 | Audit dependensi | `pip-audit` atau catatan hasil | Minggu 13 bila lingkungan mengizinkan pemasangan |
+| 7 | Umpan balik dosen | Tabel F.3 di `docs/skrip-demo-checkpoint.md` | Diisi saat checkpoint, ditindaklanjuti Minggu 13 |
+
+### Status temuan tertunda Jobsheet 12
+
+- P-06 / temuan 12 (CSP ketat): minggu 14.
+- Temuan 11 (penyimpanan batas login di memori): minggu 13.
+- Temuan 13 (`pip-audit` tidak tersedia): minggu 13.
+- UAT klien dan uji beban: minggu 13-14.

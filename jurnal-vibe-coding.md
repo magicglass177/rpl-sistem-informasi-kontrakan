@@ -1531,3 +1531,72 @@ konfigurasi tetap sesuai daftar periksa.
 
 ### Hasil Uji
 `SEMUA UJI LULUS`; 59 pengujian unit OK; tidak ada temuan baru, dua item sengaja ditunda.
+
+
+## Siklus 7 — Kelemahan yang ditemukan manusia, bukan AI
+
+### Temuan
+Pada draf pertama perbaikan CSRF, AI menambahkan input token hanya pada formulir yang
+ada di halaman data. Form logout pada `base.html` terlewat karena AI tidak membaca
+templat induk secara menyeluruh. Pemeriksaan manual dengan mencari semua `method="POST"`
+menemukan 9 formulir, termasuk form logout yang belum berubah.
+
+### Mengapa AI melewatkannya
+AI mengikuti daftar halaman yang disebut dalam prompt, bukan menyusun daftar formulir
+dari seluruh templat. Kebiasaan review manusia — mencari pola di seluruh berkas —
+menutup celah ini.
+
+### Keputusan
+- **Ubah** (token ditambahkan pada form logout dan seluruh form lain).
+
+### Alasan
+Satu POST tanpa token cukup untuk membuka celah CSRF; pemeriksaan berbasis daftar
+tidak boleh menggantikan pencarian menyeluruh.
+
+### Hasil Uji
+9 formulir memuat token; POST logout tanpa token ditolak 400.
+
+## Siklus 8 — Tindak lanjut checkpoint dan rencana Sprint 3
+
+### Tujuan
+Menindaklanjuti umpan balik dan menetapkan pekerjaan minggu berikutnya.
+
+### Aktivitas
+Menyusun skrip demo 5 menit (`docs/skrip-demo-checkpoint.md`), mengisi daftar periksa
+dan tabel umpan balik, serta memperbarui `docs/rencana-sprint.md` dengan Sprint 3.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Semua temuan tertunda mendapat tanggal dan rencana; tidak ada temuan yang dihapus
+untuk menutupi masalah.
+
+### Hasil Uji
+`SEMUA UJI LULUS` dan 59 pengujian unit OK sebelum checkpoint.
+
+## Rekap Keputusan Jobsheet 12
+
+| No | Siklus | Keputusan |
+|---:|---|---|
+| 1 | Perbaikan kasus latihan AI | Ubah |
+| 2 | Tinjauan mandiri proyek | Ubah |
+| 3 | Token CSRF | Ubah |
+| 4 | Batas login dan logging | Ubah |
+| 5 | Konfigurasi dan dependensi | Ubah |
+| 6 | Uji ulang dan diff | Terima |
+| 7 | Kelemahan ditemukan manusia | Ubah |
+| 8 | Tindak lanjut checkpoint | Terima |
+
+Catatan: pada Siklus 6, saran AI untuk menghapus uji lama **ditolak** dan perbaikan
+lainnya diterima; ini tercatat sebagai satu keputusan Tolak dalam proporsi di bawah.
+
+**Proporsi Jobsheet 12:** Ubah 6/8 (75,00%), Terima 1/8 (12,50%), Tolak 1/8 (12,50%).
+Entri baru = 8, termasuk satu entri tentang kelemahan yang tidak ditemukan AI (Siklus 7).
+
+**Proporsi kumulatif Jobsheet 9 + 10 + 11 + 12:** Terima 26/45 (57,78%), Ubah 17/45 (37,78%),
+Tolak 2/45 (4,44%).
+
+**Jenis galat AI yang ditemui:** open redirect dicek setengah, IDOR terlewat, form logout
+terlewat, username log belum memakai `%r`, konfigurasi produksi kehilangan kompatibilitas
+nama variabel, dan saran penghapusan uji lama.
