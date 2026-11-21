@@ -355,4 +355,8 @@ Tidak ditemukan kelemahan baru. Dua hal sengaja ditunda: penyimpanan batas login
 
 - `python tests/uji_cepat.py` → `SEMUA UJI LULUS` (21 kelompok uji).
 - `python -m unittest discover -s tests` → 59 tests OK.
-- Fitur lama (CRUD kamar/penyewa, sewa, pembayaran, laporan, dua peran) tetap lulus.
+- `docs/temuan-keamanan.md` — status temuan dan daftar periksa.
+- `docs/issues-tinjauan-silang.md` — 5 draf Issue + 2 catatan positif.
+- `docs/laporan-code-review.html` — versi laporan siap dicetak ke PDF (Ctrl+P).
+- `docs/bukti-checkpoint.md` — bukti verifikasi browser dan daftar screenshot.
+- `docs/skrip-demo-checkpoint.md` — naskah demo 5 menit.

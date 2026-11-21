@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan Code Review — Jobsheet 12</title>
+<style>
+  @page { size: A4; margin: 18mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.45;
+    color: #1e1e1e; margin: 0 auto; max-width: 190mm; padding: 10mm;
+  }
+  h1 { font-size: 20pt; border-bottom: 3px solid #2f5496; padding-bottom: 6px; margin-bottom: 4px; }
+  h2 { font-size: 14pt; color: #2f5496; border-bottom: 1px solid #c9d3e6; padding-bottom: 4px; margin-top: 22px; }
+  h3 { font-size: 11.5pt; margin: 14px 0 4px; }
+  p, li, td, th { font-size: 10pt; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+  th, td { border: 1px solid #999; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #eef2f9; }
+  code, pre { font-family: Consolas, monospace; font-size: 9pt; background: #f5f7fa; }
+  pre { border: 1px solid #ccc; padding: 8px; white-space: pre-wrap; }
+  .meta { color: #555; font-size: 9.5pt; margin-bottom: 14px; }
+  .tengah { text-align: center; }
+  .kecil { font-size: 9pt; color: #555; }
+  ul { margin: 4px 0 8px 18px; padding: 0; }
+  .halaman { page-break-before: always; }
+  @media print {
+    body { padding: 0; max-width: none; }
+    a { color: inherit; text-decoration: none; }
+    .halaman { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Laporan Code Review, Keamanan Dasar, dan Checkpoint Prototipe</h1>
+<div class="meta">
+  Jobsheet 12 — Pertemuan 12 (Minggu 12) &nbsp;|&nbsp; Mata Kuliah: Rekayasa Perangkat Lunak<br>
+  Proyek: Sistem Informasi Pengelolaan Kontrakan &nbsp;|&nbsp; Kelompok: ______________________<br>
+  Anggota: ______________________________________ &nbsp;|&nbsp; Kelompok peninjau: ______________<br>
+  Repositori: <code>rpl-sistem-informasi-kontrakan</code> &nbsp;|&nbsp; Commit ditinjau: <code>cafb5a3</code> / <code>1b998d0</code>
+</div>
+
+<h2>1. Tiga Kategori OWASP yang Diprediksi</h2>
+<table>
+<tr><th>No</th><th>Kategori</th><th>Alasan</th></tr>
+<tr><td>1</td><td>A01 Broken Access Control</td><td>Form POST belum memakai token CSRF meski decorator peran sudah ada</td></tr>
+<tr><td>2</td><td>A07 Authentication Failures</td><td>Belum ada batas percobaan login; pesan galat dan sesi sudah benar</td></tr>
+<tr><td>3</td><td>A02 Security Misconfiguration</td><td>Cookie Secure untuk produksi dan header keamanan belum ada</td></tr>
+</table>
+
+<h2>2. Tinjauan Kasus Latihan — 10 Nomor</h2>
+<table>
+<tr><th>No</th><th>Masalah</th><th>OWASP</th><th>Dampak</th><th>Risiko</th></tr>
+<tr><td>(1)</td><td>Impor paket fiktif <code>flask_auth_helperz</code></td><td>A03</td><td>Risiko kode berbahaya dari paket tiruan</td><td>Sedang</td></tr>
+<tr><td>(2)</td><td><code>secret_key = "rahasia123"</code></td><td>A04</td><td>Pemalsuan cookie sesi</td><td>Tinggi</td></tr>
+<tr><td>(3)</td><td>MD5 tanpa garam untuk kata sandi</td><td>A04</td><td>Hash mudah dipecah</td><td>Tinggi</td></tr>
+<tr><td>(4)</td><td>SQL dari f-string</td><td>A05</td><td>Login tanpa kata sandi</td><td>Tinggi</td></tr>
+<tr><td>(5)</td><td>Pesan galat menyebut username</td><td>A07</td><td>User enumeration</td><td>Rendah</td></tr>
+<tr><td>(6)</td><td><code>next</code> tanpa validasi</td><td>A01</td><td>Open redirect</td><td>Sedang</td></tr>
+<tr><td>(7)</td><td>Hapus via GET tanpa login/CSRF</td><td>A01</td><td>Siapa pun dapat menghapus data</td><td>Tinggi</td></tr>
+<tr><td>(8)</td><td>Catatan tanpa cek kepemilikan</td><td>A01</td><td>IDOR, data antarpengguna bocor</td><td>Tinggi</td></tr>
+<tr><td>(9)</td><td><code>f"Galat: {e!r}"</code></td><td>A10</td><td>Rincian internal terbongkar</td><td>Rendah-Sedang</td></tr>
+<tr><td>(10)</td><td><code>debug=True</code> + <code>host="0.0.0.0"</code></td><td>A02</td><td>Konsol debug dan akses terbuka</td><td>Tinggi</td></tr>
+</table>
+
+<h2>3. Tiga Bukti Kasus</h2>
+<table>
+<tr><th>Bukti</th><th>Masukan</th><th>Hasil</th></tr>
+<tr><td>SQL injection login</td><td><code>username = pemilik' -- </code>, password apa saja</td><td>302 ke <code>/</code>, sesi <code>{'id': 1, 'peran': 'pemilik'}</code></td></tr>
+<tr><td>Hapus via GET tanpa login</td><td><code>GET /barang/1/hapus</code></td><td>302, jumlah barang 2 → 1</td></tr>
+<tr><td>Open redirect + galat</td><td><code>next=https://situs-jahat.example</code>; <code>GET /laporan</code></td><td>302 ke situs luar; <code>Galat: OperationalError('no such table: penjualan')</code></td></tr>
+</table>
+
+<h2>4. Lima Temuan Kasus Terpenting</h2>
+<table>
+<tr><th>ID</th><th>Judul</th><th>Kategori</th><th>Risiko</th><th>Perbaikan</th></tr>
+<tr><td>T-01</td><td>SQL injection pada <code>login()</code></td><td>A05</td><td>Tinggi</td><td>SQL berparameter</td></tr>
+<tr><td>T-02</td><td>Hapus data lewat GET tanpa akses</td><td>A01</td><td>Tinggi</td><td>POST + peran + CSRF</td></tr>
+<tr><td>T-03</td><td>MD5 tanpa garam</td><td>A04</td><td>Tinggi</td><td>Werkzeug hash</td></tr>
+<tr><td>T-04</td><td>IDOR pada <code>/catatan/&lt;id&gt;</code></td><td>A01</td><td>Tinggi</td><td><code>WHERE id=? AND pengguna_id=?</code></td></tr>
+<tr><td>T-05</td><td>Open redirect pada <code>next</code></td><td>A01</td><td>Sedang</td><td>Allowlist alamat internal</td></tr>
+</table>
+<p class="kecil">Temuan lain: secret key tertanam (A04/Tinggi), debug + host terbuka (A02/Tinggi), rincian exception (A10/Rendah-Sedang), paket fiktif (A03/Sedang), pesan galat login (A07/Rendah).</p>
+
+<div class="halaman"></div>
+<h2>5. Catatan Kualitas Perbaikan AI</h2>
+<table>
+<tr><th>Temuan</th><th>Hasil AI</th><th>Tinjauan manual</th></tr>
+<tr><td>SQL injection</td><td>Benar: parameter query</td><td>Diterima; injeksi kini ditolak 401</td></tr>
+<tr><td>MD5</td><td>Benar: <code>generate_password_hash</code></td><td>Diterima</td></tr>
+<tr><td>GET delete</td><td>Benar: POST + 403</td><td>Diterima, token CSRF tidak diterapkan di kasus latihan</td></tr>
+<tr><td>Open redirect</td><td>Hanya <code>startswith('/')</code></td><td><b>Dikoreksi</b>: <code>//</code> dan backslash ditolak</td></tr>
+<tr><td>IDOR</td><td>Terlewat</td><td><b>Dikoreksi</b>: tambah <code>pengguna_id</code> pada query</td></tr>
+<tr><td>Galat &amp; pesan</td><td>Pesan umum + log</td><td>Diterima</td></tr>
+</table>
+<p><b>Kesimpulan:</b> AI memperbaiki penyebab pada sebagian besar temuan, tetapi melewatkan dua kontrol akses. Tinjauan manual tetap wajib.</p>
+
+<h2>6. Ringkasan Tinjauan Mandiri Proyek Sendiri</h2>
+<table>
+<tr><th>ID</th><th>Temuan</th><th>OWASP</th><th>Risiko</th><th>Keputusan</th></tr>
+<tr><td>P-01</td><td>Form POST tanpa token CSRF</td><td>A01</td><td>Tinggi</td><td>Diperbaiki</td></tr>
+<tr><td>P-02</td><td>Tanpa batas percobaan login</td><td>A07</td><td>Sedang</td><td>Diperbaiki</td></tr>
+<tr><td>P-03</td><td>Tanpa pencatatan kejadian keamanan</td><td>A09</td><td>Sedang</td><td>Diperbaiki</td></tr>
+<tr><td>P-04</td><td>Cookie Secure &amp; debug produksi</td><td>A02</td><td>Sedang</td><td>Diperbaiki</td></tr>
+<tr><td>P-05</td><td>Header keamanan belum ada</td><td>A02</td><td>Rendah-Sedang</td><td>Diperbaiki</td></tr>
+<tr><td>P-06</td><td><code>onsubmit</code> sebaris menghalangi CSP</td><td>A02</td><td>Rendah</td><td>Ditunda minggu 14</td></tr>
+<tr><td>P-07</td><td>Kepemilikan data per akun</td><td>A01</td><td>Tidak berlaku</td><td>Ditolak: data bersama</td></tr>
+</table>
+<p class="kecil">Yang sudah baik: SQL berparameter, Jinja auto-escape, decorator peran di semua rute, hash Werkzeug, kunci dari lingkungan, requirements berversi, uji jalur pelanggaran.</p>
+
+<h2>7. Daftar Temuan Silang yang Disiapkan</h2>
+<p>Lima draf Issue sesuai templat D.2 sudah disiapkan (<code>docs/issues-tinjauan-silang.md</code>). Belum dikirim karena pasangan kelompok belum ditetapkan; tidak ada serangan ke aplikasi pihak lain.</p>
+<table>
+<tr><th>ID</th><th>Judul</th><th>Kategori</th><th>Risiko</th></tr>
+<tr><td>I-01</td><td>Form POST tanpa token CSRF</td><td>A01</td><td>Tinggi</td></tr>
+<tr><td>I-02</td><td>Tanpa batas percobaan login</td><td>A07</td><td>Sedang</td></tr>
+<tr><td>I-03</td><td>Kejadian login gagal/403 tidak dicatat</td><td>A09</td><td>Sedang</td></tr>
+<tr><td>I-04</td><td>Cookie Secure &amp; header keamanan belum ada</td><td>A02</td><td>Sedang</td></tr>
+<tr><td>I-05</td><td>Konfirmasi hapus memakai JS sebaris</td><td>A02</td><td>Rendah</td></tr>
+</table>
+<p>Catatan positif: pemisahan <code>models.py</code>/<code>services.py</code> rapi; seluruh rute matriks memakai decorator peran.</p>
+
+<h2>8. Tabel Triase</h2>
+<table>
+<tr><th>No</th><th>Temuan</th><th>Risiko</th><th>Keputusan</th><th>Alasan / rencana</th></tr>
+<tr><td>1</td><td>P-01 CSRF</td><td>Tinggi</td><td>Diperbaiki</td><td>Token per sesi, 400 + log</td></tr>
+<tr><td>2</td><td>P-02 Batas login</td><td>Sedang</td><td>Diperbaiki</td><td>5 gagal/5 menit per IP+username</td></tr>
+<tr><td>3</td><td>P-03 Logging</td><td>Sedang</td><td>Diperbaiki</td><td>Tanpa kata sandi, username <code>%r</code></td></tr>
+<tr><td>4</td><td>P-04 Konfigurasi</td><td>Sedang</td><td>Diperbaiki</td><td>APP_ENV, Secure, debug dari lingkungan</td></tr>
+<tr><td>5</td><td>P-05 Header</td><td>Rendah-Sedang</td><td>Diperbaiki</td><td><code>after_request</code></td></tr>
+<tr><td>6</td><td>P-06 CSP</td><td>Rendah</td><td>Ditunda</td><td>Minggu 14 bersama HTTPS</td></tr>
+<tr><td>7</td><td>P-07 Kepemilikan</td><td>-</td><td>Ditolak</td><td>Data kontrakan bersifat bersama</td></tr>
+</table>
+
+<div class="halaman"></div>
+<h2>9. Bukti Perbaikan</h2>
+<table>
+<tr><th>Temuan</th><th>Commit</th><th>Bukti</th></tr>
+<tr><td>CSRF</td><td><code>280896d</code></td><td>9 form memuat token; POST tanpa token → 400 + log</td></tr>
+<tr><td>Batas login</td><td><code>06b7ff9</code></td><td>5×401, ke-6 → 429; uji kedaluwarsa lolos</td></tr>
+<tr><td>Logging</td><td><code>06b7ff9</code></td><td><code>Login gagal username='admin' ip=127.0.0.1</code>; kata sandi tidak tercatat</td></tr>
+<tr><td>Konfigurasi</td><td><code>14bc710</code></td><td>Produksi tanpa kunci gagal start; <code>SESSION_COOKIE_SECURE=True</code></td></tr>
+<tr><td>Header</td><td><code>14bc710</code></td><td><code>nosniff</code>, <code>DENY</code>, <code>same-origin</code></td></tr>
+</table>
+<pre>@app.before_request
+def periksa_csrf():
+    if request.method != "POST":
+        return
+    dikirim = request.form.get("csrf_token", "").encode()
+    asli = session.get("csrf_token", "").encode()
+    if not asli or not secrets.compare_digest(dikirim, asli):
+        app.logger.warning("CSRF gagal path=%r ip=%s", request.path, request.remote_addr)
+        abort(400)</pre>
+<p><b>Tinjau ulang Lampiran C:</b> SQL tetap berparameter, tidak ada <code>|safe</code>, semua rute tetap berdecorator, tidak ada <code>debug=True</code> tetap, dependensi dikunci, galat ditangkap spesifik. Tidak ada kelemahan baru.</p>
+<p><b>Hasil uji:</b> <code>python tests/uji_cepat.py</code> → SEMUA UJI LULUS (21 kelompok); <code>python -m unittest discover -s tests</code> → 59 tests OK.</p>
+
+<h2>10. Umpan Balik Checkpoint</h2>
+<table>
+<tr><th>No</th><th>Umpan balik dosen</th><th>Tindak lanjut</th><th>Tenggat</th></tr>
+<tr><td>1</td><td>________________________________</td><td>______________________</td><td>Minggu 13</td></tr>
+<tr><td>2</td><td>________________________________</td><td>______________________</td><td>Minggu 13</td></tr>
+<tr><td>3</td><td>________________________________</td><td>______________________</td><td>Minggu 14</td></tr>
+</table>
+
+<h2>11. Jawaban Pertanyaan Evaluasi</h2>
+<ol>
+<li><b>Lima sudut pandang tinjauan:</b> kesesuaian kebutuhan (apakah kriteria terpenuhi?), kebenaran (kasus pinggir?), keamanan (SQL/akses/rahasia?), keterbacaan (nama &amp; duplikasi?), dependensi/konfigurasi (paket dikenal, debug/kunci/cookie aman?). Semua diterapkan pada kasus dan proyek sendiri.</li>
+<li><b>f-string SQL berbahaya</b> karena masukan pengguna menjadi bagian perintah, mis. <code>pemilik' -- </code> menonaktifkan pemeriksaan kata sandi. Perbaikan: SQL berparameter <code>WHERE username = ?</code>. Bukti: uji injeksi kini menghasilkan 401.</li>
+<li><b>CSRF</b> adalah pemaksaan permintaan oleh situs lain memakai cookie korban. Hapus lewat GET dapat dipicu tautan/gambar; form tanpa token dapat dikirim pihak ketiga. Perbaikan: POST + token per sesi + pengecekan server.</li>
+<li><b>Paket fiktif</b> muncul karena AI mengarang nama mirip paket nyata. Sebelum memasang: cek nama persis di PyPI, pembuat, tanggal rilis, jumlah rilis, dan tautan repositori; bila ragu, jangan pasang.</li>
+<li><b>Komentar konstruktif</b> menunjukkan lokasi, alasan, usulan, dan membedakan wajib/saran. Buruk: "Kode ini ceroboh." Baik: "Query di baris 41 menyambung nama ke SQL. Usul: pakai <code>?</code> dan tuple parameter; lihat baris 28 sebagai contoh yang benar."</li>
+</ol>
+
+<p class="kecil">Dibuat dari <code>docs/laporan-temuan.md</code>, <code>docs/temuan-keamanan.md</code>, <code>docs/skrip-demo-checkpoint.md</code>, dan hasil uji. Cetak dengan Ctrl+P → Save as PDF (maks. 8 halaman).</p>
+</body>
+</html>
