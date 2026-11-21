@@ -1600,3 +1600,34 @@ Tolak 2/45 (4,44%).
 **Jenis galat AI yang ditemui:** open redirect dicek setengah, IDOR terlewat, form logout
 terlewat, username log belum memakai `%r`, konfigurasi produksi kehilangan kompatibilitas
 nama variabel, dan saran penghapusan uji lama.
+
+
+---
+
+# Jobsheet 13 — Pengujian: Test Case, pytest, Laporan Cacat, dan Rencana UAT
+
+## Siklus 1 — Draf uji pytest dari test case (Langkah 5)
+
+### Tujuan
+Mengubah tabel test case menjadi uji otomatis pytest tanpa melihat implementasi kode.
+
+### Aktivitas
+Prompt diberikan berupa tabel test case (39 baris) dan signature fungsi validasi.
+AI diminta memakai `@pytest.mark.parametrize` dan nilai harapan dari kolom
+"Hasil diharapkan", bukan dari keluaran kode. Hasil disimpan di `tests/test_validasi.py`.
+
+### Hasil AI
+Draf berisi 8 fungsi uji dengan 30 kasus parametrize. Dua asersi terbukti lemah:
+`test_nama_penyewa` memakai `assert galat is not None` (selalu benar), dan
+`test_urutan_tanggal` hanya memeriksa ada galat tanpa menyebut kuncinya.
+
+### Keputusan
+- **Ubah** (draf diterima sebagai titik awal, asersi akan diperbaiki pada Siklus 2).
+
+### Alasan
+Menyesuaikan alur Jobshet 13: draf dibuat dari spesifikasi, lalu diperiksa secara mandiri.
+Draf belum dijadikan dasar penerimaan sebelum ditinjau.
+
+### Hasil Uji
+`pytest -q tests/test_validasi.py` → 1 failed, 29 passed. Kegagalan TC-06
+(harga 11 digit diterima) sudah tertangkap; TC-27 masih salah lulus.
