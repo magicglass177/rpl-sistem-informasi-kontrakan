@@ -229,12 +229,19 @@
     font-weight: bold;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
     width: 100%;
     max-width: 420px;
     padding: 10px;
     border: 1px solid #777;
     font-size: 13px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    min-height: 90px;
+    resize: vertical;
 }
 
 .form-actions {
@@ -261,6 +268,16 @@
 }
 
 .message.error {
+    background: #fbeaea;
+    color: #8a0000;
+}
+
+.message.warning {
+    background: #fff8e1;
+    color: #7a4b00;
+}
+
+.message.danger {
     background: #fbeaea;
     color: #8a0000;
 }
@@ -294,7 +311,13 @@
                 [2] Kamar
             </a>
 
-            <span>[3] Penyewa</span>
+            <a
+                href="{{ url_for('main.daftar_penyewa') }}"
+                class="{% if active_page == 'penyewa' %}active{% endif %}"
+            >
+                [3] Penyewa
+            </a>
+
             <span>[4] Periode Sewa</span>
             <span>[5] Pembayaran</span>
             <span>[6] Laporan</span>
@@ -304,19 +327,19 @@
     <main class="content">
         <p class="breadcrumb">Beranda / {{ page_title }}</p>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
         {% block content %}{% endblock %}
 
         <footer>
             © 2026 Sistem Informasi Pengelolaan Kontrakan
         </footer>
     </main>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-        <div class="message {{ category }}" role="alert">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endwith %}
 </body>
 </html>

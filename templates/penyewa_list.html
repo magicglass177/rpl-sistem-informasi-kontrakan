@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>Daftar Penyewa</h1>
+    <p>Kelola data penyewa kamar kontrakan.</p>
+</section>
+
+<div class="toolbar">
+    <span>Data penyewa yang tercatat pada sistem.</span>
+
+    <a class="button" href="{{ url_for('main.tambah_penyewa') }}">
+        + Tambah Penyewa
+    </a>
+</div>
+
+<section class="table-card">
+    <form class="search-form" method="GET"
+          action="{{ url_for('main.daftar_penyewa') }}">
+        <input
+            type="search"
+            name="q"
+            placeholder="Cari nama, telepon, atau alamat..."
+            value="{{ kata_kunci }}"
+            aria-label="Cari penyewa"
+        >
+        <button class="button" type="submit">Cari</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">No.</th>
+                <th>Nama</th>
+                <th>No. Telepon</th>
+                <th>Alamat</th>
+                <th style="width: 14%;">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for penyewa in daftar_penyewa %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ penyewa["nama"] }}</td>
+                <td>{{ penyewa["no_telepon"] }}</td>
+                <td>{{ penyewa["alamat"] }}</td>
+                <td>
+                    <a class="button"
+                       href="{{ url_for('main.ubah_penyewa', id_penyewa=penyewa['id_penyewa']) }}">
+                        Edit
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('main.hapus_penyewa', id_penyewa=penyewa['id_penyewa']) }}"
+                        style="display: inline;"
+                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus data penyewa ini? Data yang masih digunakan oleh riwayat sewa tidak dapat dihapus.');"
+                    >
+                        <button class="button" type="submit">
+                            Hapus
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty-state">
+                    Belum ada data
+                    {% if kata_kunci %}
+                        penyewa dengan kata kunci "{{ kata_kunci }}"
+                    {% else %}
+                        penyewa yang tersimpan
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="table-footer">
+        <span>
+            Menampilkan {{ daftar_penyewa|length }} data penyewa
+        </span>
+        <span>
+            Total data: {{ daftar_penyewa|length }}
+        </span>
+    </div>
+</section>
+{% endblock %}

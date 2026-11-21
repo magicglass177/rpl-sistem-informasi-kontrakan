@@ -184,3 +184,195 @@ def update_kamar(id_kamar, nomor_kamar, harga_sewa):
 
     finally:
         connection.close()
+
+
+def get_all_penyewa(kata_kunci=""):
+    """
+    Mengambil seluruh data penyewa, diurutkan berdasarkan nama.
+    Pencarian mencakup nama, nomor telepon, dan alamat.
+    """
+    connection = get_db_connection()
+
+    try:
+        pola = f"%{kata_kunci.strip()}%"
+
+        return connection.execute(
+            """
+            SELECT id_penyewa, nama, no_telepon, alamat
+            FROM penyewa
+            WHERE nama LIKE ?
+               OR no_telepon LIKE ?
+               OR alamat LIKE ?
+            ORDER BY nama COLLATE NOCASE ASC
+            """,
+            (pola, pola, pola)
+        ).fetchall()
+
+    finally:
+        connection.close()
+
+
+def get_penyewa_by_id(id_penyewa):
+    """Mengambil satu data penyewa berdasarkan ID."""
+    connection = get_db_connection()
+
+    try:
+        return connection.execute(
+            """
+            SELECT id_penyewa, nama, no_telepon, alamat
+            FROM penyewa
+            WHERE id_penyewa = ?
+            """,
+            (id_penyewa,)
+        ).fetchone()
+
+    finally:
+        connection.close()
+
+
+def create_penyewa(nama, no_telepon, alamat):
+    """
+    Menyimpan data penyewa baru.
+
+    Hasil:
+    - (True, None) jika berhasil.
+    - (False, 'database') jika terjadi kesalahan database.
+    """
+    connection = get_db_connection()
+
+    try:
+        connection.execute(
+            """
+            INSERT INTO penyewa (nama, no_telepon, alamat)
+            VALUES (?, ?, ?)
+            """,
+            (nama, no_telepon, alamat)
+        )
+
+        connection.commit()
+        return True, None
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()
+
+
+def update_penyewa(id_penyewa, nama, no_telepon, alamat):
+    """
+    Memperbarui data penyewa.
+
+    Hasil:
+    - (True, None) jika berhasil.
+    - (False, 'not_found') jika penyewa tidak ditemukan.
+    - (False, 'database') jika terjadi kesalahan database.
+    """
+    connection = get_db_connection()
+
+    try:
+        cursor = connection.execute(
+            """
+            UPDATE penyewa
+            SET nama = ?, no_telepon = ?, alamat = ?
+            WHERE id_penyewa = ?
+            """,
+            (nama, no_telepon, alamat, id_penyewa)
+        )
+
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            return False, "not_found"
+
+        return True, None
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()
+
+
+def delete_penyewa(id_penyewa):
+    """
+    Menghapus data penyewa berdasarkan ID.
+
+    Hasil:
+    - (True, None) jika berhasil.
+    - (False, 'not_found') jika penyewa tidak ditemukan.
+    - (False, 'in_use') jika penyewa masih dirujuk oleh data sewa.
+    - (False, 'database') jika terjadi kesalahan database lainnya.
+    """
+    connection = get_db_connection()
+
+    try:
+        cursor = connection.execute(
+            """
+            DELETE FROM penyewa
+            WHERE id_penyewa = ?
+            """,
+            (id_penyewa,)
+        )
+
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            return False, "not_found"
+
+        return True, None
+
+    except sqlite3.IntegrityError:
+        # Penyewa masih dirujuk oleh tabel sewa (ON DELETE RESTRICT).
+        connection.rollback()
+        return False, "in_use"
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()
+
+
+def delete_kamar(id_kamar):
+    """
+    Menghapus data kamar berdasarkan ID.
+
+    Hasil:
+    - (True, None) jika berhasil.
+    - (False, 'not_found') jika kamar tidak ditemukan.
+    - (False, 'in_use') jika kamar masih dirujuk oleh data sewa.
+    - (False, 'database') jika terjadi kesalahan database lainnya.
+    """
+    connection = get_db_connection()
+
+    try:
+        cursor = connection.execute(
+            """
+            DELETE FROM kamar
+            WHERE id_kamar = ?
+            """,
+            (id_kamar,)
+        )
+
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            return False, "not_found"
+
+        return True, None
+
+    except sqlite3.IntegrityError:
+        # Kamar masih dirujuk oleh tabel sewa (ON DELETE RESTRICT).
+        connection.rollback()
+        return False, "in_use"
+
+    except sqlite3.Error:
+        connection.rollback()
+        return False, "database"
+
+    finally:
+        connection.close()

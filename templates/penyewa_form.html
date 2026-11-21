@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>{{ judul_form }}</h1>
+
+    <p>
+        {% if judul_form == "Ubah Penyewa" %}
+            Perbarui informasi penyewa kontrakan.
+        {% else %}
+            Masukkan informasi penyewa kontrakan yang baru.
+        {% endif %}
+    </p>
+</section>
+
+<section class="table-card">
+    {% if errors.get("database") %}
+        <div class="message error">
+            {{ errors["database"] }}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{{ action_url }}">
+        <div class="form-group">
+            <label for="nama">Nama Lengkap</label>
+            <input
+                type="text"
+                id="nama"
+                name="nama"
+                maxlength="100"
+                required
+                value="{{ data.get('nama', '') }}"
+                placeholder="Contoh: Andi Pratama"
+                aria-describedby="nama-error"
+            >
+
+            {% if errors.get("nama") %}
+                <small class="field-error" id="nama-error">
+                    {{ errors["nama"] }}
+                </small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="no_telepon">Nomor Telepon</label>
+            <input
+                type="tel"
+                id="no_telepon"
+                name="no_telepon"
+                maxlength="15"
+                required
+                value="{{ data.get('no_telepon', '') }}"
+                placeholder="Contoh: 081234567890"
+                aria-describedby="telepon-error"
+            >
+            <small>
+                Gunakan awalan 08 (10-13 digit) atau +628 (12-15 karakter).
+            </small>
+
+            {% if errors.get("no_telepon") %}
+                <small class="field-error" id="telepon-error">
+                    {{ errors["no_telepon"] }}
+                </small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="alamat">Alamat</label>
+            <textarea
+                id="alamat"
+                name="alamat"
+                required
+                placeholder="Contoh: Jalan Melati No. 10"
+                aria-describedby="alamat-error"
+            >{{ data.get('alamat', '') }}</textarea>
+
+            {% if errors.get("alamat") %}
+                <small class="field-error" id="alamat-error">
+                    {{ errors["alamat"] }}
+                </small>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button class="button" type="submit">
+                {{ teks_tombol }}
+            </button>
+
+            <a class="button"
+               href="{{ url_for('main.daftar_penyewa') }}">
+                Batal
+            </a>
+        </div>
+    </form>
+</section>
+{% endblock %}

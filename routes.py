@@ -9,12 +9,18 @@ from flask import (
 )
 
 from models import (
-    get_all_kamar,
     create_kamar,
+    create_penyewa,
+    delete_kamar,
+    delete_penyewa,
+    get_all_kamar,
+    get_all_penyewa,
     get_kamar_by_id,
+    get_penyewa_by_id,
     update_kamar,
+    update_penyewa,
 )
-from services import validate_kamar
+from services import validate_kamar, validate_penyewa
 
 
 main = Blueprint("main", __name__)
@@ -171,3 +177,206 @@ def ubah_kamar(id_kamar):
         ),
         teks_tombol="Simpan Perubahan",
     )
+
+
+@main.route("/kamar/<int:id_kamar>/hapus", methods=["POST"])
+def hapus_kamar(id_kamar):
+    berhasil, status = delete_kamar(id_kamar)
+
+    if berhasil:
+        flash("Data kamar berhasil dihapus.", "success")
+
+    elif status == "not_found":
+        # Sesuai Lampiran A.5: ID yang tidak ditemukan menghasilkan 404.
+        abort(404)
+
+    elif status == "in_use":
+        flash(
+            "Data kamar tidak dapat dihapus karena masih digunakan "
+            "dalam riwayat sewa. Hapus atau selesaikan data terkait "
+            "sesuai prosedur terlebih dahulu.",
+            "warning"
+        )
+
+    else:
+        flash(
+            "Data kamar gagal dihapus karena terjadi kesalahan "
+            "database. Silakan coba kembali.",
+            "danger"
+        )
+
+    return redirect(url_for("main.daftar_kamar"))
+
+
+@main.route("/penyewa")
+def daftar_penyewa():
+    kata_kunci = request.args.get("q", "").strip()
+    daftar_penyewa = get_all_penyewa(kata_kunci)
+
+    return render_template(
+        "penyewa_list.html",
+        page_title="Daftar Penyewa",
+        active_page="penyewa",
+        daftar_penyewa=daftar_penyewa,
+        kata_kunci=kata_kunci,
+    )
+
+
+@main.route("/penyewa/tambah", methods=["GET", "POST"])
+def tambah_penyewa():
+    if request.method == "POST":
+        data_bersih, errors = validate_penyewa(request.form)
+
+        if errors:
+            return render_template(
+                "penyewa_form.html",
+                page_title="Tambah Penyewa",
+                active_page="penyewa",
+                data=data_bersih,
+                errors=errors,
+                judul_form="Tambah Penyewa",
+                action_url=url_for("main.tambah_penyewa"),
+                teks_tombol="Simpan",
+            ), 400
+
+        berhasil, status = create_penyewa(
+            data_bersih["nama"],
+            data_bersih["no_telepon"],
+            data_bersih["alamat"],
+        )
+
+        if berhasil:
+            flash("Data penyewa berhasil ditambahkan.", "success")
+            return redirect(url_for("main.daftar_penyewa"))
+
+        errors["database"] = (
+            "Data penyewa gagal disimpan karena terjadi "
+            "kesalahan database."
+        )
+
+        return render_template(
+            "penyewa_form.html",
+            page_title="Tambah Penyewa",
+            active_page="penyewa",
+            data=data_bersih,
+            errors=errors,
+            judul_form="Tambah Penyewa",
+            action_url=url_for("main.tambah_penyewa"),
+            teks_tombol="Simpan",
+        ), 400
+
+    return render_template(
+        "penyewa_form.html",
+        page_title="Tambah Penyewa",
+        active_page="penyewa",
+        data={"nama": "", "no_telepon": "", "alamat": ""},
+        errors={},
+        judul_form="Tambah Penyewa",
+        action_url=url_for("main.tambah_penyewa"),
+        teks_tombol="Simpan",
+    )
+
+
+@main.route("/penyewa/<int:id_penyewa>/ubah", methods=["GET", "POST"])
+def ubah_penyewa(id_penyewa):
+    penyewa = get_penyewa_by_id(id_penyewa)
+
+    if penyewa is None:
+        abort(404)
+
+    if request.method == "POST":
+        data_bersih, errors = validate_penyewa(request.form)
+
+        if errors:
+            return render_template(
+                "penyewa_form.html",
+                page_title="Ubah Penyewa",
+                active_page="penyewa",
+                data=data_bersih,
+                errors=errors,
+                judul_form="Ubah Penyewa",
+                action_url=url_for(
+                    "main.ubah_penyewa",
+                    id_penyewa=id_penyewa
+                ),
+                teks_tombol="Simpan Perubahan",
+            ), 400
+
+        berhasil, status = update_penyewa(
+            id_penyewa,
+            data_bersih["nama"],
+            data_bersih["no_telepon"],
+            data_bersih["alamat"],
+        )
+
+        if berhasil:
+            flash("Data penyewa berhasil diperbarui.", "success")
+            return redirect(url_for("main.daftar_penyewa"))
+
+        if status == "not_found":
+            abort(404)
+
+        errors["database"] = (
+            "Data penyewa gagal diperbarui karena terjadi "
+            "kesalahan database."
+        )
+
+        return render_template(
+            "penyewa_form.html",
+            page_title="Ubah Penyewa",
+            active_page="penyewa",
+            data=data_bersih,
+            errors=errors,
+            judul_form="Ubah Penyewa",
+            action_url=url_for(
+                "main.ubah_penyewa",
+                id_penyewa=id_penyewa
+            ),
+            teks_tombol="Simpan Perubahan",
+        ), 400
+
+    return render_template(
+        "penyewa_form.html",
+        page_title="Ubah Penyewa",
+        active_page="penyewa",
+        data={
+            "nama": penyewa["nama"],
+            "no_telepon": penyewa["no_telepon"],
+            "alamat": penyewa["alamat"],
+        },
+        errors={},
+        judul_form="Ubah Penyewa",
+        action_url=url_for(
+            "main.ubah_penyewa",
+            id_penyewa=id_penyewa
+        ),
+        teks_tombol="Simpan Perubahan",
+    )
+
+
+@main.route("/penyewa/<int:id_penyewa>/hapus", methods=["POST"])
+def hapus_penyewa(id_penyewa):
+    berhasil, status = delete_penyewa(id_penyewa)
+
+    if berhasil:
+        flash("Data penyewa berhasil dihapus.", "success")
+
+    elif status == "not_found":
+        abort(404)
+
+    elif status == "in_use":
+        flash(
+            "Data penyewa tidak dapat dihapus karena masih digunakan "
+            "dalam riwayat sewa. Hapus atau selesaikan data terkait "
+            "sesuai prosedur terlebih dahulu.",
+            "warning"
+        )
+
+    else:
+        flash(
+            "Data penyewa gagal dihapus karena terjadi kesalahan "
+            "database. Silakan coba kembali.",
+            "danger"
+        )
+
+    return redirect(url_for("main.daftar_penyewa"))

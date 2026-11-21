@@ -51,11 +51,22 @@
                         {{ kamar["status_ketersediaan"] }}
                     </span>
                 </td>
-               <td>
+                <td>
                     <a class="button"
-                    href="{{ url_for('main.ubah_kamar', id_kamar=kamar['id_kamar']) }}">
+                       href="{{ url_for('main.ubah_kamar', id_kamar=kamar['id_kamar']) }}">
                         Edit
                     </a>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('main.hapus_kamar', id_kamar=kamar['id_kamar']) }}"
+                        style="display: inline;"
+                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus data kamar ini? Data yang masih digunakan oleh riwayat sewa tidak dapat dihapus.');"
+                    >
+                        <button class="button" type="submit">
+                            Hapus
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% else %}
