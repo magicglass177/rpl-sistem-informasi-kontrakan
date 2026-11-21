@@ -1479,3 +1479,31 @@ Penyimpanan memori hanya berlaku per proses dan sudah dicatat sebagai keterbatas
 ### Hasil Uji
 `uji_cepat.py`: 5 kegagalan → 401, percobaan ke-6 dengan kata sandi benar → 429,
 kedaluwarsa lulus dengan waktu suntikan; 56 pengujian unit OK.
+
+
+## Siklus 5 — Konfigurasi produksi, header, dan dependensi
+
+### Tujuan
+Menutup temuan P-04 dan P-05 serta memeriksa paket yang dipakai proyek.
+
+### Aktivitas
+Menambahkan `APP_ENV=production` yang mewajibkan kunci dari lingkungan, menerima
+`SECRET_KEY` sebagai alternatif `FLASK_SECRET_KEY`, mengaktifkan `SESSION_COOKIE_SECURE`
+hanya pada produksi, mengendalikan debug lewat `FLASK_DEBUG`, dan menambahkan tiga header
+keamanan melalui `after_request`. `requirements.txt` dibandingkan dengan `pip freeze`.
+
+### Hasil AI
+AI mengusulkan kunci bawaan untuk pengembangan dan hanya membaca `SECRET_KEY`. Saya
+mempertahankan `FLASK_SECRET_KEY` agar tidak merusak konfigurasi proyek, dengan `SECRET_KEY`
+sebagai alternatif, dan tetap menolak start pada produksi tanpa kunci.
+
+### Keputusan
+- **Ubah** (kompatibilitas nama variabel dan tanpa nilai bawaan).
+
+### Alasan
+Kunci bawaan berisiko dipakai di produksi; aplikasi lebih baik gagal cepat. Semua paket
+pada `requirements.txt` adalah Flask beserta dependensinya dan versinya sudah dikunci.
+
+### Hasil Uji
+59 pengujian unit OK; produksi tanpa kunci gagal start; `SESSION_COOKIE_SECURE=True`
+pada produksi; ketiga header hadir. `pip-audit` tidak tersedia, dicatat sebagai temuan tertunda.

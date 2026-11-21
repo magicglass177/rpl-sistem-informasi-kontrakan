@@ -1,5 +1,6 @@
 import atexit
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -81,6 +82,51 @@ class TestKeamanan(unittest.TestCase):
 
         self.assertEqual(respons.status_code, 400)
         self.assertIn("CSRF gagal", "\n".join(tangkap.output))
+
+    def test_header_keamanan(self):
+        respons = self.client.get("/login")
+
+        self.assertEqual(respons.headers.get("X-Content-Type-Options"), "nosniff")
+        self.assertEqual(respons.headers.get("X-Frame-Options"), "DENY")
+        self.assertEqual(respons.headers.get("Referrer-Policy"), "same-origin")
+
+    def _lingkungan_produksi(self):
+        lingkungan = dict(os.environ)
+        lingkungan.pop("FLASK_SECRET_KEY", None)
+        lingkungan.pop("SECRET_KEY", None)
+        lingkungan["APP_ENV"] = "production"
+        return lingkungan
+
+    def test_produksi_tanpa_kunci_gagal_start(self):
+        hasil = subprocess.run(
+            [sys.executable, "-c", "import app"],
+            cwd=str(PROJECT_ROOT),
+            env=self._lingkungan_produksi(),
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertNotEqual(hasil.returncode, 0)
+        self.assertIn("wajib diatur", hasil.stderr)
+
+    def test_cookie_secure_aktif_pada_produksi(self):
+        lingkungan = self._lingkungan_produksi()
+        lingkungan["SECRET_KEY"] = "kunci-uji-produksi"
+
+        hasil = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "from app import app; print(app.config['SESSION_COOKIE_SECURE'])",
+            ],
+            cwd=str(PROJECT_ROOT),
+            env=lingkungan,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(hasil.returncode, 0, hasil.stderr)
+        self.assertIn("True", hasil.stdout)
 
 
 if __name__ == "__main__":
