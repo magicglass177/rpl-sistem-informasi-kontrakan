@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan Pengujian — Jobsheet 13</title>
+<style>
+  @page { size: A4; margin: 18mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.45;
+    color: #1e1e1e; margin: 0 auto; max-width: 190mm; padding: 10mm;
+  }
+  h1 { font-size: 20pt; border-bottom: 3px solid #2f5496; padding-bottom: 6px; margin-bottom: 4px; }
+  h2 { font-size: 14pt; color: #2f5496; border-bottom: 1px solid #c9d3e6; padding-bottom: 4px; margin-top: 22px; }
+  p, li, td, th { font-size: 10pt; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+  th, td { border: 1px solid #999; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #eef2f9; }
+  code, pre { font-family: Consolas, monospace; font-size: 9pt; background: #f5f7fa; }
+  pre { border: 1px solid #ccc; padding: 8px; white-space: pre-wrap; }
+  .meta { color: #555; font-size: 9.5pt; margin-bottom: 14px; }
+  .kecil { font-size: 9pt; color: #555; }
+  ul, ol { margin: 4px 0 8px 18px; padding: 0; }
+  .halaman { page-break-before: always; }
+  @media print {
+    body { padding: 0; max-width: none; }
+    .halaman { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Laporan Pengujian — Test Case, pytest, Cacat, dan UAT</h1>
+<div class="meta">
+  Jobsheet 13 — Pertemuan 13 (Minggu 13) &nbsp;|&nbsp; Mata Kuliah: Rekayasa Perangkat Lunak<br>
+  Proyek: Sistem Informasi Pengelolaan Kontrakan &nbsp;|&nbsp; Kelompok: ______________________<br>
+  Anggota: ______________________________________ &nbsp;|&nbsp; Kelas / tanggal: ______________<br>
+  Repositori: <code>rpl-sistem-informasi-kontrakan</code> &nbsp;|&nbsp; Branch: <code>fitur/pengujian</code>
+</div>
+
+<h2>1. Verifikasi, Validasi, dan Tingkat Pengujian</h2>
+<p><b>Verifikasi</b> menjawab "Apakah kita membangun produk dengan benar?" — hasil dibandingkan
+dengan spesifikasi. <b>Validasi</b> menjawab "Apakah kita membangun produk yang benar?" —
+klien memastikan aplikasi berguna untuk pekerjaannya. Pengujian dapat menunjukkan adanya
+cacat, bukan membuktikan ketiadaannya.</p>
+<table>
+<tr><th>Tingkat</th><th>Yang diuji</th><th>Contoh pada proyek ini</th></tr>
+<tr><td>Unit</td><td>Satu fungsi / aturan</td><td><code>services.validate_sewa</code>, <code>_format_tanggal_valid</code></td></tr>
+<tr><td>Alur</td><td>Beberapa lapisan lewat HTTP</td><td>Tambah kamar → tampil di daftar; bayar → status Lunas</td></tr>
+<tr><td>Sistem</td><td>Aplikasi lengkap</td><td>Alur pemilik dan kasir di peramban</td></tr>
+<tr><td>Penerimaan</td><td>Klien menerima produk</td><td>UAT 7 skenario pada Minggu 14</td></tr>
+</table>
+
+<h2>2. Matriks Keterlacakan</h2>
+<table>
+<tr><th>KF</th><th>Kebutuhan</th><th>Test case</th></tr>
+<tr><td>KF-01</td><td>Login pemilik</td><td>TC-34, TC-35, TC-36</td></tr>
+<tr><td>KF-02</td><td>Menambah data kamar</td><td>TC-01–TC-17</td></tr>
+<tr><td>KF-03</td><td>Melihat &amp; mencari kamar</td><td>TC-18, TC-37</td></tr>
+<tr><td>KF-06</td><td>Mengelola data penyewa</td><td>TC-19–TC-25</td></tr>
+<tr><td>KF-07</td><td>Menghubungkan penyewa dengan kamar</td><td>TC-26, TC-29, TC-38</td></tr>
+<tr><td>KF-09</td><td>Mencatat pembayaran</td><td>TC-30–TC-33</td></tr>
+<tr><td>KF-13</td><td>Mengelola periode sewa</td><td>TC-26–TC-29</td></tr>
+<tr><td>KF-15</td><td>Melihat laporan pendapatan</td><td>TC-39</td></tr>
+</table>
+<p class="kecil">8 KF tercakup; KF tanpa test case = 0. Harapan test case ditulis dari PRD,
+kamus data, dan skema <b>sebelum</b> uji dijalankan.</p>
+
+<h2>3. Test Case (ringkasan 39 kasus)</h2>
+<table>
+<tr><th>Kelompok</th><th>Jumlah</th><th>Contoh</th><th>Teknik</th></tr>
+<tr><td>Harga sewa</td><td>11</td><td>0 diterima; 10000000000.00 ditolak; "²" ditolak</td><td>BVA, EP, pelanggaran</td></tr>
+<tr><td>Nomor kamar</td><td>6</td><td>1 char diterima; 21 char ditolak; duplikat ditolak</td><td>BVA, pelanggaran</td></tr>
+<tr><td>Telepon &amp; nama penyewa</td><td>7</td><td>10/11/13 digit diterima; 14 digit ditolak</td><td>BVA, EP</td></tr>
+<tr><td>Tanggal sewa</td><td>4</td><td>2026-03-01 diterima; 20261108 ditolak</td><td>BVA, pelanggaran</td></tr>
+<tr><td>Jumlah bayar</td><td>3</td><td>0 ditolak; 1 diterima</td><td>BVA</td></tr>
+<tr><td>Alur, akses, login, laporan</td><td>8</td><td>CRUD, matriks peran, CSRF, 429, laporan</td><td>Normal, pelanggaran</td></tr>
+</table>
+<p>Komposisi memenuhi syarat: ≥ 20 kasus, 13 BVA, 19 pelanggaran, 7 jalur normal.
+Tabel lengkap dengan hasil aktual ada pada <code>docs/pengujian/test-case.md</code>.</p>
+
+<h2>4. Hasil Menjalankan Uji</h2>
+<table>
+<tr><th>Perintah</th><th>Sebelum perbaikan</th><th>Sesudah perbaikan</th></tr>
+<tr><td><code>python -m pytest -q tests</code></td><td>3 failed, 108 passed</td><td><b>111 passed, 23 subtests</b></td></tr>
+<tr><td><code>python tests/uji_cepat.py</code></td><td>SEMUA UJI LULUS</td><td>SEMUA UJI LULUS</td></tr>
+<tr><td><code>python -m unittest discover -s tests</code></td><td>59 tests OK</td><td>59 tests OK</td></tr>
+</table>
+<p>Jumlah fungsi uji pytest baru: <b>29 fungsi</b> (termasuk puluhan kasus parametrize).
+Basis data uji memakai berkas sementara melalui <code>tests/conftest.py</code>;
+<code>kontrakan.db</code> nyata tidak tersentuh.</p>
+
+<div class="halaman"></div>
+<h2>5. Pemeriksaan Uji dari AI dan Mutasi Manual</h2>
+<table>
+<tr><th>Uji</th><th>Kelemahan yang ditemukan</th><th>Perbaikan</th></tr>
+<tr><td><code>test_nama_penyewa</code></td><td><code>assert galat is not None</code> selalu benar</td><td><code>("nama" in galat) is (not valid)</code></td></tr>
+<tr><td><code>test_urutan_tanggal</code></td><td>Hanya mengecek "ada galat"</td><td><code>assert "tanggal_selesai" in galat</code></td></tr>
+<tr><td><code>test_tanggal_sewa</code> / TC-27</td><td><b>Salah lulus</b>: galat datang dari tanggal selesai, bukan format kompak</td><td>Asersi kunci <code>tanggal_mulai</code> → cacat D-01 terlihat</td></tr>
+<tr><td>Matriks akses <code>/penyewa</code></td><td>Ditulis 403 untuk kasir, padahal daftar boleh dibaca</td><td>Harapan diubah ke 200 (uji yang salah, bukan kode)</td></tr>
+<tr><td>Pesan login</td><td><code>response.data</code> dibandingkan mentah; field username diisi ulang</td><td>Diperiksa pesan spesifik dan ketiadaan "tidak ditemukan"</td></tr>
+</table>
+<p><b>Tiga mutasi manual</b> (kode dikembalikan setelah percobaan):</p>
+<table>
+<tr><th>Mutasi</th><th>Uji yang gagal</th><th>Status</th></tr>
+<tr><td><code>harga &lt; 0</code> → <code>harga &lt;= 0</code></td><td>TC-01 (harga 0)</td><td>Tertangkap</td></tr>
+<tr><td><code>len(nomor) &gt; 20</code> → <code>&gt;= 20</code></td><td>TC-13 (20 karakter)</td><td>Tertangkap</td></tr>
+<tr><td><code>jumlah &lt;= 0</code> → <code>jumlah &lt; 0</code></td><td>TC-30 (jumlah 0)</td><td>Tertangkap</td></tr>
+</table>
+
+<h2>6. Laporan Cacat dan Perbaikannya</h2>
+<table>
+<tr><th>ID</th><th>Ringkasan</th><th>Keparahan</th><th>Prioritas</th><th>Commit</th><th>Status</th></tr>
+<tr><td>D-01</td><td>Tanggal kompak <code>20261108</code> lolos validasi, ditolak basis data dengan pesan menyesatkan</td><td>Sedang</td><td>Sprint ini</td><td><code>866c8aa</code></td><td>Diperbaiki</td></tr>
+<tr><td>D-02</td><td>Harga 11 digit diterima, melampaui <code>DECIMAL(12,2)</code></td><td>Sedang</td><td>Sprint ini</td><td><code>33480db</code></td><td>Diperbaiki</td></tr>
+<tr><td>D-03</td><td><code>%</code> pada pencarian kamar jadi wildcard; semua kamar tampil</td><td>Rendah</td><td>Sprint ini</td><td><code>78e3131</code></td><td>Diperbaiki</td></tr>
+</table>
+<p><b>Alur perbaikan:</b> uji merah (3 failed) → perbaikan minimal satu cacat per commit →
+uji hijau → seluruh uji tetap lulus. Uji yang menangkap cacat ditinggalkan sebagai
+uji regresi; tidak ada uji yang dihapus atau dilonggarkan.</p>
+<p><b>Permintaan perubahan (bukan cacat):</b> PR-01 keunikan nama kamar huruf
+besar-kecil; PR-02 batas kelebihan bayar; PR-03 hak akses hapus pembayaran.
+Semua memerlukan keputusan klien dan tercatat di <code>laporan-cacat.md</code>.</p>
+
+<div class="halaman"></div>
+<h2>7. Rencana UAT</h2>
+<table>
+<tr><th>Item</th><th>Isi</th></tr>
+<tr><td>Tujuan</td><td>Pemilik dan kasir dapat memakai aplikasi untuk pekerjaan harian</td></tr>
+<tr><td>Peserta</td><td>Pemilik kontrakan, satu kasir; pengamat: anggota kelompok</td></tr>
+<tr><td>Waktu &amp; tempat</td><td>Minggu 14, 60 menit; jadwal <b>belum dikonfirmasi klien</b></td></tr>
+<tr><td>Lingkungan</td><td>Aplikasi uji, data karangan, akun uji dua peran; tanpa data pribadi nyata</td></tr>
+<tr><td>Kriteria lulus</td><td>Semua skenario inti lulus; tidak ada cacat Kritis/Tinggi terbuka; klien menyatakan dapat memakai</td></tr>
+<tr><td>Pencatatan</td><td>Pengamat mengisi lembar skenario; temuan dipindah ke laporan cacat</td></tr>
+</table>
+<table>
+<tr><th>ID</th><th>KF</th><th>Skenario (bahasa klien)</th><th>Hasil diharapkan</th></tr>
+<tr><td>UAT-1</td><td>KF-01</td><td>Saya masuk sebagai pemilik</td><td>Halaman utama tampil</td></tr>
+<tr><td>UAT-2</td><td>KF-02</td><td>Saya mendaftarkan kamar baru</td><td>Kamar muncul, status Tersedia</td></tr>
+<tr><td>UAT-3</td><td>KF-06</td><td>Saya menyimpan data penyewa baru</td><td>Data tampil di daftar</td></tr>
+<tr><td>UAT-4</td><td>KF-13</td><td>Saya menentukan masa sewa kamar</td><td>Periode tersimpan, kamar jadi Terisi</td></tr>
+<tr><td>UAT-5</td><td>KF-09</td><td>Saya mencatat pembayaran yang masuk</td><td>Pembayaran tercatat, status Lunas</td></tr>
+<tr><td>UAT-6</td><td>KF-15</td><td>Saya melihat pendapatan bulan Maret</td><td>Daftar dan total tampil</td></tr>
+<tr><td>UAT-7</td><td>KF-08</td><td>Kasir mencoba menghapus kamar</td><td>Tombol tidak ada, alamat langsung ditolak</td></tr>
+</table>
+
+<h2>8. Jawaban Pertanyaan Evaluasi</h2>
+<ol>
+<li><b>Verifikasi vs validasi.</b> Verifikasi: memeriksa <code>validate_kamar("0")</code>
+  menghasilkan galat kosong sesuai kamus data (sesuai spesifikasi). Validasi:
+  klien menjalankan UAT-5 dan menyatakan alur mencatat pembayaran sesuai
+  pekerjaannya (sesuai kebutuhan).</li>
+<li><b>Partisi ekuivalen &amp; nilai batas.</b> Untuk jumlah bayar (&gt; 0), partisi
+  valid adalah bilangan bulat positif, partisi tidak valid adalah nol, negatif,
+  bukan angka, dan kosong. Uji batas: 0 (ditolak), 1 (diterima), −1 (ditolak),
+  dan 10000000000.00 (ditolak karena batas <code>DECIMAL(12,2)</code>).</li>
+<li><b>Uji AI bisa lulus walau kode salah</b> karena asersinya dangkal atau
+  harapannya diambil dari keluaran kode. TC-27 awalnya lulus karena ada galat,
+  tetapi galatnya berasal dari isian lain. Mutasi manual membuktikan hal ini:
+  dengan mengubah operator batas, uji yang benar harus gagal; bila tetap lulus,
+  uji itu lemah.</li>
+<li><b>Alur merah → hijau</b> mencegah perbaikan tanpa bukti: uji yang gagal
+  menunjukkan cacat benar-benar ada, lalu perbaikan minimal membuatnya lulus.
+  Uji regresi tetap disimpan agar cacat yang sama tidak kembali saat kode lain
+  diubah.</li>
+<li><b>Keparahan vs prioritas.</b> Keparahan = dampak teknis; prioritas = urutan
+  perbaikan (keputusan bersama klien). Contoh: D-03 berkeparahan Rendah
+  (pencarian menyesatkan, tidak ada data rusak) tetapi berprioritas Sprint ini
+  karena perbaikannya satu baris dan konsistensi antarmodul penting.</li>
+</ol>
+
+<p class="kecil">Dibuat dari <code>docs/pengujian/test-case.md</code>,
+<code>laporan-cacat.md</code>, <code>rencana-uat.md</code>, dan hasil uji.
+Cetak dengan Ctrl+P → Save as PDF (maksimal 8 halaman).</p>
+</body>
+</html>

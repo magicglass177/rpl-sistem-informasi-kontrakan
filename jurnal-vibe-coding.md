@@ -1824,3 +1824,54 @@ Mencantumkan tanggal palsu akan menyesatkan dosen dan klien.
 ### Hasil Uji
 Rencana memuat 7 skenario (≥ 5) dan 4 kriteria lulus; status penjadwalan dicatat
 jujur sebagai belum terkonfirmasi.
+
+## Siklus 9 — Melengkapi pengujian dan laporan (Langkah 15)
+
+### Tujuan
+Memastikan setiap KF memiliki uji, menyiapkan luaran akhir, dan menutup Sprint 3.
+
+### Aktivitas
+Memeriksa matriks keterlacakan (KF tanpa uji = 0), menyiapkan laporan pengujian
+siap cetak, memperbarui `docs/rencana-sprint.md`, dan merekap keputusan.
+
+### Hasil AI
+AI mengusulkan menandai jadwal UAT sebagai "selesai" karena rencana sudah ditulis.
+Saya menolak: rencana bukan persetujuan klien.
+
+### Keputusan
+- **Terima** struktur laporan; **Tolak** penandaan jadwal UAT sebagai selesai.
+
+### Alasan
+Membedakan "direncanakan" dan "disetujui" sesuai etika jobsheet. Klien nyata
+belum dihubungi dari lingkungan ini.
+
+### Hasil Uji
+Pemeriksaan akhir: 111 pytest passed, 23 subtests; `uji_cepat.py` SEMUA UJI LULUS;
+59 unittest OK; tiga cacat Diperbaiki.
+
+## Rekap Keputusan Jobsheet 13
+
+| No | Siklus | Keputusan |
+|---:|---|---|
+| 1 | Draf uji dari test case | Ubah |
+| 2 | Pemeriksaan uji AI + 3 mutasi | Ubah |
+| 3 | Uji alur, akses, laporan cacat | Ubah |
+| 4 | Perbaikan D-01 | Ubah |
+| 5 | Perbaikan D-02 | Ubah |
+| 6 | Perbaikan D-03 | Ubah |
+| 7 | Regresi dan tinjau diff | Tolak |
+| 8 | Rencana UAT | Tolak |
+| 9 | Melengkapi pengujian dan laporan | Terima |
+
+**Proporsi Jobsheet 13:** Ubah 6/9 (66,67%), Tolak 2/9 (22,22%),
+Terima 1/9 (11,11%). Entri baru = 9 (≥ 8), termasuk satu entri tentang
+uji AI lemah (Siklus 2) dan dua entri tentang kelemahan yang ditemukan manusia.
+
+**Proporsi kumulatif Jobsheet 9 + 10 + 11 + 12 + 13:**
+Terima 27/54 (50,00%), Ubah 23/54 (42,59%), Tolak 4/54 (7,41%).
+
+**Jenis galat AI yang ditemui:** asersi `assert galat is not None`, format
+tanggal kompak terlewat, matriks akses `/penyewa` keliru, perbandingan HTML
+login terlalu kuat, usulan mengubah pesan galat lama, usulan tanggal UAT rekaan,
+dan usulan menghapus uji alur.
+
