@@ -1379,3 +1379,224 @@ Tolak 1/37 (2,70%).
 **Jenis galat AI yang ditemui:** decorator never-defined, escape backslash pada validasi
 `next`, skrip akun memakai environment variable, dan pesan galat login yang membocorkan
 keberadaan akun.
+
+
+---
+
+# Jobsheet 12 — Code Review, Keamanan Dasar, dan Checkpoint
+
+## Siklus 1 — Perbaikan kasus latihan dengan bantuan AI
+
+### Tujuan
+Memperbaiki satu per satu temuan pada `kasus_rentan.py` dan meninjau kualitas perbaikan AI.
+
+### Aktivitas
+AI diminta memperbaiki SQL injection, hash MD5, hapus via GET, open redirect, IDOR,
+dan penanganan galat. Setiap hasil dibaca kembali dengan daftar periksa Lampiran C.
+
+### Hasil AI
+AI benar memakai SQL berparameter, `generate_password_hash`, pesan galat umum, dan POST+403.
+Namun AI hanya mengecek `next.startswith('/')` dan tidak menyertakan pemeriksaan kepemilikan
+pada rute catatan.
+
+### Keputusan
+- **Ubah** (dua perbaikan dikoreksi manual).
+
+### Alasan
+`//situs-jahat` tetap diterima oleh pemeriksaan sederhana; tanpa `pengguna_id`, IDOR tetap ada.
+Ini membuktikan tinjauan AI tidak boleh dijadikan satu-satunya pemeriksaan.
+
+### Hasil Uji
+SQL injection → 401; `next` luar → `/`; catatan kasir → 404; hapus GET → 405.
+
+## Siklus 2 — Tinjauan mandiri proyek sendiri
+
+### Tujuan
+Menerapkan Lampiran C pada kode kelompok dan merangkum temuan dengan format Lampiran D.1.
+
+### Aktivitas
+Meninjau `app.py`, `routes.py`, `services.py`, `models.py`, templat, dan `requirements.txt`;
+menggabungkan dengan `docs/temuan-keamanan.md`; menulis tujuh temuan pada
+`docs/laporan-temuan.md`.
+
+### Keputusan
+- **Ubah**: lima temuan dijadwalkan diperbaiki hari ini (CSRF, batas login, log, konfigurasi, header).
+- **Ditolak**: pemeriksaan kepemilikan data per akun, karena data kontrakan bersifat bersama.
+
+### Alasan
+Risiko tertinggi ditutup lebih dulu; temuan CSP ditunda karena bukan bagian dari alur hari ini.
+
+### Hasil Uji
+Tinjauan tercatat; `main` tetap lulus `uji_cepat.py` sebelum perbaikan dimulai.
+
+
+## Siklus 3 — Perlindungan CSRF
+
+### Tujuan
+Menutup temuan P-01: semua perubahan data harus disertai token yang tidak diketahui situs lain.
+
+### Aktivitas
+Menambahkan `csrf_token()` di `app.py`, mendaftarkannya sebagai global Jinja, memeriksa token
+pada `before_request` dengan `secrets.compare_digest`, dan memasukkan input tersembunyi ke
+seluruh formulir POST. Pengujian disesuaikan memakai pembungkus `post()` yang menyetel token.
+
+### Hasil AI
+AI menghasilkan fungsi token dan pemeriksaan dengan benar, tetapi pada draf awal hanya
+formulir halaman yang disebut; form logout pada `base.html` terlewat.
+
+### Keputusan
+- **Ubah** (menambahkan token pada form logout setelah mencari semua `method="POST"`).
+
+### Alasan
+Satu formulir yang terlewat tetap membuka celah; pemeriksaan dengan `grep` memastikan 9 form
+semua memiliki token.
+
+### Hasil Uji
+POST tanpa token → 400; `uji_cepat.py` dan 53 pengujian unit tetap lulus.
+
+
+## Siklus 4 — Batas percobaan login dan pencatatan kejadian
+
+### Tujuan
+Menutup temuan P-02 dan P-03: membatasi brute force dan mencatat kejadian penting tanpa rahasia.
+
+### Aktivitas
+Menambahkan `percobaan.py` (BATAS=5, JENDELA=300, waktu dapat disuntikkan), memanggilnya
+pada rute login, mengembalikan 429 saat terkunci, dan menambahkan `app.logger` untuk
+login gagal/berhasil, akun terkunci, akses 403, dan CSRF gagal.
+
+### Hasil AI
+AI menghasilkan struktur modul yang mudah diuji lewat argumen `sekarang`. Namun draf awal
+mencatat username mentah, yang dapat merusak baris log bila mengandung newline.
+
+### Keputusan
+- **Ubah** (username dicatat dengan `%r`).
+
+### Alasan
+`%r` menampilkan karakter baris baru sebagai `\n`; kata sandi tidak pernah masuk ke log.
+Penyimpanan memori hanya berlaku per proses dan sudah dicatat sebagai keterbatasan.
+
+### Hasil Uji
+`uji_cepat.py`: 5 kegagalan → 401, percobaan ke-6 dengan kata sandi benar → 429,
+kedaluwarsa lulus dengan waktu suntikan; 56 pengujian unit OK.
+
+
+## Siklus 5 — Konfigurasi produksi, header, dan dependensi
+
+### Tujuan
+Menutup temuan P-04 dan P-05 serta memeriksa paket yang dipakai proyek.
+
+### Aktivitas
+Menambahkan `APP_ENV=production` yang mewajibkan kunci dari lingkungan, menerima
+`SECRET_KEY` sebagai alternatif `FLASK_SECRET_KEY`, mengaktifkan `SESSION_COOKIE_SECURE`
+hanya pada produksi, mengendalikan debug lewat `FLASK_DEBUG`, dan menambahkan tiga header
+keamanan melalui `after_request`. `requirements.txt` dibandingkan dengan `pip freeze`.
+
+### Hasil AI
+AI mengusulkan kunci bawaan untuk pengembangan dan hanya membaca `SECRET_KEY`. Saya
+mempertahankan `FLASK_SECRET_KEY` agar tidak merusak konfigurasi proyek, dengan `SECRET_KEY`
+sebagai alternatif, dan tetap menolak start pada produksi tanpa kunci.
+
+### Keputusan
+- **Ubah** (kompatibilitas nama variabel dan tanpa nilai bawaan).
+
+### Alasan
+Kunci bawaan berisiko dipakai di produksi; aplikasi lebih baik gagal cepat. Semua paket
+pada `requirements.txt` adalah Flask beserta dependensinya dan versinya sudah dikunci.
+
+### Hasil Uji
+59 pengujian unit OK; produksi tanpa kunci gagal start; `SESSION_COOKIE_SECURE=True`
+pada produksi; ketiga header hadir. `pip-audit` tidak tersedia, dicatat sebagai temuan tertunda.
+
+
+## Siklus 6 — Uji ulang dan tinjau diff perbaikan
+
+### Tujuan
+Memastikan perbaikan menutup temuan tanpa merusak fitur lama dan tanpa kelemahan baru.
+
+### Aktivitas
+Menambahkan uji header ke `uji_cepat.py` (total 21 kelompok uji), menjalankan seluruh uji,
+lalu membaca diff `e027f36..HEAD` dengan Lampiran C.
+
+### Hasil AI
+AI mengusulkan penghapusan beberapa uji lama agar POST lebih sederhana. Saya menolak:
+semua uji lama tetap dipertahankan dan disesuaikan dengan token CSRF.
+
+### Keputusan
+- **Tolak** usulan menghapus uji lama; **Terima** perbaikan lainnya.
+
+### Alasan
+Menghapus uji lama menyembunyikan regresi. Tinjauan menunjukkan SQL, templat, peran, dan
+konfigurasi tetap sesuai daftar periksa.
+
+### Hasil Uji
+`SEMUA UJI LULUS`; 59 pengujian unit OK; tidak ada temuan baru, dua item sengaja ditunda.
+
+
+## Siklus 7 — Kelemahan yang ditemukan manusia, bukan AI
+
+### Temuan
+Pada draf pertama perbaikan CSRF, AI menambahkan input token hanya pada formulir yang
+ada di halaman data. Form logout pada `base.html` terlewat karena AI tidak membaca
+templat induk secara menyeluruh. Pemeriksaan manual dengan mencari semua `method="POST"`
+menemukan 9 formulir, termasuk form logout yang belum berubah.
+
+### Mengapa AI melewatkannya
+AI mengikuti daftar halaman yang disebut dalam prompt, bukan menyusun daftar formulir
+dari seluruh templat. Kebiasaan review manusia — mencari pola di seluruh berkas —
+menutup celah ini.
+
+### Keputusan
+- **Ubah** (token ditambahkan pada form logout dan seluruh form lain).
+
+### Alasan
+Satu POST tanpa token cukup untuk membuka celah CSRF; pemeriksaan berbasis daftar
+tidak boleh menggantikan pencarian menyeluruh.
+
+### Hasil Uji
+9 formulir memuat token; POST logout tanpa token ditolak 400.
+
+## Siklus 8 — Tindak lanjut checkpoint dan rencana Sprint 3
+
+### Tujuan
+Menindaklanjuti umpan balik dan menetapkan pekerjaan minggu berikutnya.
+
+### Aktivitas
+Menyusun skrip demo 5 menit (`docs/skrip-demo-checkpoint.md`), mengisi daftar periksa
+dan tabel umpan balik, serta memperbarui `docs/rencana-sprint.md` dengan Sprint 3.
+
+### Keputusan
+- **Terima**.
+
+### Alasan
+Semua temuan tertunda mendapat tanggal dan rencana; tidak ada temuan yang dihapus
+untuk menutupi masalah.
+
+### Hasil Uji
+`SEMUA UJI LULUS` dan 59 pengujian unit OK sebelum checkpoint.
+
+## Rekap Keputusan Jobsheet 12
+
+| No | Siklus | Keputusan |
+|---:|---|---|
+| 1 | Perbaikan kasus latihan AI | Ubah |
+| 2 | Tinjauan mandiri proyek | Ubah |
+| 3 | Token CSRF | Ubah |
+| 4 | Batas login dan logging | Ubah |
+| 5 | Konfigurasi dan dependensi | Ubah |
+| 6 | Uji ulang dan diff | Terima |
+| 7 | Kelemahan ditemukan manusia | Ubah |
+| 8 | Tindak lanjut checkpoint | Terima |
+
+Catatan: pada Siklus 6, saran AI untuk menghapus uji lama **ditolak** dan perbaikan
+lainnya diterima; ini tercatat sebagai satu keputusan Tolak dalam proporsi di bawah.
+
+**Proporsi Jobsheet 12:** Ubah 6/8 (75,00%), Terima 1/8 (12,50%), Tolak 1/8 (12,50%).
+Entri baru = 8, termasuk satu entri tentang kelemahan yang tidak ditemukan AI (Siklus 7).
+
+**Proporsi kumulatif Jobsheet 9 + 10 + 11 + 12:** Terima 26/45 (57,78%), Ubah 17/45 (37,78%),
+Tolak 2/45 (4,44%).
+
+**Jenis galat AI yang ditemui:** open redirect dicek setengah, IDOR terlewat, form logout
+terlewat, username log belum memakai `%r`, konfigurasi produksi kehilangan kompatibilitas
+nama variabel, dan saran penghapusan uji lama.

@@ -68,6 +68,7 @@
                         style="display: inline;"
                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus data kamar ini? Data yang masih digunakan oleh riwayat sewa tidak dapat dihapus.');"
                     >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="button" type="submit">
                             Hapus
                         </button>

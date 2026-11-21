@@ -10,6 +10,7 @@ TEMP_DIR = tempfile.TemporaryDirectory()
 TEMP_PATH = Path(TEMP_DIR.name)
 
 import models
+import percobaan
 
 models.INSTANCE_DIR = TEMP_PATH
 models.DB_PATH = TEMP_PATH / "kontrakan_uji_cepat.db"
@@ -17,6 +18,20 @@ models.DB_PATH = TEMP_PATH / "kontrakan_uji_cepat.db"
 os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret-key")
 
 from app import create_app
+
+def _token(klien):
+    """Ambil atau buat token CSRF pada sesi klien uji."""
+    with klien.session_transaction() as sesi:
+        if "csrf_token" not in sesi:
+            sesi["csrf_token"] = "token-uji"
+        return sesi["csrf_token"]
+
+
+def post(klien, url, **kwargs):
+    """Kirim POST dengan token CSRF yang sah."""
+    data = dict(kwargs.pop("data", None) or {})
+    data.setdefault("csrf_token", _token(klien))
+    return klien.post(url, data=data, **kwargs)
 
 
 def cek(kondisi, pesan):
@@ -42,7 +57,7 @@ def main():
         connection.close()
 
     models.create_akun("admin", "rahasia", "pemilik")
-    client.post(
+    post(client, 
         "/login",
         data={"username": "admin", "password": "rahasia"},
     )
@@ -53,7 +68,7 @@ def main():
     cek("Belum ada data" in response.get_data(as_text=True), "Pesan kosong tidak tampil.")
 
     # 2. Tambah kamar valid.
-    response = client.post(
+    response = post(client, 
         "/kamar/tambah",
         data={"nomor_kamar": "A-01", "harga_sewa": "850000"},
         follow_redirects=True,
@@ -63,7 +78,7 @@ def main():
     cek(len(models.get_all_kamar()) == 1, "Data kamar valid tidak tersimpan.")
 
     # 3. Tambah kamar tidak valid (nomor kosong).
-    response = client.post(
+    response = post(client, 
         "/kamar/tambah",
         data={"nomor_kamar": "", "harga_sewa": "850000"},
     )
@@ -73,7 +88,7 @@ def main():
     id_kamar = models.get_all_kamar()[0]["id_kamar"]
 
     # 4. Ubah kamar valid.
-    response = client.post(
+    response = post(client, 
         f"/kamar/{id_kamar}/ubah",
         data={"nomor_kamar": "A-01-UBAH", "harga_sewa": "900000"},
         follow_redirects=True,
@@ -82,7 +97,7 @@ def main():
     cek(models.get_kamar_by_id(id_kamar)["nomor_kamar"] == "A-01-UBAH", "Perubahan kamar tidak tersimpan.")
 
     # 5. Hapus kamar yang tidak dipakai.
-    response = client.post(
+    response = post(client, 
         f"/kamar/{id_kamar}/hapus",
         follow_redirects=True,
     )
@@ -193,7 +208,7 @@ def main():
 
     # 13. Satu pesan galat yang sama untuk kata sandi dan username salah.
     client_login = app.test_client()
-    response = client_login.post(
+    response = post(client_login, 
         "/login",
         data={"username": "admin", "password": "sandi-salah"},
         follow_redirects=True,
@@ -203,7 +218,7 @@ def main():
         "Pesan galat kata sandi salah tidak tampil.",
     )
 
-    response = client_login.post(
+    response = post(client_login, 
         "/login",
         data={"username": "pengguna_tidak_ada", "password": "sandi-salah"},
         follow_redirects=True,
@@ -227,7 +242,7 @@ def main():
 
     # 15. Parameter next luar situs diabaikan (cegah open redirect).
     client_next = app.test_client()
-    response = client_next.post(
+    response = post(client_next, 
         "/login?next=https://situs-jahat.example",
         data={"username": "admin", "password": "rahasia"},
     )
@@ -241,7 +256,7 @@ def main():
     cek(berhasil, f"Akun kasir uji gagal dibuat: {status}")
 
     client_kasir = app.test_client()
-    response = client_kasir.post(
+    response = post(client_kasir, 
         "/login",
         data={"username": "kasiruji", "password": "sandi-kasir-uji"},
     )
@@ -255,7 +270,7 @@ def main():
     )
 
     jumlah_sebelum = len(models.get_all_kamar())
-    response = client_kasir.post(
+    response = post(client_kasir, 
         "/kamar/tambah",
         data={"nomor_kamar": "X-99", "harga_sewa": "100000"},
     )
@@ -272,10 +287,77 @@ def main():
     cek(response.status_code == 200, "Peran pemilik harus bisa membuka tambah kamar.")
 
     # 17. Logout lewat POST mengosongkan sesi.
-    response = client_kasir.post("/logout", follow_redirects=True)
+    response = post(client_kasir, "/logout", follow_redirects=True)
     cek(response.status_code == 200, "Logout gagal.")
     response = client_kasir.get("/kamar")
     cek(response.status_code == 302, "Sesi belum kosong setelah logout.")
+
+    # 18. CSRF: POST tanpa token ditolak dan form memuat token.
+    client_tanpa_token = app.test_client()
+    response = client_tanpa_token.post(
+        "/login",
+        data={"username": "admin", "password": "rahasia"},
+    )
+    cek(response.status_code == 400, "POST tanpa token CSRF harus ditolak 400.")
+
+    halaman_login = app.test_client().get("/login").get_data(as_text=True)
+    cek(
+        'name="csrf_token"' in halaman_login,
+        "Form login tidak memuat input token CSRF.",
+    )
+
+    # 19. Batas percobaan login: kegagalan ke-6 ditolak walau kata sandi benar.
+    berhasil, status = models.create_akun("penguncuji", "sandi-penguncu", "pemilik")
+    cek(berhasil, f"Akun uji kunci gagal dibuat: {status}")
+
+    client_kunci = app.test_client()
+    for _ in range(percobaan.BATAS):
+        response = post(
+            client_kunci,
+            "/login",
+            data={"username": "penguncuji", "password": "sandi-salah"},
+        )
+        cek(response.status_code == 401, "Kegagalan login harus menghasilkan 401.")
+
+    response = post(
+        client_kunci,
+        "/login",
+        data={"username": "penguncuji", "password": "sandi-penguncu"},
+    )
+    cek(response.status_code == 429, "Percobaan ke-6 harus ditolak 429.")
+    cek(
+        "Terlalu banyak percobaan" in response.get_data(as_text=True),
+        "Pesan akun terkunci tidak tampil.",
+    )
+
+    # 20. Kedaluwarsa diuji dengan waktu yang disuntikkan (tanpa menunggu).
+    kunci_uji = "uji|kedaluwarsa"
+    waktu = 1000.0
+    for _ in range(percobaan.BATAS):
+        percobaan.catat_gagal(kunci_uji, sekarang=waktu)
+    cek(percobaan.terkunci(kunci_uji, sekarang=waktu), "Kunci belum aktif.")
+    cek(
+        not percobaan.terkunci(
+            kunci_uji, sekarang=waktu + percobaan.JENDELA + 1
+        ),
+        "Kunci harus kedaluwarsa setelah jendela waktu.",
+    )
+    percobaan.reset(kunci_uji)
+
+    # 21. Header keamanan dasar hadir pada respons.
+    respons = client.get("/kamar")
+    cek(
+        respons.headers.get("X-Content-Type-Options") == "nosniff",
+        "Header X-Content-Type-Options tidak sesuai.",
+    )
+    cek(
+        respons.headers.get("X-Frame-Options") == "DENY",
+        "Header X-Frame-Options tidak sesuai.",
+    )
+    cek(
+        respons.headers.get("Referrer-Policy") == "same-origin",
+        "Header Referrer-Policy tidak sesuai.",
+    )
 
     print("=" * 50)
     print("SEMUA UJI LULUS")

@@ -51,6 +51,7 @@
                 <td><span class="status">{{ p["status_pembayaran"] }}</span></td>
                 <td>
                     <form method="POST" action="{{ url_for('main.hapus_pembayaran', id_pembayaran=p['id_pembayaran']) }}" onsubmit="return confirm('Hapus pembayaran ini?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="button" type="submit">Hapus</button>
                     </form>
                 </td>

@@ -2,6 +2,7 @@ from functools import wraps
 from flask import (
     Blueprint,
     abort,
+    current_app,
     flash,
     g,
     redirect,
@@ -36,6 +37,7 @@ from models import (
 )
 from datetime import date
 
+import percobaan
 import services
 from services import (
     validate_kamar,
@@ -100,27 +102,8 @@ semua_peran = peran_diperlukan(*services.PERAN)
 hanya_pemilik = peran_diperlukan("pemilik")
 
 
-@main.route("/login", methods=["GET", "POST"])
-def login():
-    if g.pengguna is not None:
-        return redirect(url_for("main.daftar_kamar"))
-
-    if request.method == "POST":
-        pengguna = services.autentikasi(
-            request.form.get("username", ""),
-            request.form.get("password", ""),
-        )
-
-        if pengguna is not None:
-            session.clear()
-            session["pengguna_id"] = pengguna["id_akun"]
-            flash("Login berhasil.", "success")
-
-            tujuan = _tujuan_aman(request.args.get("next"))
-            return redirect(tujuan or url_for("main.daftar_kamar"))
-
-        flash("Username atau password salah.", "danger")
-
+def _render_login(status=200):
+    """Merender halaman login dengan status tertentu."""
     return render_template(
         "login.html",
         page_title="Login",
@@ -131,7 +114,58 @@ def login():
             else "",
         },
         errors={},
-    )
+    ), status
+
+
+@main.route("/login", methods=["GET", "POST"])
+def login():
+    if g.pengguna is not None:
+        return redirect(url_for("main.daftar_kamar"))
+
+    if request.method == "POST":
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+        kunci = f"{request.remote_addr}|{username.strip().lower()}"
+
+        if percobaan.terkunci(kunci):
+            current_app.logger.warning(
+                "Login terkunci username=%r ip=%s",
+                username,
+                request.remote_addr,
+            )
+            flash(
+                "Terlalu banyak percobaan login. Coba lagi beberapa saat lagi.",
+                "danger",
+            )
+            return _render_login(429)
+
+        pengguna = services.autentikasi(username, password)
+
+        if pengguna is not None:
+            percobaan.reset(kunci)
+            current_app.logger.info(
+                "Login berhasil username=%r peran=%r",
+                pengguna["username"],
+                pengguna["peran"],
+            )
+
+            session.clear()
+            session["pengguna_id"] = pengguna["id_akun"]
+            flash("Login berhasil.", "success")
+
+            tujuan = _tujuan_aman(request.args.get("next"))
+            return redirect(tujuan or url_for("main.daftar_kamar"))
+
+        percobaan.catat_gagal(kunci)
+        current_app.logger.warning(
+            "Login gagal username=%r ip=%s",
+            username,
+            request.remote_addr,
+        )
+        flash("Username atau password salah.", "danger")
+        return _render_login(401)
+
+    return _render_login()
 
 
 @main.route("/logout", methods=["POST"])
@@ -144,6 +178,12 @@ def logout():
 @main.errorhandler(403)
 def akses_ditolak(_galat):
     """Halaman akses ditolak untuk peran yang tidak berhak."""
+    current_app.logger.warning(
+        "Akses ditolak path=%r ip=%s pengguna=%r",
+        request.path,
+        request.remote_addr,
+        g.pengguna["username"] if g.pengguna else None,
+    )
     return render_template("403.html"), 403
 
 
