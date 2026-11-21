@@ -32,7 +32,7 @@ Pemilik kontrakan.
 - `docs/product-backlog.md` – Daftar kebutuhan awal aplikasi.
 
 ## Status Pengembangan
-Tahap perencanaan dan penyusunan kebutuhan awal (Product Backlog).
+Implementasi modul CRUD kamar dan penyewa selesai dan diuji otomatis (53 tes lulus). Periode sewa, pembayaran, autentikasi, dan laporan masih dalam rencana Sprint 2–3.
 
 ## Teknologi
 Teknologi yang digunakan akan ditentukan sesuai kebutuhan dan proses pengembangan proyek.
