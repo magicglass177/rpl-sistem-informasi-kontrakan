@@ -1453,3 +1453,29 @@ semua memiliki token.
 
 ### Hasil Uji
 POST tanpa token → 400; `uji_cepat.py` dan 53 pengujian unit tetap lulus.
+
+
+## Siklus 4 — Batas percobaan login dan pencatatan kejadian
+
+### Tujuan
+Menutup temuan P-02 dan P-03: membatasi brute force dan mencatat kejadian penting tanpa rahasia.
+
+### Aktivitas
+Menambahkan `percobaan.py` (BATAS=5, JENDELA=300, waktu dapat disuntikkan), memanggilnya
+pada rute login, mengembalikan 429 saat terkunci, dan menambahkan `app.logger` untuk
+login gagal/berhasil, akun terkunci, akses 403, dan CSRF gagal.
+
+### Hasil AI
+AI menghasilkan struktur modul yang mudah diuji lewat argumen `sekarang`. Namun draf awal
+mencatat username mentah, yang dapat merusak baris log bila mengandung newline.
+
+### Keputusan
+- **Ubah** (username dicatat dengan `%r`).
+
+### Alasan
+`%r` menampilkan karakter baris baru sebagai `\n`; kata sandi tidak pernah masuk ke log.
+Penyimpanan memori hanya berlaku per proses dan sudah dicatat sebagai keterbatasan.
+
+### Hasil Uji
+`uji_cepat.py`: 5 kegagalan → 401, percobaan ke-6 dengan kata sandi benar → 429,
+kedaluwarsa lulus dengan waktu suntikan; 56 pengujian unit OK.

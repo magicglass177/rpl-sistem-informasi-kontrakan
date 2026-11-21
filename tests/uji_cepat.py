@@ -10,6 +10,7 @@ TEMP_DIR = tempfile.TemporaryDirectory()
 TEMP_PATH = Path(TEMP_DIR.name)
 
 import models
+import percobaan
 
 models.INSTANCE_DIR = TEMP_PATH
 models.DB_PATH = TEMP_PATH / "kontrakan_uji_cepat.db"
@@ -304,6 +305,44 @@ def main():
         'name="csrf_token"' in halaman_login,
         "Form login tidak memuat input token CSRF.",
     )
+
+    # 19. Batas percobaan login: kegagalan ke-6 ditolak walau kata sandi benar.
+    berhasil, status = models.create_akun("penguncuji", "sandi-penguncu", "pemilik")
+    cek(berhasil, f"Akun uji kunci gagal dibuat: {status}")
+
+    client_kunci = app.test_client()
+    for _ in range(percobaan.BATAS):
+        response = post(
+            client_kunci,
+            "/login",
+            data={"username": "penguncuji", "password": "sandi-salah"},
+        )
+        cek(response.status_code == 401, "Kegagalan login harus menghasilkan 401.")
+
+    response = post(
+        client_kunci,
+        "/login",
+        data={"username": "penguncuji", "password": "sandi-penguncu"},
+    )
+    cek(response.status_code == 429, "Percobaan ke-6 harus ditolak 429.")
+    cek(
+        "Terlalu banyak percobaan" in response.get_data(as_text=True),
+        "Pesan akun terkunci tidak tampil.",
+    )
+
+    # 20. Kedaluwarsa diuji dengan waktu yang disuntikkan (tanpa menunggu).
+    kunci_uji = "uji|kedaluwarsa"
+    waktu = 1000.0
+    for _ in range(percobaan.BATAS):
+        percobaan.catat_gagal(kunci_uji, sekarang=waktu)
+    cek(percobaan.terkunci(kunci_uji, sekarang=waktu), "Kunci belum aktif.")
+    cek(
+        not percobaan.terkunci(
+            kunci_uji, sekarang=waktu + percobaan.JENDELA + 1
+        ),
+        "Kunci harus kedaluwarsa setelah jendela waktu.",
+    )
+    percobaan.reset(kunci_uji)
 
     print("=" * 50)
     print("SEMUA UJI LULUS")
