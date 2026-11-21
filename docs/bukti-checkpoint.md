@@ -21,7 +21,10 @@ Pada saat checkpoint, tangkap gambar sesuai daftar di bagian kedua.
 5. **Akses langsung ke `/kamar/tambah` sebagai kasir** → halaman "Akses Ditolak" dengan
    pesan `role="alert"` "Peran Anda tidak diizinkan membuka halaman ini." dan tautan
    "Kembali ke daftar kamar". Log server mencatat `GET /kamar/tambah 302` saat masih tamu,
-   lalu 403 setelah login kasir.
+   lalu 403 setelah login kasir. Bukti log:
+   `Login berhasil username='kasirdemo' peran='kasir'`,
+   `Akses ditolak path='/kamar/tambah' ip=127.0.0.1 pengguna='kasirdemo'`,
+   `GET /kamar/tambah HTTP/1.1 403`.
 6. **Log server** (tanpa kata sandi):
    `Login berhasil username='pemilikdemo' peran='pemilik'`,
    `Login berhasil username='kasirdemo' peran='kasir'`.
