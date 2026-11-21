@@ -24,7 +24,19 @@
             value="{{ kata_kunci }}"
             aria-label="Cari periode sewa"
         >
+
+        <select name="status" aria-label="Saring status periode sewa">
+            <option value="">Semua status</option>
+            <option value="aktif" {% if status == "aktif" %}selected{% endif %}>
+                Aktif
+            </option>
+            <option value="berakhir" {% if status == "berakhir" %}selected{% endif %}>
+                Berakhir
+            </option>
+        </select>
+
         <button class="button" type="submit">Cari</button>
+        <a class="button" href="{{ url_for('main.daftar_sewa') }}">Atur ulang</a>
     </form>
 
     <table>
@@ -56,11 +68,10 @@
             {% else %}
             <tr>
                 <td colspan="7" class="empty-state">
-                    Belum ada data
-                    {% if kata_kunci %}
-                        periode sewa dengan kata kunci "{{ kata_kunci }}"
+                    {% if kata_kunci or status %}
+                        Tidak ada periode sewa yang cocok.
                     {% else %}
-                        periode sewa yang tersimpan
+                        Belum ada periode sewa yang tersimpan.
                     {% endif %}
                 </td>
             </tr>

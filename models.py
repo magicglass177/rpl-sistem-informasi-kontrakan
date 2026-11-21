@@ -377,7 +377,12 @@ def delete_kamar(id_kamar):
     finally:
         connection.close()
 
-def get_all_sewa(kata_kunci=""):
+def _escape_like(teks):
+    """Netralkan % dan _ agar dicari sebagai huruf biasa pada LIKE."""
+    return teks.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def get_all_sewa(kata_kunci="", status=""):
     """
     Mengambil seluruh periode sewa dengan JOIN ke penyewa dan kamar.
     Pencarian mencakup nama penyewa dan nomor kamar.
@@ -385,10 +390,10 @@ def get_all_sewa(kata_kunci=""):
     connection = get_db_connection()
 
     try:
-        pola = f"%{kata_kunci.strip()}%"
+        kata = kata_kunci.strip()
+        pola = f"%{_escape_like(kata)}%"
 
-        return connection.execute(
-            """
+        sql = """
             SELECT
                 s.id_sewa,
                 s.id_kamar,
@@ -402,11 +407,18 @@ def get_all_sewa(kata_kunci=""):
             FROM sewa AS s
             JOIN penyewa AS p ON p.id_penyewa = s.id_penyewa
             JOIN kamar AS k ON k.id_kamar = s.id_kamar
-            WHERE p.nama LIKE ? OR k.nomor_kamar LIKE ?
-            ORDER BY s.tanggal_mulai DESC, s.id_sewa DESC
-            """,
-            (pola, pola)
-        ).fetchall()
+            WHERE (p.nama LIKE ? ESCAPE '\\' OR k.nomor_kamar LIKE ? ESCAPE '\\')
+        """
+        param = [pola, pola]
+
+        if status == "aktif":
+            sql += " AND date(s.tanggal_selesai) >= date('now', 'localtime')"
+        elif status == "berakhir":
+            sql += " AND date(s.tanggal_selesai) < date('now', 'localtime')"
+
+        sql += " ORDER BY s.tanggal_mulai DESC, s.id_sewa DESC"
+
+        return connection.execute(sql, param).fetchall()
 
     finally:
         connection.close()

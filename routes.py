@@ -391,7 +391,8 @@ def hapus_penyewa(id_penyewa):
 @main.route("/sewa")
 def daftar_sewa():
     kata_kunci = request.args.get("q", "").strip()
-    daftar_sewa = get_all_sewa(kata_kunci)
+    status = request.args.get("status", "").strip()
+    daftar_sewa = get_all_sewa(kata_kunci, status)
 
     return render_template(
         "sewa_list.html",
@@ -399,6 +400,7 @@ def daftar_sewa():
         active_page="sewa",
         daftar_sewa=daftar_sewa,
         kata_kunci=kata_kunci,
+        status=status,
     )
 
 
