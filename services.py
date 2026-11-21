@@ -31,6 +31,11 @@ def _format_tanggal_valid(teks):
         return False
 
 
+def _harga_dalam_batas(angka):
+    """Sesuai kamus data DECIMAL(12,2): maksimal 10 digit bulat, 2 desimal."""
+    return bool(re.fullmatch(r"\d{1,10}(?:\.\d{1,2})?", format(angka, "f")))
+
+
 def validasi_pengguna_baru(username, password, peran):
     """Mengembalikan daftar galat validasi akun baru."""
     galat = []
@@ -123,6 +128,10 @@ def validate_kamar(data):
             elif harga < 0:
                 errors["harga_sewa"] = (
                     "Harga sewa tidak boleh negatif."
+                )
+            elif not _harga_dalam_batas(harga):
+                errors["harga_sewa"] = (
+                    "Harga sewa melebihi batas DECIMAL(12,2)."
                 )
             else:
                 data_bersih["harga_sewa"] = str(harga)
@@ -269,6 +278,10 @@ def validate_sewa(data):
                 errors["harga_sewa_disepakati"] = (
                     "Harga sewa tidak boleh negatif."
                 )
+            elif not _harga_dalam_batas(harga):
+                errors["harga_sewa_disepakati"] = (
+                    "Harga sewa melebihi batas DECIMAL(12,2)."
+                )
             else:
                 data_bersih["harga_sewa_disepakati"] = str(harga)
 
@@ -318,6 +331,10 @@ def validate_pembayaran(data):
                 errors["jumlah_bayar"] = "Jumlah bayar harus berupa angka yang valid."
             elif jumlah <= 0:
                 errors["jumlah_bayar"] = "Jumlah bayar harus lebih dari 0."
+            elif not _harga_dalam_batas(jumlah):
+                errors["jumlah_bayar"] = (
+                    "Jumlah bayar melebihi batas DECIMAL(12,2)."
+                )
             else:
                 data_bersih["jumlah_bayar"] = str(jumlah)
 

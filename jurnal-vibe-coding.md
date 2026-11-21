@@ -1718,3 +1718,30 @@ melihat pesan "harus berformat TTTT-BB-HH" alih-alih "kesalahan database".
 ### Hasil Uji
 `pytest -k "tanggal_sewa or tanggal_pembayaran or urutan_tanggal"` → 4 passed.
 Uji penuh → 2 failed (D-02, D-03), 109 passed: tidak ada regresi.
+
+
+## Siklus 5 — Perbaiki D-02: batas DECIMAL(12,2) (Langkah 11)
+
+### Tujuan
+Menolak harga/jumlah di luar batas tipe yang ditetapkan kamus data.
+
+### Aktivitas
+Menambahkan `_harga_dalam_batas()` yang memeriksa bentuk desimal tetap dengan
+pola maksimal 10 digit bulat dan 2 digit desimal. Dipakai pada `harga_sewa`,
+`harga_sewa_disepakati`, dan `jumlah_bayar`. Pesan galat lama tidak diubah.
+
+### Hasil AI
+AI mengusulkan mengganti pesan "Harga sewa tidak boleh negatif." dengan pesan
+baru yang menggabungkan semua aturan. Saya menolak karena dua berkas uji lama
+mencocokkan teks tersebut persis.
+
+### Keputusan
+- **Ubah** (cabang batas baru ditambahkan setelah cabang negatif).
+
+### Alasan
+Dengan menjaga pesan lama, perbaikan hanya menutup celah batas atas tanpa
+mengubah kontrak pesan yang sudah diuji pada Jobshet 9–12.
+
+### Hasil Uji
+`uji_cepat.py` → SEMUA UJI LULUS; 59 unittest OK; pytest → 1 failed (D-03),
+110 passed, 23 subtests. Tidak ada regresi.

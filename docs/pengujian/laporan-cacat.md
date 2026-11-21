@@ -58,9 +58,11 @@ FAILED tests/test_tanggal_sewa[20261108-False-tanggal_mulai]
 - **Prioritas:** Sprint ini.
 - **Penyebab:** Validasi hanya memeriksa `is_finite()` dan `>= 0`; tidak ada
   pemeriksaan batas digit/presisi sesuai kamus data.
-- **Perbaikan:** (diisi setelah commit perbaikan)
+- **Perbaikan:** commit `08ca34c` — helper `_harga_dalam_batas()` dipakai
+  pada tiga isian uang; pesan galat lama dipertahankan.
 - **Uji regresi:** `tests/test_validasi.py::test_harga_sewa[10000000000.00-False]`
-- **Status:** Terbuka
+  → lulus; `uji_cepat.py` dan 59 unittest tetap lulus.
+- **Status:** Diperbaiki
 
 ### D-03 â€” Karakter `%` pada pencarian kamar dianggap wildcard
 
