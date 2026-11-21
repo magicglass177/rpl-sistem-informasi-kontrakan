@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>Akses Ditolak</h1>
+    <p>Peran Anda tidak diizinkan membuka halaman ini.</p>
+</section>
+
+<section class="table-card">
+    <div class="message error" role="alert">
+        Peran Anda tidak diizinkan membuka halaman ini.
+    </div>
+
+    <div class="form-actions">
+        <a class="button" href="{{ url_for('main.daftar_kamar') }}">
+            Kembali ke daftar kamar
+        </a>
+    </div>
+</section>
+{% endblock %}

@@ -41,7 +41,7 @@ def main():
     finally:
         connection.close()
 
-    models.create_akun("admin", "rahasia")
+    models.create_akun("admin", "rahasia", "pemilik")
     client.post(
         "/login",
         data={"username": "admin", "password": "rahasia"},
@@ -180,6 +180,102 @@ def main():
 
     rows_kosong = models.get_laporan_pembayaran("2026-04-01", "2026-04-30")
     cek(len(rows_kosong) == 0, "Laporan menampilkan data di luar periode.")
+
+    # 12. Tamu dialihkan ke login dengan parameter next.
+    client_tamu = app.test_client()
+    response = client_tamu.get("/kamar")
+    cek(response.status_code == 302, "Tamu harus dialihkan ke login.")
+    cek(
+        "/login" in response.headers["Location"]
+        and "next=" in response.headers["Location"],
+        "Redirect tamu harus membawa parameter next.",
+    )
+
+    # 13. Satu pesan galat yang sama untuk kata sandi dan username salah.
+    client_login = app.test_client()
+    response = client_login.post(
+        "/login",
+        data={"username": "admin", "password": "sandi-salah"},
+        follow_redirects=True,
+    )
+    cek(
+        "Username atau password salah." in response.get_data(as_text=True),
+        "Pesan galat kata sandi salah tidak tampil.",
+    )
+
+    response = client_login.post(
+        "/login",
+        data={"username": "pengguna_tidak_ada", "password": "sandi-salah"},
+        follow_redirects=True,
+    )
+    cek(
+        "Username atau password salah." in response.get_data(as_text=True),
+        "Pesan galat username salah tidak sama.",
+    )
+
+    # 14. Kata sandi tersimpan sebagai hash berasam, bukan teks.
+    akun_admin = models.get_akun_by_username("admin")
+    cek(akun_admin is not None, "Akun admin tidak ditemukan.")
+    cek(
+        str(akun_admin["password_hash"]).startswith(("scrypt:", "pbkdf2:")),
+        "Kata sandi tidak tersimpan sebagai hash berasam.",
+    )
+    cek(
+        akun_admin["password_hash"] != "rahasia",
+        "Kata sandi tersimpan sebagai teks biasa.",
+    )
+
+    # 15. Parameter next luar situs diabaikan (cegah open redirect).
+    client_next = app.test_client()
+    response = client_next.post(
+        "/login?next=https://situs-jahat.example",
+        data={"username": "admin", "password": "rahasia"},
+    )
+    cek(response.status_code == 302, "Login sukses harus dialihkan.")
+    lokasi = response.headers["Location"]
+    cek("situs-jahat.example" not in lokasi, "Open redirect tidak dicegah.")
+    cek(lokasi.startswith("/"), "Alihkan harus menuju alamat internal.")
+
+    # 16. Otorisasi: kasir ditolak, pemilik diizinkan.
+    berhasil, status = models.create_akun("kasiruji", "sandi-kasir-uji", "kasir")
+    cek(berhasil, f"Akun kasir uji gagal dibuat: {status}")
+
+    client_kasir = app.test_client()
+    response = client_kasir.post(
+        "/login",
+        data={"username": "kasiruji", "password": "sandi-kasir-uji"},
+    )
+    cek(response.status_code == 302, "Login peran kasir gagal.")
+
+    response = client_kasir.get("/kamar/tambah")
+    cek(response.status_code == 403, "Kasir harus mendapat 403 pada halaman tambah.")
+    cek(
+        "Akses Ditolak" in response.get_data(as_text=True),
+        "Halaman 403 tidak tampil.",
+    )
+
+    jumlah_sebelum = len(models.get_all_kamar())
+    response = client_kasir.post(
+        "/kamar/tambah",
+        data={"nomor_kamar": "X-99", "harga_sewa": "100000"},
+    )
+    cek(response.status_code == 403, "Kasir harus dilarang POST tambah kamar.")
+    cek(
+        len(models.get_all_kamar()) == jumlah_sebelum,
+        "Data berubah akibat POST dari peran kasir.",
+    )
+
+    response = client_kasir.get("/kamar")
+    cek(response.status_code == 200, "Kasir harus bisa membuka daftar kamar.")
+
+    response = client.get("/kamar/tambah")
+    cek(response.status_code == 200, "Peran pemilik harus bisa membuka tambah kamar.")
+
+    # 17. Logout lewat POST mengosongkan sesi.
+    response = client_kasir.post("/logout", follow_redirects=True)
+    cek(response.status_code == 200, "Logout gagal.")
+    response = client_kasir.get("/kamar")
+    cek(response.status_code == 302, "Sesi belum kosong setelah logout.")
 
     print("=" * 50)
     print("SEMUA UJI LULUS")

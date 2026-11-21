@@ -38,7 +38,8 @@ class TestCrudKamar(unittest.TestCase):
     def setUp(self):
         self._kosongkan_database()
 
-        models.create_akun("admin", "rahasia")
+        if models.get_akun_by_username("admin") is None:
+            models.create_akun("admin", "rahasia", "pemilik")
         self.client.post(
             "/login",
             data={"username": "admin", "password": "rahasia"},
@@ -65,7 +66,6 @@ class TestCrudKamar(unittest.TestCase):
             connection.execute("DELETE FROM sewa")
             connection.execute("DELETE FROM penyewa")
             connection.execute("DELETE FROM kamar")
-            connection.execute("DELETE FROM akun_pengguna")
             connection.commit()
         finally:
             connection.close()

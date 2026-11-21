@@ -1,7 +1,9 @@
+from functools import wraps
 from flask import (
     Blueprint,
     abort,
     flash,
+    g,
     redirect,
     render_template,
     request,
@@ -26,7 +28,7 @@ from models import (
     get_all_sewa,
     get_kamar_by_id,
     get_pembayaran_by_id,
-    verify_password,
+    ambil_pengguna,
     get_penyewa_by_id,
     get_sewa_by_id,
     update_kamar,
@@ -34,6 +36,7 @@ from models import (
 )
 from datetime import date
 
+import services
 from services import (
     validate_kamar,
     validate_pembayaran,
@@ -45,40 +48,76 @@ from services import (
 main = Blueprint("main", __name__)
 
 @main.before_request
-def wajib_login():
-    """Membatasi akses ke halaman pengelolaan bagi pengguna yang belum login."""
-    if request.endpoint in {"main.login"}:
-        return
+def muat_pengguna():
+    """Memuat pengguna dari sesi untuk kebutuhan otorisasi."""
+    pengguna_id = session.get("pengguna_id")
+    g.pengguna = ambil_pengguna(pengguna_id) if pengguna_id else None
 
-    if request.endpoint and request.endpoint.startswith("static"):
-        return
 
-    if not session.get("id_akun"):
-        return redirect(url_for("main.login", next=request.path))
+@main.context_processor
+def konteks_pengguna():
+    """Membuat data pengguna tersedia ke semua template."""
+    return {"pengguna": g.pengguna}
+
+
+def _tujuan_aman(tujuan):
+    """Menerima hanya alamat internal yang aman untuk redirect."""
+    if (
+        tujuan
+        and tujuan.startswith("/")
+        and not tujuan.startswith("//")
+        and "\\" not in tujuan
+    ):
+        return tujuan
+    return None
+
+
+def peran_diperlukan(*peran):
+    """Mengeksekusi penegakan otorisasi di sisi server."""
+
+    def decorator(fungsi):
+        @wraps(fungsi)
+        def bungkus(*args, **kwargs):
+            if g.pengguna is None:
+                return redirect(
+                    url_for(
+                        "main.login",
+                        next=request.full_path.rstrip("?"),
+                    )
+                )
+
+            if g.pengguna["peran"] not in peran:
+                abort(403)
+
+            return fungsi(*args, **kwargs)
+
+        return bungkus
+
+    return decorator
+
+
+semua_peran = peran_diperlukan(*services.PERAN)
+hanya_pemilik = peran_diperlukan("pemilik")
 
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
-    if session.get("id_akun"):
+    if g.pengguna is not None:
         return redirect(url_for("main.daftar_kamar"))
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "")
+        pengguna = services.autentikasi(
+            request.form.get("username", ""),
+            request.form.get("password", ""),
+        )
 
-        akun = get_akun_by_username(username)
-
-        if akun and verify_password(akun["password_hash"], password):
+        if pengguna is not None:
             session.clear()
-            session["id_akun"] = akun["id_akun"]
-            session["username"] = akun["username"]
+            session["pengguna_id"] = pengguna["id_akun"]
             flash("Login berhasil.", "success")
 
-            tujuan = request.args.get("next", "")
-            if tujuan.startswith("/"):
-                return redirect(tujuan)
-
-            return redirect(url_for("main.daftar_kamar"))
+            tujuan = _tujuan_aman(request.args.get("next"))
+            return redirect(tujuan or url_for("main.daftar_kamar"))
 
         flash("Username atau password salah.", "danger")
 
@@ -86,7 +125,11 @@ def login():
         "login.html",
         page_title="Login",
         active_page=None,
-        data={"username": request.form.get("username", "") if request.method == "POST" else ""},
+        data={
+            "username": request.form.get("username", "")
+            if request.method == "POST"
+            else "",
+        },
         errors={},
     )
 
@@ -98,12 +141,20 @@ def logout():
     return redirect(url_for("main.login"))
 
 
+@main.errorhandler(403)
+def akses_ditolak(_galat):
+    """Halaman akses ditolak untuk peran yang tidak berhak."""
+    return render_template("403.html"), 403
+
+
 @main.route("/")
+@semua_peran
 def beranda():
     return redirect(url_for("main.daftar_kamar"))
 
 
 @main.route("/kamar")
+@semua_peran
 def daftar_kamar():
     kata_kunci = request.args.get("q", "").strip()
     daftar_kamar = get_all_kamar(kata_kunci)
@@ -132,6 +183,7 @@ def _render_form_kamar(data, errors, judul_form, action_url, teks_tombol):
 
 
 @main.route("/kamar/tambah", methods=["GET", "POST"])
+@hanya_pemilik
 def tambah_kamar():
     if request.method == "POST":
         data_bersih, errors = validate_kamar(request.form)
@@ -181,6 +233,7 @@ def tambah_kamar():
     )
 
 @main.route("/kamar/<int:id_kamar>/ubah", methods=["GET", "POST"])
+@hanya_pemilik
 def ubah_kamar(id_kamar):
     kamar = get_kamar_by_id(id_kamar)
 
@@ -242,6 +295,7 @@ def ubah_kamar(id_kamar):
 
 
 @main.route("/kamar/<int:id_kamar>/hapus", methods=["POST"])
+@hanya_pemilik
 def hapus_kamar(id_kamar):
     berhasil, status = delete_kamar(id_kamar)
 
@@ -271,6 +325,7 @@ def hapus_kamar(id_kamar):
 
 
 @main.route("/penyewa")
+@semua_peran
 def daftar_penyewa():
     kata_kunci = request.args.get("q", "").strip()
     daftar_penyewa = get_all_penyewa(kata_kunci)
@@ -285,6 +340,7 @@ def daftar_penyewa():
 
 
 @main.route("/penyewa/tambah", methods=["GET", "POST"])
+@hanya_pemilik
 def tambah_penyewa():
     if request.method == "POST":
         data_bersih, errors = validate_penyewa(request.form)
@@ -340,6 +396,7 @@ def tambah_penyewa():
 
 
 @main.route("/penyewa/<int:id_penyewa>/ubah", methods=["GET", "POST"])
+@hanya_pemilik
 def ubah_penyewa(id_penyewa):
     penyewa = get_penyewa_by_id(id_penyewa)
 
@@ -417,6 +474,7 @@ def ubah_penyewa(id_penyewa):
 
 
 @main.route("/penyewa/<int:id_penyewa>/hapus", methods=["POST"])
+@hanya_pemilik
 def hapus_penyewa(id_penyewa):
     berhasil, status = delete_penyewa(id_penyewa)
 
@@ -446,6 +504,7 @@ def hapus_penyewa(id_penyewa):
 
 
 @main.route("/sewa")
+@semua_peran
 def daftar_sewa():
     kata_kunci = request.args.get("q", "").strip()
     status = request.args.get("status", "").strip()
@@ -463,6 +522,7 @@ def daftar_sewa():
 
 
 @main.route("/sewa/tambah", methods=["GET", "POST"])
+@semua_peran
 def tambah_sewa():
     daftar_kamar = get_all_kamar()
     daftar_penyewa = get_all_penyewa()
@@ -548,6 +608,7 @@ def tambah_sewa():
 
 
 @main.route("/pembayaran")
+@semua_peran
 def daftar_pembayaran():
     kata_kunci = request.args.get("q", "").strip()
     status = request.args.get("status", "").strip()
@@ -564,6 +625,7 @@ def daftar_pembayaran():
 
 
 @main.route("/pembayaran/tambah", methods=["GET", "POST"])
+@semua_peran
 def tambah_pembayaran():
     daftar_sewa = get_all_sewa()
 
@@ -633,6 +695,7 @@ def tambah_pembayaran():
 
 
 @main.route("/pembayaran/<int:id_pembayaran>/hapus", methods=["POST"])
+@semua_peran
 def hapus_pembayaran(id_pembayaran):
     berhasil, status = delete_pembayaran(id_pembayaran)
 
@@ -651,6 +714,7 @@ def hapus_pembayaran(id_pembayaran):
 
 
 @main.route("/laporan")
+@hanya_pemilik
 def laporan_pembayaran():
     tanggal_mulai = request.args.get("tanggal_mulai", "").strip()
     tanggal_selesai = request.args.get("tanggal_selesai", "").strip()

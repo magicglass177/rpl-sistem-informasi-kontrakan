@@ -2,6 +2,74 @@ import re
 from datetime import date
 from decimal import Decimal, InvalidOperation
 
+from werkzeug.security import check_password_hash, generate_password_hash
+
+import models
+
+PERAN = ("pemilik", "kasir")
+_HASH_PALSU = generate_password_hash("bukan-kata-sandi-sungguhan")
+
+
+def _bilangan(teks):
+    """Ubah teks menjadi bilangan bulat >= 0, atau None bila tidak valid."""
+    teks = (teks or "").strip()
+    return int(teks) if teks.isdigit() else None
+
+
+def validasi_pengguna_baru(username, password, peran):
+    """Mengembalikan daftar galat validasi akun baru."""
+    galat = []
+
+    if not re.fullmatch(r"[A-Za-z0-9_]{3,30}", username or ""):
+        galat.append(
+            "Nama pengguna 3-30 karakter: huruf, angka, atau garis bawah."
+        )
+
+    if len(password or "") < 8:
+        galat.append("Kata sandi minimal 8 karakter.")
+
+    if peran not in PERAN:
+        galat.append("Peran harus pemilik atau kasir.")
+
+    return galat
+
+
+def buat_pengguna(username, password, peran):
+    """Membuat akun baru setelah divalidasi."""
+    galat = validasi_pengguna_baru(username, password, peran)
+
+    if galat:
+        return galat
+
+    berhasil, status = models.tambah_pengguna(
+        username, generate_password_hash(password), peran
+    )
+
+    if not berhasil:
+        if status == "duplicate":
+            galat.append("Nama pengguna sudah dipakai.")
+        else:
+            galat.append("Akun gagal dibuat karena kesalahan database.")
+
+    return galat
+
+
+def autentikasi(username, password):
+    """Mengembalikan baris pengguna bila kredensial cocok, selain itu None."""
+    pengguna = models.cari_pengguna((username or "").strip())
+
+    if pengguna is None:
+        hash_tersimpan = _HASH_PALSU
+        cocok = check_password_hash(hash_tersimpan, password or "")
+        return pengguna if cocok else None
+
+    try:
+        cocok = check_password_hash(pengguna["password_hash"], password or "")
+    except (TypeError, ValueError):
+        return None
+
+    return pengguna if cocok else None
+
 
 def validate_kamar(data):
     """
