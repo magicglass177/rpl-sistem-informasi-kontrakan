@@ -339,7 +339,12 @@
             >
                 [5] Pembayaran
             </a>
-            <span>[6] Laporan</span>
+            <a
+                href="{{ url_for('main.laporan_pembayaran') }}"
+                class="{% if active_page == 'laporan' %}active{% endif %}"
+            >
+                [6] Laporan
+            </a>
         </nav>
     </aside>
 

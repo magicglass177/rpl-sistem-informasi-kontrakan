@@ -21,6 +21,7 @@ from models import (
     delete_penyewa,
     get_all_kamar,
     get_all_pembayaran,
+    get_laporan_pembayaran,
     get_all_penyewa,
     get_all_sewa,
     get_kamar_by_id,
@@ -647,3 +648,63 @@ def hapus_pembayaran(id_pembayaran):
         )
 
     return redirect(url_for("main.daftar_pembayaran"))
+
+
+@main.route("/laporan")
+def laporan_pembayaran():
+    tanggal_mulai = request.args.get("tanggal_mulai", "").strip()
+    tanggal_selesai = request.args.get("tanggal_selesai", "").strip()
+    kata_kunci = request.args.get("q", "").strip()
+
+    errors = {}
+
+    if tanggal_mulai:
+        try:
+            from datetime import date
+
+            date.fromisoformat(tanggal_mulai)
+        except ValueError:
+            errors["tanggal_mulai"] = "Tanggal mulai harus berformat TTTT-BB-HH."
+
+    if tanggal_selesai:
+        try:
+            from datetime import date
+
+            date.fromisoformat(tanggal_selesai)
+        except ValueError:
+            errors["tanggal_selesai"] = "Tanggal selesai harus berformat TTTT-BB-HH."
+
+    if (
+        tanggal_mulai
+        and tanggal_selesai
+        and not errors
+        and tanggal_mulai > tanggal_selesai
+    ):
+        errors["tanggal_selesai"] = (
+            "Tanggal selesai tidak boleh lebih awal dari tanggal mulai."
+        )
+
+    if errors:
+        daftar_laporan = []
+    else:
+        daftar_laporan = get_laporan_pembayaran(
+            tanggal_mulai,
+            tanggal_selesai,
+            kata_kunci,
+        )
+
+    total_pendapatan = sum(
+        float(item["jumlah_bayar"]) for item in daftar_laporan
+    )
+
+    return render_template(
+        "laporan.html",
+        page_title="Laporan Pendapatan",
+        active_page="laporan",
+        daftar_laporan=daftar_laporan,
+        tanggal_mulai=tanggal_mulai,
+        tanggal_selesai=tanggal_selesai,
+        kata_kunci=kata_kunci,
+        errors=errors,
+        total_pendapatan=total_pendapatan,
+    )

@@ -170,6 +170,17 @@ def main():
         "Pembayaran tidak valid meninggalkan data.",
     )
 
+    # 11. Laporan pendapatan berdasarkan periode.
+    rows = models.get_laporan_pembayaran("2026-03-01", "2026-03-31")
+    cek(len(rows) == 1, "Laporan tidak menampilkan pembayaran pada periode.")
+    cek(
+        abs(sum(float(item["jumlah_bayar"]) for item in rows) - 750000) < 0.01,
+        "Total pendapatan laporan tidak sesuai.",
+    )
+
+    rows_kosong = models.get_laporan_pembayaran("2026-04-01", "2026-04-30")
+    cek(len(rows_kosong) == 0, "Laporan menampilkan data di luar periode.")
+
     print("=" * 50)
     print("SEMUA UJI LULUS")
     print("=" * 50)

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-heading">
+    <h1>Laporan Pendapatan</h1>
+    <p>Daftar pembayaran dan total pendapatan berdasarkan periode yang dipilih.</p>
+</section>
+
+<section class="table-card">
+    <form class="search-form" method="GET" action="{{ url_for('main.laporan_pembayaran') }}">
+        <input type="date" name="tanggal_mulai" value="{{ tanggal_mulai }}" aria-label="Tanggal mulai">
+        <input type="date" name="tanggal_selesai" value="{{ tanggal_selesai }}" aria-label="Tanggal selesai">
+        <input type="search" name="q" placeholder="Cari nama penyewa atau nomor kamar..." value="{{ kata_kunci }}" aria-label="Cari laporan">
+        <button class="button" type="submit">Tampilkan</button>
+        <a class="button" href="{{ url_for('main.laporan_pembayaran') }}">Atur ulang</a>
+    </form>
+
+    {% if errors.get("tanggal_mulai") %}
+        <div class="message error">{{ errors["tanggal_mulai"] }}</div>
+    {% endif %}
+    {% if errors.get("tanggal_selesai") %}
+        <div class="message error">{{ errors["tanggal_selesai"] }}</div>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 6%;">No.</th>
+                <th>Tanggal Bayar</th>
+                <th>Jumlah Bayar</th>
+                <th>Penyewa</th>
+                <th>Kamar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in daftar_laporan %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ p["tanggal_pembayaran"] }}</td>
+                <td>Rp{{ "{:,.0f}".format(p["jumlah_bayar"]).replace(",", ".") }}</td>
+                <td>{{ p["nama_penyewa"] }}</td>
+                <td>{{ p["nomor_kamar"] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty-state">
+                    {% if tanggal_mulai or tanggal_selesai or kata_kunci %}
+                        Tidak ada pembayaran pada periode yang dipilih.
+                    {% else %}
+                        Belum ada pembayaran yang tersimpan.
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="table-footer">
+        <span>Menampilkan {{ daftar_laporan|length }} data pembayaran</span>
+        <span>Total pendapatan: Rp{{ "{:,.0f}".format(total_pendapatan).replace(",", ".") }}</span>
+    </div>
+</section>
+{% endblock %}

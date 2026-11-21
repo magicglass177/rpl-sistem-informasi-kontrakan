@@ -789,3 +789,49 @@ def delete_pembayaran(id_pembayaran):
 
     finally:
         connection.close()
+
+
+def get_laporan_pembayaran(tanggal_mulai="", tanggal_selesai="", kata_kunci=""):
+    """Mengambil daftar pembayaran untuk laporan berdasarkan periode."""
+    connection = get_db_connection()
+
+    try:
+        kata = kata_kunci.strip()
+        pola = f"%{_escape_like(kata)}%"
+
+        sql = """
+            SELECT
+                p.id_pembayaran,
+                p.id_sewa,
+                p.tanggal_pembayaran,
+                p.jumlah_bayar,
+                s.id_kamar,
+                s.id_penyewa,
+                s.tanggal_mulai,
+                s.tanggal_selesai,
+                s.tanggal_jatuh_tempo,
+                s.harga_sewa_disepakati,
+                pe.nama AS nama_penyewa,
+                k.nomor_kamar AS nomor_kamar
+            FROM pembayaran AS p
+            JOIN sewa AS s ON s.id_sewa = p.id_sewa
+            JOIN penyewa AS pe ON pe.id_penyewa = s.id_penyewa
+            JOIN kamar AS k ON k.id_kamar = s.id_kamar
+            WHERE (pe.nama LIKE ? ESCAPE '\\' OR k.nomor_kamar LIKE ? ESCAPE '\\')
+        """
+        params = [pola, pola]
+
+        if tanggal_mulai.strip():
+            sql += " AND p.tanggal_pembayaran >= ?"
+            params.append(tanggal_mulai.strip())
+
+        if tanggal_selesai.strip():
+            sql += " AND p.tanggal_pembayaran <= ?"
+            params.append(tanggal_selesai.strip())
+
+        sql += " ORDER BY p.tanggal_pembayaran DESC, p.id_pembayaran DESC"
+
+        return connection.execute(sql, params).fetchall()
+
+    finally:
+        connection.close()
