@@ -254,10 +254,105 @@ SQL seluruhnya berparameter di `models.py`, keluaran memakai `{{ }}` Jinja2 tanp
 semua rute dalam matriks memakai decorator peran, kata sandi memakai hash Werkzeug, kunci
 dari lingkungan, `requirements.txt` sudah berversi, dan uji otomatis mencakup jalur pelanggaran.
 
-## Tinjauan silang dan triase
+## Tinjauan silang dan triase (Langkah 9-10)
 
-(Diisi pada Langkah 9-10.)
+### Keterbatasan tinjauan silang
 
-## Bukti perbaikan
+Pasangan kelompok peninjau belum ditetapkan di lingkungan ini dan saya tidak memiliki akses
+baca ke repositori kelompok lain. Sesuai aturan etika Jobsheet 12, tinjauan tidak dilakukan
+dengan menyerang aplikasi pihak lain. Oleh karena itu **5 Issue tinjauan silang belum dapat
+dibuat/dikirim**. Sebagai latihan, lima draf Issue berikut disiapkan memakai templat D.2 dan
+akan dikirim ke repositori kelompok yang ditunjuk dosen setelah pasangan diumumkan.
 
-(Diisi pada Langkah 11-14.)
+| Draf | Judul | Lokasi (baris pada commit `cafb5a3`) | Kategori | Risiko |
+|---|---|---|---|---|
+| I-01 | [Keamanan] Form POST belum memakai token CSRF | `templates/login.html`, `templates/base.html` | A01 | Tinggi |
+| I-02 | [Keamanan] Belum ada batas percobaan login | `routes.py` fungsi `login()` | A07 | Sedang |
+| I-03 | [Keamanan] Kejadian login gagal/akses ditolak tidak dicatat | `app.py`, `routes.py` | A09 | Sedang |
+| I-04 | [Keamanan] Cookie Secure dan header keamanan belum ada | `app.py` | A02 | Sedang |
+| I-05 | [Kualitas] Konfirmasi hapus memakai JS sebaris | `templates/kamar_list.html` baris 64 | A02 | Rendah |
+
+Contoh isi draf I-01 (templat D.2):
+
+> **Judul:** [Keamanan] Form POST belum memakai token CSRF
+> **Lokasi:** `templates/base.html` form logout dan seluruh form tambah/ubah/hapus
+> **Kategori:** A01 | **Risiko:** Tinggi
+> **Mengapa ini masalah:** Permintaan POST hanya dilindungi decorator peran. Situs pihak ketiga
+> dapat mengirim POST memakai cookie sesi korban.
+> **Cara memeriksa (tanpa menyerang aplikasi):** Baca kode; tidak ada input `csrf_token`
+> dan tidak ada pemeriksaan token pada `before_request`.
+> **Usulan:** Token acak per sesi + input tersembunyi + `secrets.compare_digest`, tolak 400.
+> **Wajib diperbaiki atau saran:** Wajib diperbaiki.
+
+Dua hal yang sudah baik untuk disampaikan secara konstruktif: pemisahan SQL di `models.py`
+dan validasi di `services.py` rapi, serta seluruh rute dalam matriks sudah memakai decorator peran.
+
+### Tabel triase temuan yang diterima
+
+| No | Temuan (ID) | Risiko | Keputusan | Alasan / rencana |
+|---:|---|---|---|---|
+| 1 | P-01 CSRF | Tinggi | Diperbaiki | Langkah 11: token per sesi, 400 + log |
+| 2 | P-02 Batas login | Sedang | Diperbaiki | Langkah 12: 5 kegagalan/5 menit per IP+username |
+| 3 | P-03 Logging | Sedang | Diperbaiki | Langkah 12: log tanpa kata sandi, username `%r` |
+| 4 | P-04 Konfigurasi | Sedang | Diperbaiki | Langkah 13: APP_ENV, Secure, debug dari lingkungan |
+| 5 | P-05 Header | Rendah-Sedang | Diperbaiki | Langkah 13: `after_request` |
+| 6 | P-06 CSP/JS sebaris | Rendah | Ditunda | Pertemuan 14, bersama HTTPS |
+| 7 | P-07 Kepemilikan data | - | Ditolak | Data kontrakan bersifat bersama; tidak ada data per akun |
+| 8 | T-01...T-10 kasus latihan | campuran | Diperbaiki di folder latihan | Tidak disalin ke proyek; bukti di bagian kasus |
+
+Setiap draf Issue akan ditanggapi dengan komentar bermakna bila sudah dikirim; tidak ada
+Issue yang dihapus untuk menutupi masalah.
+
+## Bukti perbaikan (Langkah 11-14)
+
+| Temuan | Commit | Bukti perbaikan |
+|---|---|---|
+| P-01 CSRF | `280896d` | 9 formulir memuat `csrf_token`; POST tanpa token → 400; log `CSRF gagal path=...` |
+| P-02 Batas login | `06b7ff9` | 5POST salah → 401; POST ke-6 dengan kata sandi benar → 429; uji kedaluwarsa dengan waktu suntikan lulus |
+| P-03 Logging | `06b7ff9` | `Login gagal username='admin' ip=127.0.0.1`; uji `assertLogs` membuktikan kata sandi tidak tercatat |
+| P-04 Konfigurasi | `14bc710` | Produksi tanpa kunci → `RuntimeError`; `SESSION_COOKIE_SECURE=True`; debug hanya bila `FLASK_DEBUG=1` dan bukan produksi |
+| P-05 Header | `14bc710` | `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: same-origin` |
+
+Potongan diff kunci (`app.py`):
+
+```python
+@app.before_request
+def periksa_csrf():
+    if request.method != "POST":
+        return
+    dikirim = request.form.get("csrf_token", "").encode()
+    asli = session.get("csrf_token", "").encode()
+    if not asli or not secrets.compare_digest(dikirim, asli):
+        app.logger.warning("CSRF gagal path=%r ip=%s", request.path, request.remote_addr)
+        abort(400)
+```
+
+```python
+@app.after_request
+def tambah_header_keamanan(respons):
+    respons.headers["X-Content-Type-Options"] = "nosniff"
+    respons.headers["X-Frame-Options"] = "DENY"
+    respons.headers["Referrer-Policy"] = "same-origin"
+    return respons
+```
+
+### Tinjau ulang diff dengan Lampiran C
+
+- SQL tetap berparameter di `models.py`; tidak ada f-string SQL baru.
+- Keluaran tetap lewat `{{ }}` Jinja2; tidak ada `|safe` atau `Markup`.
+- Semua rute dalam matriks tetap memakai decorator; tidak ada perubahan data lewat GET.
+- Kata sandi tetap berhash; kunci dari lingkungan; tidak ada rahasia di kode.
+- Pesan galat login tetap sama; `session.clear()` tetap ada; batas percobaan ditambahkan.
+- Tidak ada `debug=True` tetap; host tidak `0.0.0.0`; cookie HttpOnly/SameSite/Secure sesuai lingkungan.
+- `requirements.txt` berversi dan hanya berisi Flask + dependensinya.
+- Galat ditangkap dengan jenis spesifik; rincian ke log, pesan umum ke pengguna.
+- Fungsi pendek dan berlapis; tidak ada duplikasi SQL di luar `models.py`.
+
+Tidak ditemukan kelemahan baru. Dua hal sengaja ditunda: penyimpanan batas login di memori
+(Sprint 3 untuk multi-proses) dan CSP ketat (Pertemuan 14 karena `onsubmit` sebaris).
+
+### Hasil uji akhir
+
+- `python tests/uji_cepat.py` → `SEMUA UJI LULUS` (21 kelompok uji).
+- `python -m unittest discover -s tests` → 59 tests OK.
+- Fitur lama (CRUD kamar/penyewa, sewa, pembayaran, laporan, dua peran) tetap lulus.

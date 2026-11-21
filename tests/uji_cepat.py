@@ -344,6 +344,21 @@ def main():
     )
     percobaan.reset(kunci_uji)
 
+    # 21. Header keamanan dasar hadir pada respons.
+    respons = client.get("/kamar")
+    cek(
+        respons.headers.get("X-Content-Type-Options") == "nosniff",
+        "Header X-Content-Type-Options tidak sesuai.",
+    )
+    cek(
+        respons.headers.get("X-Frame-Options") == "DENY",
+        "Header X-Frame-Options tidak sesuai.",
+    )
+    cek(
+        respons.headers.get("Referrer-Policy") == "same-origin",
+        "Header Referrer-Policy tidak sesuai.",
+    )
+
     print("=" * 50)
     print("SEMUA UJI LULUS")
     print("=" * 50)

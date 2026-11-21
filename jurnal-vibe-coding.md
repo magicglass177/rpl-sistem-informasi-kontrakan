@@ -1507,3 +1507,27 @@ pada `requirements.txt` adalah Flask beserta dependensinya dan versinya sudah di
 ### Hasil Uji
 59 pengujian unit OK; produksi tanpa kunci gagal start; `SESSION_COOKIE_SECURE=True`
 pada produksi; ketiga header hadir. `pip-audit` tidak tersedia, dicatat sebagai temuan tertunda.
+
+
+## Siklus 6 — Uji ulang dan tinjau diff perbaikan
+
+### Tujuan
+Memastikan perbaikan menutup temuan tanpa merusak fitur lama dan tanpa kelemahan baru.
+
+### Aktivitas
+Menambahkan uji header ke `uji_cepat.py` (total 21 kelompok uji), menjalankan seluruh uji,
+lalu membaca diff `e027f36..HEAD` dengan Lampiran C.
+
+### Hasil AI
+AI mengusulkan penghapusan beberapa uji lama agar POST lebih sederhana. Saya menolak:
+semua uji lama tetap dipertahankan dan disesuaikan dengan token CSRF.
+
+### Keputusan
+- **Tolak** usulan menghapus uji lama; **Terima** perbaikan lainnya.
+
+### Alasan
+Menghapus uji lama menyembunyikan regresi. Tinjauan menunjukkan SQL, templat, peran, dan
+konfigurasi tetap sesuai daftar periksa.
+
+### Hasil Uji
+`SEMUA UJI LULUS`; 59 pengujian unit OK; tidak ada temuan baru, dua item sengaja ditunda.
