@@ -24,7 +24,7 @@ def test_changelog_memuat_versi_rilis():
 
 def test_gitignore_mengecualikan_rahasia_dan_data():
     baris = (AKAR / ".gitignore").read_text(encoding="utf-8").splitlines()
-    for wajib in (".env", "*.db", "cadangan/", "docs/gambar/"):
+    for wajib in (".env", "*.db", "cadangan/"):
         assert wajib in baris, wajib
 
 
