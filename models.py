@@ -3,9 +3,13 @@ from pathlib import Path
 from decimal import Decimal
 
 
+import os
+
 BASE_DIR = Path(__file__).resolve().parent
 INSTANCE_DIR = BASE_DIR / "instance"
-DB_PATH = INSTANCE_DIR / "kontrakan.db"
+# Lokasi basis data dapat diatur lewat variabel lingkungan KONTRAKAN_DB
+# (Lampiran C.2 Jobsheet 14). Bawaan: instance/kontrakan.db.
+DB_PATH = Path(os.environ.get("KONTRAKAN_DB") or INSTANCE_DIR / "kontrakan.db")
 SCHEMA_PATH = BASE_DIR / "docs" / "desain" / "schema.sql"
 
 
@@ -41,6 +45,7 @@ def get_db_connection():
     """
     Membuat koneksi SQLite dan mengaktifkan foreign key.
     """
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")

@@ -7,6 +7,7 @@ from flask import Flask, abort, request, session
 
 from models import init_db
 from routes import main
+from versi import VERSI
 
 logging.basicConfig(
     level=logging.INFO,
@@ -46,6 +47,7 @@ def create_app():
         return session["csrf_token"]
 
     app.jinja_env.globals["csrf_token"] = csrf_token
+    app.jinja_env.globals["versi"] = VERSI
 
     @app.before_request
     def periksa_csrf():
