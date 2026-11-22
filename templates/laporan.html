@@ -8,9 +8,9 @@
 
 <section class="table-card">
     <form class="search-form" method="GET" action="{{ url_for('main.laporan_pembayaran') }}">
-        <input type="date" name="tanggal_mulai" value="{{ tanggal_mulai }}" aria-label="Tanggal mulai">
-        <input type="date" name="tanggal_selesai" value="{{ tanggal_selesai }}" aria-label="Tanggal selesai">
-        <input type="search" name="q" placeholder="Cari nama penyewa atau nomor kamar..." value="{{ kata_kunci }}" aria-label="Cari laporan">
+        <input class="form-control" type="date" name="tanggal_mulai" value="{{ tanggal_mulai }}" aria-label="Tanggal mulai">
+        <input class="form-control" type="date" name="tanggal_selesai" value="{{ tanggal_selesai }}" aria-label="Tanggal selesai">
+        <input class="form-control" type="search" name="q" placeholder="Cari nama penyewa atau nomor kamar..." value="{{ kata_kunci }}" aria-label="Cari laporan">
         <button class="button" type="submit">Tampilkan</button>
         <a class="button" href="{{ url_for('main.laporan_pembayaran') }}">Atur ulang</a>
     </form>

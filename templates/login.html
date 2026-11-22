@@ -1,48 +1,40 @@
 {% extends "base.html" %}
 
+{% block title %}Login — Sistem Informasi Pengelolaan Kontrakan{% endblock %}
+
 {% block content %}
-<section class="page-heading">
-    <h1>Login Pengelola</h1>
-    <p>Masukkan username dan password untuk mengakses sistem.</p>
-</section>
-
-<section class="table-card" style="max-width: 420px;">
-    {% if errors.get("database") %}
-        <div class="message error">{{ errors["database"] }}</div>
-    {% endif %}
-
-    <form method="POST" action="{{ url_for('main.login', next=request.args.get('next', '')) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input
-                type="text"
-                id="username"
-                name="username"
-                required
-                maxlength="30"
-                autocomplete="username"
-                autofocus
-                value="{{ data.get('username', '') }}"
-                placeholder="Contoh: admin"
-            >
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="login-logo">
+            <div class="logo">K</div>
+            <div>
+                <h1>Sistem Informasi<br>Pengelolaan Kontrakan</h1>
+                <p>Masukkan username dan password untuk mengakses sistem.</p>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                autocomplete="current-password"
-                placeholder="Masukkan password"
-            >
-        </div>
+        {% if errors.get("database") %}
+            <div class="flash danger">{{ errors["database"] }}</div>
+        {% endif %}
 
-        <div class="form-actions">
-            <button class="button" type="submit">Login</button>
-        </div>
-    </form>
-</section>
+        <form method="POST" action="{{ url_for('main.login', next=request.args.get('next', '')) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input class="form-control" type="text" id="username" name="username"
+                       required maxlength="30" autocomplete="username" autofocus
+                       value="{{ data.get('username', '') }}" placeholder="Contoh: admin">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="password"
+                       required autocomplete="current-password" placeholder="Masukkan password">
+            </div>
+            <div class="form-actions">
+                <button class="btn primary" type="submit" style="width:100%;justify-content:center;">Masuk</button>
+            </div>
+        </form>
+        <p style="text-align:center;margin-top:16px;font-size:11px;color:var(--text-soft);">v{{ versi }}</p>
+    </div>
+</div>
 {% endblock %}

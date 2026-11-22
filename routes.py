@@ -190,7 +190,78 @@ def akses_ditolak(_galat):
 @main.route("/")
 @semua_peran
 def beranda():
-    return redirect(url_for("main.daftar_kamar"))
+    daftar_kamar = get_all_kamar()
+    total_unit = len(daftar_kamar)
+    unit_tersewa = sum(1 for k in daftar_kamar if k["status_ketersediaan"] == "Terisi")
+    unit_tersedia = total_unit - unit_tersewa
+
+    # Aktivitas dan jadwal: sewa yang akan mulai / berakhir / pembayaran jatuh tempo.
+    aktivitas = []
+    hari_ini = date.today().isoformat()
+    for sewa in get_all_sewa():
+        if sewa["tanggal_mulai"] >= hari_ini:
+            aktivitas.append({
+                "judul": "Mulai sewa",
+                "nama": sewa["nama_penyewa"],
+                "detail": f"Kamar {sewa['nomor_kamar']}",
+                "tanggal": sewa["tanggal_mulai"],
+                "status": "Terjadwal",
+                "badge": "info",
+            })
+        if sewa["tanggal_selesai"] >= hari_ini and sewa["tanggal_selesai"] <= _tambah_hari(hari_ini, 30):
+            aktivitas.append({
+                "judul": "Sewa berakhir",
+                "nama": sewa["nama_penyewa"],
+                "detail": f"Kamar {sewa['nomor_kamar']}",
+                "tanggal": sewa["tanggal_selesai"],
+                "status": "Mendekati",
+                "badge": "warning",
+            })
+    for bayar in get_all_pembayaran():
+        if bayar.get("tanggal_jatuh_tempo"):
+            if hari_ini <= str(bayar["tanggal_jatuh_tempo"]) <= _tambah_hari(hari_ini, 30):
+                aktivitas.append({
+                    "judul": "Jatuh tempo",
+                    "nama": bayar["nama_penyewa"],
+                    "detail": f"Kamar {bayar['nomor_kamar']}",
+                    "tanggal": bayar["tanggal_jatuh_tempo"],
+                    "status": bayar["status_pembayaran"],
+                    "badge": "danger" if bayar["status_pembayaran"] == "Terlambat" else "warning",
+                })
+    aktivitas = aktivitas[:8]
+
+    pembayaran_terbaru = list(get_all_pembayaran())[:5]
+    penghuni_terbaru = sorted(
+        get_all_penyewa(), key=lambda p: p["id_penyewa"], reverse=True
+    )[:5]
+
+    return render_template(
+        "dashboard.html",
+        page_title="Dashboard",
+        active_page="dashboard",
+        total_unit=total_unit,
+        unit_tersewa=unit_tersewa,
+        unit_tersedia=unit_tersedia,
+        daftar_kamar=daftar_kamar[:6],
+        aktivitas=aktivitas,
+        pembayaran_terbaru=pembayaran_terbaru,
+        penghuni_terbaru=penghuni_terbaru,
+    )
+
+
+def _tambah_hari(iso, hari):
+    from datetime import date, timedelta
+    return (date.fromisoformat(iso) + timedelta(days=hari)).isoformat()
+
+
+@main.route("/pengaturan")
+@semua_peran
+def pengaturan():
+    return render_template(
+        "pengaturan.html",
+        page_title="Pengaturan",
+        active_page="pengaturan",
+    )
 
 
 @main.route("/kamar")

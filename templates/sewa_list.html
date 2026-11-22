@@ -17,7 +17,7 @@
 <section class="table-card">
     <form class="search-form" method="GET"
           action="{{ url_for('main.daftar_sewa') }}">
-        <input
+        <input class="form-control"
             type="search"
             name="q"
             placeholder="Cari nama penyewa atau nomor kamar..."
@@ -25,7 +25,7 @@
             aria-label="Cari periode sewa"
         >
 
-        <select name="status" aria-label="Saring status periode sewa">
+        <select class="form-control" name="status" aria-label="Saring status periode sewa">
             <option value="">Semua status</option>
             <option value="aktif" {% if status == "aktif" %}selected{% endif %}>
                 Aktif

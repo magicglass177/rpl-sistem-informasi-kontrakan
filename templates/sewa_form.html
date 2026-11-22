@@ -24,7 +24,7 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label for="id_kamar">Kamar</label>
-            <select id="id_kamar" name="id_kamar" required
+            <select class="form-control" id="id_kamar" name="id_kamar" required
                     aria-describedby="kamar-error">
                 <option value="">-- pilih kamar --</option>
                 {% for kamar in daftar_kamar %}
@@ -44,7 +44,7 @@
 
         <div class="form-group">
             <label for="id_penyewa">Penyewa</label>
-            <select id="id_penyewa" name="id_penyewa" required
+            <select class="form-control" id="id_penyewa" name="id_penyewa" required
                     aria-describedby="penyewa-error">
                 <option value="">-- pilih penyewa --</option>
                 {% for penyewa in daftar_penyewa %}
@@ -64,7 +64,7 @@
 
         <div class="form-group">
             <label for="tanggal_mulai">Tanggal Mulai</label>
-            <input
+            <input class="form-control"
                 type="date"
                 id="tanggal_mulai"
                 name="tanggal_mulai"
@@ -82,7 +82,7 @@
 
         <div class="form-group">
             <label for="tanggal_selesai">Tanggal Selesai</label>
-            <input
+            <input class="form-control"
                 type="date"
                 id="tanggal_selesai"
                 name="tanggal_selesai"
@@ -100,7 +100,7 @@
 
         <div class="form-group">
             <label for="tanggal_jatuh_tempo">Tanggal Jatuh Tempo (opsional)</label>
-            <input
+            <input class="form-control"
                 type="date"
                 id="tanggal_jatuh_tempo"
                 name="tanggal_jatuh_tempo"
@@ -117,7 +117,7 @@
 
         <div class="form-group">
             <label for="harga_sewa_disepakati">Harga Sewa Disepakati (Rp)</label>
-            <input
+            <input class="form-control"
                 type="number"
                 id="harga_sewa_disepakati"
                 name="harga_sewa_disepakati"
