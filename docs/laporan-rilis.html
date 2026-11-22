@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Laporan Rilis — Jobsheet 14</title>
+<style>
+  @page { size: A4; margin: 18mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.45; color:#1e1e1e; margin:0 auto; max-width:190mm; padding:10mm; }
+  h1 { font-size: 20pt; border-bottom: 3px solid #2f5496; padding-bottom:6px; }
+  h2 { font-size: 14pt; color:#2f5496; border-bottom:1px solid #c9d3e6; padding-bottom:4px; margin-top:22px; }
+  p, li, td, th { font-size: 10pt; }
+  table { width:100%; border-collapse:collapse; margin:8px 0 12px; }
+  th, td { border:1px solid #999; padding:5px 7px; vertical-align:top; }
+  th { background:#eef2f9; }
+  code, pre { font-family:Consolas,monospace; font-size:9pt; background:#f5f7fa; }
+  pre { border:1px solid #ccc; padding:8px; white-space:pre-wrap; }
+  .meta { color:#555; font-size:9.5pt; margin-bottom:14px; }
+  .kecil { font-size:9pt; color:#555; }
+  .halaman { page-break-before:always; }
+  @media print { body { padding:0; max-width:none; } .halaman { page-break-before:always; } }
+</style>
+</head>
+<body>
+
+<h1>Laporan Rilis v1.0.0, Deployment, Dokumentasi, dan UAT</h1>
+<div class="meta">
+  Jobsheet 14 — Pertemuan 14 (Minggu 14) &nbsp;|&nbsp; Mata Kuliah: Rekayasa Perangkat Lunak<br>
+  Proyek: Sistem Informasi Pengelolaan Kontrakan &nbsp;|&nbsp; Kelompok: ______________________<br>
+  Anggota: ______________________________________ &nbsp;|&nbsp; Tanggal praktikum: ______________<br>
+  Lingkungan deployment: ______________________ &nbsp;|&nbsp; Tag rilis: <code>v1.0.0</code>
+</div>
+
+<h2>1. Lingkungan Deployment dan Alasan</h2>
+<p>Lingkungan yang disepakati: komputer toko (jaringan lokal) — pengguna di satu
+lokasi, tanpa biaya hosting. Komputer server harus menyala; firewall mengizinkan
+port 8000; cadangan rutin disimpan di tempat terpisah. Server pengembangan Flask
+(<code>python app.py</code>) tidak dipakai untuk produksi; digunakan Waitress
+(<code>waitress-serve --listen=127.0.0.1:8000 app:app</code>).</p>
+<p><b>Cookie Secure:</b> <code>COOKIE_SECURE=0</code> dipakai pada jaringan tertutup tanpa
+HTTPS agar sesi tetap tersimpan; bila aplikasi dapat diakses lewat internet,
+harus HTTPS dengan <code>COOKIE_SECURE=1</code>.</p>
+
+<h2>2. Audit Kesiapan Rilis (Lampiran B)</h2>
+<table>
+<tr><th>No</th><th>Butir</th><th>Hasil</th></tr>
+<tr><td>1</td><td><code>git ls-files "*.db" ".env"</code> kosong</td><td>Lulus</td></tr>
+<tr><td>2</td><td><code>git log --all -- "*.db" ".env"</code> kosong</td><td>Lulus</td></tr>
+<tr><td>3</td><td>Tidak ada kunci rahasia/kata sandi pada kode (git grep)</td><td>Lulus (hanya contoh kasus &amp; data uji)</td></tr>
+<tr><td>4</td><td>Produksi tanpa <code>SECRET_KEY</code> menolak start</td><td>Lulus</td></tr>
+<tr><td>5</td><td><code>requirements.txt</code> berversi persis + waitress</td><td>Lulus</td></tr>
+<tr><td>6</td><td>Akun awal dibuat dengan skrip, tanpa kata sandi bawaan</td><td>Lulus</td></tr>
+<tr><td>7</td><td>Cadangan dibuat dan pemulihan teruji</td><td>Lulus</td></tr>
+<tr><td>8</td><td>Nomor versi terlihat di aplikasi; CHANGELOG memuat versi</td><td>Lulus</td></tr>
+<tr><td>9</td><td>README lulus uji orang asing</td><td>Lulus</td></tr>
+<tr><td>10</td><td>Manual pengguna mencakup semua skenario UAT</td><td>Lulus (gambar placeholder)</td></tr>
+</table>
+
+<h2>3. Bukti Aplikasi Berjalan (Waitress, mode produksi)</h2>
+<p>Perintah: <code>waitress-serve --listen=127.0.0.1:8000 app:app</code> dengan
+<code>APP_ENV=production</code>, <code>SECRET_KEY</code> dari lingkungan, <code>COOKIE_SECURE=0</code>
+(jaringan tertutup). Hasil: halaman login tampil, login pemilik dan kasir
+berhasil, daftar kamar (A-01, B-01) tampil, footer menampilkan
+<code>v1.0.0</code>. Tanpa <code>SECRET_KEY</code>, aplikasi menolak start dengan
+<code>RuntimeError: FLASK_SECRET_KEY/SECRET_KEY wajib diatur pada lingkungan produksi.</code></p>
+
+<h2>4. Bukti Cadangan dan Pemulihan</h2>
+<p><code>python cadangkan.py</code> menghasilkan
+<code>cadangan/kontrakan-YYYYMMDD-HHMMSS.db</code>. Latihan pemulihan: satu kamar
+dihapus, berkas cadangan disalin menimpa basis data, kamar kembali (2 kamar).
+Prosedur cadangan dan pemulihan tertulis di README (frekuensi, lokasi simpan,
+siapa bertanggung jawab).</p>
+
+<h2>5. README dan Uji Orang Asing</h2>
+<p>README memuat deskripsi, fitur, kebutuhan, instalasi, konfigurasi (tabel variabel),
+membuat akun pertama, menjalankan (dev &amp; prod), pengujian, cadangan/pemulihan,
+struktur, keamanan. <b>Uji orang asing</b> (simulasi pada folder bersih dengan
+venv baru): pip install OK, pytest 117 passed, versi import OK, dev server
+berjalan. Tidak ada langkah yang macet.</p>
+
+<h2>6. Manual Pengguna</h2>
+<p><code>docs/manual-pengguna.md</code>: 8 tugas bernomor (masuk, cari kamar, tambah
+kamar, penyewa, periode sewa, pembayaran, laporan, masalah), 5 referensi gambar
+(data karangan), tabel "Bila ada masalah" dengan pesan galat yang benar-benar
+muncul. Folder <code>docs/gambar/</code> disiapkan untuk tangkapan layar.</p>
+
+<div class="halaman"></div>
+<h2>7. Hasil UAT (SIMULASI — bukan UAT nyata)</h2>
+<p><b>Peringatan:</b> lingkungan ini tidak memiliki klien nyata. Hasil di bawah
+adalah latihan format dengan narasumber fiktif. UAT nyata dijadwalkan pada
+Pertemuan 14/15 dengan klien sebenarnya.</p>
+<table>
+<tr><th>ID</th><th>Skenario</th><th>Lulus?</th><th>Waktu</th><th>Kesulitan</th></tr>
+<tr><td>UAT-1</td><td>Masuk sebagai pemilik</td><td>Ya</td><td>1 mnt</td><td>Tidak</td></tr>
+<tr><td>UAT-2</td><td>Mendaftarkan kamar baru</td><td>Ya</td><td>2 mnt</td><td>Tidak</td></tr>
+<tr><td>UAT-3</td><td>Menyimpan data penyewa</td><td>Ya</td><td>2 mnt</td><td>Tidak</td></tr>
+<tr><td>UAT-4</td><td>Menentukan masa sewa</td><td>Ya</td><td>3 mnt</td><td>Ya (1x)</td></tr>
+<tr><td>UAT-5</td><td>Mencatat pembayaran</td><td>Ya</td><td>2 mnt</td><td>Tidak</td></tr>
+<tr><td>UAT-6</td><td>Melihat laporan pendapatan</td><td>Ya</td><td>2 mnt</td><td>Tidak</td></tr>
+<tr><td>UAT-7</td><td>Kasir mencoba hapus kamar</td><td>Ya</td><td>1 mnt</td><td>Tidak</td></tr>
+</table>
+<p>Skor SUS: Pemilik 82.5, Kasir 90.0, rata-rata 86.3 (2 responden — hanya
+indikasi kasar). Triase: 1 kesulitan penggunaan (urutan tanggal), 1 permintaan
+perubahan (filter kamar terisi), 1 positif.</p>
+
+<h2>8. Tabel Triase Umpan Balik</h2>
+<table>
+<tr><th>No</th><th>Temuan</th><th>Jenis</th><th>Keputusan</th></tr>
+<tr><td>1</td><td>Tanggal mulai/selesai sering tertukar</td><td>Kesulitan</td><td>Perbaiki manual</td></tr>
+<tr><td>2</td><td>Filter kamar terisi tanpa membuka semua</td><td>Permintaan perubahan</td><td>Calon v1.1</td></tr>
+<tr><td>3</td><td>Tombol hapus tidak ada untuk kasir</td><td>Sesuai rancangan</td><td>Tolak dengan alasan</td></tr>
+<tr><td>4</td><td>Status pembayaran langsung tampil</td><td>Positif</td><td>Tidak ada tindakan</td></tr>
+</table>
+
+<h2>9. Tindak Lanjut dan Calon v1.1</h2>
+<ul>
+<li>Cacat UAT: tidak ada cacat baru yang menyimpang dari PRD.</li>
+<li>Kesulitan: perbaiki urutan field tanggal dan tambah contoh pada manual.</li>
+<li>Permintaan perubahan: masuk daftar calon v1.1, disepakati dengan klien.</li>
+<li>Rilis 1.0.0 tidak diubah mendadak; perbaikan kecil masuk rilis 1.0.1.</li>
+<li>Tag <code>v1.0.0</code> sudah diberikan dan didorong ke origin.</li>
+</ul>
+
+<h2>10. Jawaban Pertanyaan Evaluasi</h2>
+<ol>
+<li><b>Rahasia dan basis data tidak boleh di Git</b> karena bocor ke publik dan
+  ada di riwayat. Bila terlanjur ter-commit: cabut dan ganti rahasia, hapus
+  berkas, dan perlakukan isinya sebagai bocor.</li>
+<li><b><code>python app.py</code> tidak untuk produksi</b> karena server
+  pengembangan Flask tidak menangani beban dan keamanan. Server WSGI (Waitress)
+  menangani banyak permintaan dan mode produksi.</li>
+<li><b>Semantic Versioning:</b> MAJOR (tidak kompatibel), MINOR (fitur baru
+  kompatibel), PATCH (perbaikan cacat). PATCH naik untuk perbaikan cacat;
+  MINOR untuk fitur baru.</li>
+<li><b>README vs manual pengguna:</b> README untuk pengembang/teknisi yang
+  memasang (kriteria: pihak lain berhasil memasang); manual untuk pemilik/kasir
+  (kriteria: menyelesaikan tugas tanpa bertanya).</li>
+<li><b>Triase umpan balik:</b> cacat (menyimpang PRD → perbaiki + uji),
+  kesulitan penggunaan (perbaiki teks/manual), permintaan perubahan (calon v1.1).
+  Lingkup 1.0.0 tidak diubah mendadak tanpa persetujuan klien dan dosen.</li>
+</ol>
+
+<p class="kecil">Dibuat dari README, CHANGELOG, manual pengguna, hasil UAT (simulasi),
+dan bukti rilis. Cetak dengan Ctrl+P → Save as PDF (maksimal 8 halaman).</p>
+</body>
+</html>

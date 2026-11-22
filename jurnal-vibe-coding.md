@@ -1874,4 +1874,3 @@ Terima 27/54 (50,00%), Ubah 23/54 (42,59%), Tolak 4/54 (7,41%).
 tanggal kompak terlewat, matriks akses `/penyewa` keliru, perbandingan HTML
 login terlalu kuat, usulan mengubah pesan galat lama, usulan tanggal UAT rekaan,
 dan usulan menghapus uji alur.
-
