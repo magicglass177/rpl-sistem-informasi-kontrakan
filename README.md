@@ -75,7 +75,9 @@ Pengembangan (di komputer sendiri):
 python app.py
 ```
 
-Buka http://127.0.0.1:5000.
+Buka http://127.0.0.1:5000. Jika `FLASK_SECRET_KEY` belum disetel, aplikasi
+membuat kunci acak untuk pengembangan (sesi tidak bertahan antar restart);
+untuk penggunaan nyata setel `FLASK_SECRET_KEY`/`SECRET_KEY`.
 
 Produksi (server WSGI, contoh Waitress):
 

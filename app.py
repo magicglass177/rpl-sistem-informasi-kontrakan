@@ -29,8 +29,13 @@ def create_app():
             raise RuntimeError(
                 "FLASK_SECRET_KEY/SECRET_KEY wajib diatur pada lingkungan produksi."
             )
-        raise RuntimeError(
-            "Variabel lingkungan FLASK_SECRET_KEY belum diatur."
+        # Mode pengembangan: buat kunci acak agar aplikasi dapat dijalankan
+        # tanpa menyetel variabel lingkungan. Kunci ini berubah setiap restart,
+        # sehingga sesi tidak bertahan antar restart (wajar untuk pengembangan).
+        secret_key = secrets.token_hex(32)
+        print(
+            "PERINGATAN: FLASK_SECRET_KEY belum diatur; memakai kunci acak "
+            "untuk pengembangan. Setel FLASK_SECRET_KEY untuk penggunaan nyata."
         )
 
     app.config["SECRET_KEY"] = secret_key
