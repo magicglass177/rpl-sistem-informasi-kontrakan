@@ -1,0 +1,1 @@
+Latihan tanya jawab silang dan modifikasi tanpa AI dilakukan pada 22 November 2026. Setiap anggota menjawab >= 3 pertanyaan dan menyelesaikan >= 1 modifikasi <= 10 menit. Daftar belajar pribadi tertulis di jurnal masing-masing.
